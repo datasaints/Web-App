@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import com.datasaints.domain.Item;
 
 public class JDBCConnect {
-/*
     private ArrayList<Item> items;
     
     private Connection conn;
@@ -25,17 +24,11 @@ public class JDBCConnect {
             ex.printStackTrace();
         }
 
-        //recipeDBTuples = new ArrayList<RecipeDBTuple>();
-        //recipeIngredientsTuples = new ArrayList<RecipeIngredientsTuple>();
-        //nutritionFactTuples = new ArrayList<NutritionFactTuple>();
-
-        populateRecipeDBs();
-        populateRecipeIngredients();
-        populateNutritionFacts();
+        populateItems();
     }
 
-    private void populateRecipeDBs() {
-        String sql = "SELECT * FROM recipeDB;";
+    private void populateItems() {
+        String sql = "SELECT * FROM DSaints.Equipment;";
 
         ResultSet rst;
         PreparedStatement pst;
@@ -44,62 +37,17 @@ public class JDBCConnect {
             pst = conn.prepareStatement(sql);
             rst = pst.executeQuery();
 
-            while (rst.next()) {
-                recipeDBTuples.add(new RecipeDBTuple(rst.getInt("recipeID"), rst.getString("recipeName"),
-                        rst.getString("cuisine"), rst.getDouble("calorieCount"), rst.getDouble("fatCount"),
-                        rst.getDouble("sugarCount"), rst.getDouble("proteinCount"), rst.getString("URL")));
+            while (rst.next()) {            	
+            	items.add(new Item(rst.getString("ItemID"), rst.getInt("EmployeeID"),
+            			rst.getString("ItemName"), rst.getDate("CheckIn"),
+            			rst.getDate("CheckOut"), rst.getDate("LastCalibrated")));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    private void populateRecipeIngredients() {
-        String sql = "SELECT * FROM recipeIngredients;";
-
-        ResultSet rst;
-        PreparedStatement pst;
-
-        try {
-            pst = conn.prepareStatement(sql);
-            rst = pst.executeQuery();
-
-            while (rst.next()) {
-                recipeIngredientsTuples.add(new RecipeIngredientsTuple(rst.getInt("recipeID"),
-                        rst.getString("ingredientID"), rst.getString("quantity")));
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+    public ArrayList<Item> getItems() {
+        return this.items;
     }
-
-    private void populateNutritionFacts() {
-        String sql = "SELECT * FROM nutritionFacts;";
-
-        ResultSet rst;
-        PreparedStatement pst;
-
-        try {
-            pst = conn.prepareStatement(sql);
-            rst = pst.executeQuery();
-            while (rst.next()) {
-                nutritionFactTuples.add(new NutritionFactTuple());
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public ArrayList<RecipeDBTuple> getRecipeDBTuples() {
-        return this.recipeDBTuples;
-    }
-
-    public ArrayList<RecipeIngredientsTuple> getRecipeIngredientsTuples() {
-        return this.recipeIngredientsTuples;
-    }
-
-    public ArrayList<NutritionFactTuple> getNutritionFactTuples() {
-        return this.nutritionFactTuples;
-    }
-*/
 }
