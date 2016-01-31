@@ -11,7 +11,7 @@ import com.datasaints.domain.Item;
 
 public class JDBCConnect {
     private ArrayList<Item> items;
-    
+
     private Connection conn;
 
     public JDBCConnect() {
@@ -23,6 +23,8 @@ public class JDBCConnect {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        
+        items = new ArrayList<Item>();
 
         populateItems();
     }
@@ -37,7 +39,7 @@ public class JDBCConnect {
             pst = conn.prepareStatement(sql);
             rst = pst.executeQuery();
 
-            while (rst.next()) {            	
+            while (rst.next()) {
             	items.add(new Item(rst.getString("ItemID"), rst.getInt("EmployeeID"),
             			rst.getString("ItemName"), rst.getDate("CheckIn"),
             			rst.getDate("CheckOut"), rst.getDate("LastCalibrated")));
