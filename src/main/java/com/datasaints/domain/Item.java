@@ -10,7 +10,16 @@ public class Item {
 	private Date checkIn;
 	private Date checkOut;
 	private Date lastCalibrated;
-	
+
+   public Item() {
+      this.itemId = "";
+      this.employeeId = 0;
+      this.itemName = "";
+      this.checkIn = null;
+      this.checkOut = null;
+      this.lastCalibrated = null;
+   }
+
 	public Item(String itemID, int employeeID, String name, Date checkIn,
 			Date checkOut, Date lastCalibrated) {
 		this.itemId = itemID;
@@ -20,7 +29,7 @@ public class Item {
 		this.checkOut = checkOut;
 		this.lastCalibrated = lastCalibrated;
 	}
-	
+
 	public String getItemId() {
 		return itemId;
 	}

@@ -25,19 +25,16 @@
 </style>
 
 <script type="text/javascript">
-   /*
-    * Just copied what was done in sample code, not sure if anything should have been done differently
-    */
    $(document).ready(function() {
       var itemList = {};
       $.ajax({
-         url: "/getItems",
+         url: "/datasaints/getItems",
          type: 'POST',
          contentType: 'application/json',
          data: JSON.stringify(itemList),
          dataType: 'json',
          success: function(response){
-            createItemTable(response.items);
+            createItemTable(response);
             console.log(itemList);
             console.log(response);
             },
@@ -50,8 +47,8 @@
    function createItemTable(itemList) {
       for (var i = 0; i < itemList.length; i++) {
          var row = $("<tr>");
-         row.append($("<td>" + itemList[i].itemID + "</td>"))
-            .append($("<td>" + itemList[i].employeeID + "</td>"))
+         row.append($("<td>" + itemList[i].itemId + "</td>"))
+            .append($("<td>" + itemList[i].employeeId + "</td>"))
             .append($("<td>" + itemList[i].itemName + "</td>"))
             .append($("<td>" + itemList[i].checkIn + "</td>"))
             .append($("<td>" + itemList[i].checkOut + "</td>"))
