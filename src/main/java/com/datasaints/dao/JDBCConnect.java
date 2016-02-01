@@ -29,11 +29,14 @@ public class JDBCConnect {
         populateItems();
     }
 
-    private void populateItems() {
+    public void populateItems() {
         String sql = "SELECT * FROM DSaints.Equipment;";
 
         ResultSet rst;
         PreparedStatement pst;
+        
+        // Clear item list in case it is full
+        items.clear();
 
         try {
             pst = conn.prepareStatement(sql);

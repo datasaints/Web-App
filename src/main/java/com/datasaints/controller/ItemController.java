@@ -31,6 +31,7 @@ public class ItemController {
 
    @RequestMapping(value = "/getItems", method = RequestMethod.POST)
    public ArrayList<Item> getItems() {
+	  conn.populateItems();
       return conn.getItems();
    }
 }
