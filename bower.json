@@ -1,0 +1,21 @@
+{
+  "name": "Web-App",
+  "homepage": "https://github.com/datasaints/Web-App",
+  "authors": [
+    "csardo <christina.sardo@gmail.com>"
+  ],
+  "description": "Data Saints Web App",
+  "main": "",
+  "moduleType": [
+    "node"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
