@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.util.Date;
 
 import com.datasaints.domain.Item;
 import com.datasaints.exception.AddItemException;
@@ -58,6 +60,24 @@ public class ItemDaoImpl implements ItemDao {
 	        //pst.setString(1, item.getItemId());
 	        //System.out.println(pst);
 
+        	/*
+            String checkin = (new Date(System.currentTimeMillis())).toString()
+                  + " " + (new Time(System.currentTimeMillis())).toString();
+            String checkout = (new Date(System.currentTimeMillis())).toString()
+                  + " " + (new Time(System.currentTimeMillis())).toString();
+            String lastcali = (new Date(System.currentTimeMillis())).toString()
+                  + " " + (new Time(System.currentTimeMillis())).toString();
+
+            String insertStatement = "INSERT INTO DSaints.Equipment VALUES ('" + item.getItemId();
+            insertStatement += "'," +"'" + item.getEmployeeId() +"', '" +item.getItemName() + "', ";
+            insertStatement += "'" + checkin + "', ";
+            insertStatement += "'" + checkout + "', ";
+            insertStatement += "'" + lastcali + "');";
+
+            System.out.println("query: " +insertStatement);
+            pst = conn.prepareStatement(insertStatement);
+            */
+        	
 	        pst.executeUpdate();
 	        
 	        System.out.println("Added item " +item.getItemId() + " to the database");
@@ -87,6 +107,11 @@ public class ItemDaoImpl implements ItemDao {
 
         } catch (Exception ex) {
             ex.printStackTrace();
+            
+        }
+        finally {
+        	closeConnection(conn);
+
         }
 	}
 	
@@ -125,6 +150,8 @@ public class ItemDaoImpl implements ItemDao {
             
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+        	closeConnection(conn);
         }
 
         return item;
