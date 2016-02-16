@@ -20,25 +20,30 @@
 	}
 
    #itemTable {
-   
+
       visibility: hidden;
    }
 </style>
 
 <script type="text/javascript">
    $(document).ready(function() {
-	   
+
 		 $("#addButton").click(function () {
-			console.log("add button clicked");	
-			
-			var toAdd = $('#addItemTextbox').val();
-			console.log(toAdd);	
-			
+			console.log("add button clicked");
+
+			var itemID = $('#addItemIDTextbox').val();
+         var employeeID = $('#addEmployeeIDTextbox').val();
+         var iName = $('#addItemNameTextbox').val();
+
+			console.log(itemID);
+         console.log(employeeID);
+         console.log(iName);
+
 			var item = {};
-				
-			item["itemId"] = toAdd;
-			item["employeeId"] = 12;
-			item["itemName"] = "name here";
+
+			item["itemId"] = itemID;
+			item["employeeId"] = employeeID;
+			item["itemName"] = iName;
 			item["checkIn"] = "2016-01-25";
 			item["checkOut"] = "2016-01-25";
 			item["lastCalibrated"] = "2016-01-25";
@@ -65,12 +70,12 @@
 		  	        }
 		  	     });
 		 });
-		 
+
 		 $("#deleteButton").click(function () {
 			 console.log("HELLO");
 			 var toDelete = $('#deleteItemTexbox').val();
 		     console.log(toDelete);
-		     
+
 		     $.ajax({
 			      url: "/datasaints/deleteItem",
 			      type: 'DELETE',
@@ -85,10 +90,10 @@
 			      }
 			   });
 		  });
-				 
-		 
-		 
-		 
+
+
+
+
 		   var itemList = {};
 		   $.ajax({
 		      url: "/datasaints/getItems",
@@ -107,7 +112,7 @@
 		   });
 		   $("#itemTable").css('visibility', 'visible');
 		});
-	
+
    function createItemTable(itemList) {
 	   for (var i = 0; i < itemList.length; i++) {
 	      var row = $("<tr>");
@@ -121,8 +126,8 @@
 	   }
 
    }
-   
-   
+
+
 </script>
 
 </head>
@@ -141,12 +146,19 @@
 	   </tbody>
 	</table>
 	<br><br>
-	
-	<label>Add Item by Id (String) : </label><input id='addItemTextbox' >
+
+
+	<label>Add Item: </label><br>
+   <label>Item ID: </label><input id='addItemIDTextbox' >
+   <label>Employee ID: </label><input id='addEmployeeIDTextbox'>
+   <label>Item Name: </label><input id='addItemNameTextbox'>
 	<input type='button' value='Add Item' id='addButton'>
-	  
+
+   <br>
+   <br>
+
 	<label>Delete Item by Id (String) : </label><input id='deleteItemTexbox' >
 	<input type='button' value='Delete Item' id='deleteButton'>
-	
+
 </body>
 </html>

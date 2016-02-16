@@ -14,7 +14,7 @@ import com.datasaints.exception.AddItemException;
 public class ItemDaoImpl implements ItemDao {
 	 public Connection getConnection() {
         Connection conn = null;
-        
+
         try {
             Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(
@@ -28,9 +28,9 @@ public class ItemDaoImpl implements ItemDao {
 
 	 public void closeConnection(Connection conn) {
 		/* TODO: clean up before close:
-		 * It is strongly recommended that an application explicitly commits or 
-		 * rolls back an active transaction prior to calling the close method. If 
-		 * the close method is called and there is an active transaction, the 
+		 * It is strongly recommended that an application explicitly commits or
+		 * rolls back an active transaction prior to calling the close method. If
+		 * the close method is called and there is an active transaction, the
 		 * results are implementation-defined.
 		 */
         try {
@@ -41,21 +41,22 @@ public class ItemDaoImpl implements ItemDao {
 			e.printStackTrace();
 		}
 	}
-	 
+
 	public String addItem(Item item) {
 		Connection conn = getConnection();
 		PreparedStatement pst;
         ResultSet rst;
-		
+
         if (item.getItemId() ==  null) {
         	throw new AddItemException("No item id given");
         }
-     
+
         try {
         	System.out.println("The item id attempting to be added is " +item.getItemId());
-	        
+
         	//TO CHANGE
-        	String insertStatement = "INSERT INTO DSaints.Equipment (ItemID) VALUES ('" + item.getItemId() +"');";
+        	String insertStatement = "INSERT INTO DSaints.Equipment (ItemID, EmployeeID, ItemName) VALUES ('"
+            + item.getItemId() +"', '" + item.getEmployeeId() + "', '" + item.getItemName() + "');";
         	pst = conn.prepareStatement(insertStatement);
 	        //pst.setString(1, item.getItemId());
 	        //System.out.println(pst);
@@ -77,9 +78,9 @@ public class ItemDaoImpl implements ItemDao {
             System.out.println("query: " +insertStatement);
             pst = conn.prepareStatement(insertStatement);
             */
-        	
+
 	        pst.executeUpdate();
-	        
+
 	        System.out.println("Added item " +item.getItemId() + " to the database");
         }
         catch (SQLException e) {
@@ -88,7 +89,7 @@ public class ItemDaoImpl implements ItemDao {
         finally {
         	closeConnection(conn);
         }
-        
+
         return item.getItemId();
 	}
 
@@ -107,14 +108,14 @@ public class ItemDaoImpl implements ItemDao {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            
+
         }
         finally {
         	closeConnection(conn);
 
         }
 	}
-	
+
 	@Override
     public Item getItemById(String itemId) {
         Connection conn = getConnection();
@@ -122,13 +123,13 @@ public class ItemDaoImpl implements ItemDao {
         ResultSet rst;
         PreparedStatement pst;
 
-        /* Check if the string is in the proper format -- need to add "" marks 
-         * around it. 
+        /* Check if the string is in the proper format -- need to add "" marks
+         * around it.
          */
         if (itemId.charAt(0) != '"') {
         	itemId = '"' + itemId + '"';
         }
-        
+
         String itemQuery = "SELECT * FROM DSaints.Equipment WHERE ItemID = " + itemId + ";";
 
         System.out.println("database query executed: " + itemQuery);
@@ -141,13 +142,13 @@ public class ItemDaoImpl implements ItemDao {
 
             if (rst.next()) {
                 item = new Item();
-                
+
                 item.setItemId(rst.getString("itemID"));
             } else {
             	return null;
             }
 
-            
+
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
