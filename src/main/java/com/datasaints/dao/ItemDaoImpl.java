@@ -55,9 +55,14 @@ public class ItemDaoImpl implements ItemDao {
         	System.out.println("The item id attempting to be added is " +item.getItemId());
 
         	//TO CHANGE
-        	String insertStatement = "INSERT INTO DSaints.Equipment (ItemID, EmployeeID, ItemName) VALUES ('"
-            + item.getItemId() +"', '" + item.getEmployeeId() + "', '" + item.getItemName() + "');";
+        	String insertStatement = "INSERT INTO DSaints.Equipment (ItemID, EmployeeID, ItemName) VALUES (?, ?, ?);";
+        	
         	pst = conn.prepareStatement(insertStatement);
+        	
+        	pst.setString(1, item.getItemId());
+        	pst.setInt(2, item.getEmployeeId());
+        	pst.setString(3, item.getItemName());
+        	
 	        //pst.setString(1, item.getItemId());
 	        //System.out.println(pst);
 
