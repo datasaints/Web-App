@@ -52,37 +52,16 @@ public class ItemDaoImpl implements ItemDao {
         }
 
         try {
-        	System.out.println("The item id attempting to be added is " +item.getItemId());
+        	  System.out.println("The item id attempting to be added is " +item.getItemId());
 
-        	//TO CHANGE
-        	String insertStatement = "INSERT INTO DSaints.Equipment (ItemID, EmployeeID, ItemName) VALUES (?, ?, ?);";
-        	
-        	pst = conn.prepareStatement(insertStatement);
-        	
-        	pst.setString(1, item.getItemId());
-        	pst.setInt(2, item.getEmployeeId());
-        	pst.setString(3, item.getItemName());
-        	
-	        //pst.setString(1, item.getItemId());
-	        //System.out.println(pst);
+           //TO CHANGE
+           String insertStatement = "INSERT INTO DSaints.Equipment (ItemID, EmployeeID, ItemName) VALUES (?, ?, ?);";
 
-        	/*
-            String checkin = (new Date(System.currentTimeMillis())).toString()
-                  + " " + (new Time(System.currentTimeMillis())).toString();
-            String checkout = (new Date(System.currentTimeMillis())).toString()
-                  + " " + (new Time(System.currentTimeMillis())).toString();
-            String lastcali = (new Date(System.currentTimeMillis())).toString()
-                  + " " + (new Time(System.currentTimeMillis())).toString();
+           pst = conn.prepareStatement(insertStatement);
 
-            String insertStatement = "INSERT INTO DSaints.Equipment VALUES ('" + item.getItemId();
-            insertStatement += "'," +"'" + item.getEmployeeId() +"', '" +item.getItemName() + "', ";
-            insertStatement += "'" + checkin + "', ";
-            insertStatement += "'" + checkout + "', ";
-            insertStatement += "'" + lastcali + "');";
-
-            System.out.println("query: " +insertStatement);
-            pst = conn.prepareStatement(insertStatement);
-            */
+           pst.setString(1, item.getItemId());
+           pst.setInt(2, item.getEmployeeId());
+           pst.setString(3, item.getItemName());
 
 	        pst.executeUpdate();
 
