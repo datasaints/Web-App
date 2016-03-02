@@ -1,0 +1,12 @@
+html, body {
+
+		background-color: lightblue;
+
+		text-align: center;
+
+	}
+
+   #itemTable {
+
+      visibility: hidden;
+   }
