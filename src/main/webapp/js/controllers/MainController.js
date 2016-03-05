@@ -75,6 +75,7 @@
 		      dataType: 'json',
 		      success: function(response){
 		         createItemTable(response);
+		         console.log("hello");
 		         console.log(itemList);
 		         console.log(response);
 		         },
@@ -82,10 +83,9 @@
 		         console.log("ERROR OCCURRED")
 		      }
 		   });
-		   $("#itemTable").css('visibility', 'visible');
 		});
 
-   function createItemTable(itemList) {
+   	   function createItemTable(itemList) {
 	   for (var i = 0; i < itemList.length; i++) {
 	      var row = $("<tr>");
 	      row.append($("<td>" + itemList[i].itemId + "</td>"))
