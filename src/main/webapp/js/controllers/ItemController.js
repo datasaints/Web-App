@@ -1,4 +1,4 @@
-angular.module('myApp')
+angular.module('DataSaints')
 .controller('ItemController', [ '$scope', '$http', function ($scope, $http) {
 	
 	$scope.newItem = {};

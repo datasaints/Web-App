@@ -7,7 +7,7 @@
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.5 -->
-  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
   <!-- Ionicons -->
@@ -120,7 +120,7 @@
         </div>
         <div class="pull-left info">
           <p>Alexander Pierce</p>
-          <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+          <a href="#"><i class="fa fa-circle text-success"></i> Administrator</a>
         </div>
       </div>
       <!-- search form -->
@@ -151,15 +151,10 @@
             <i class="fa fa-laptop"></i>
             <span>Reader Profiles</span>
           </a>
-          <ul class="treeview-menu">
-            <li><a href="pages/layout/top-nav.html"><i class="fa fa-circle-o"></i> Top Navigation</a></li>
-            <li><a href="pages/layout/boxed.html"><i class="fa fa-circle-o"></i> Boxed</a></li>
-            <li><a href="pages/layout/fixed.html"><i class="fa fa-circle-o"></i> Fixed</a></li>
-            <li><a href="pages/layout/collapsed-sidebar.html"><i class="fa fa-circle-o"></i> Collapsed Sidebar</a></li>
-          </ul>
+          
         </li>
         <li>
-          <a href="pages/widgets.html">
+          <a href="#">
             <i class="fa fa-edit"></i> <span>Edit Items</span>
           </a>
         </li>
@@ -517,7 +512,9 @@
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
 <!--  My Controllers -->
-<script src="js/controllers/MainController.js"></script>	
+<script src="js/controllers/MainController.js"></script>
+<!--  AngularJS -->	
+<script type="text/javascript" src="../../angularjs/angular-1.2.4.min.js"></script>
 
 </body>
 </html>
