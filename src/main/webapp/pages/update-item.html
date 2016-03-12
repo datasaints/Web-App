@@ -1,41 +1,46 @@
 
 <!-- Add Reader Profile Form -->
 <div class="box box-info">
-  <div class="box-header with-border">
-    <h3 class="box-title">Update Item Table</h3>
-  </div>
-  <!-- /.box-header -->
   <!-- form start -->
   <div class="nav-tabs-custom">
-            <!-- Tabs within a box -->
-            <ul class="nav nav-tabs pull-left">
-              <li class="pull-left header"><i class="fa fa-archive"></i> Update Item Table</li>
-              <li class="active"><a href="#revenue-chart" data-toggle="tab">Add Item</a></li>
-              <li><a href="#sales-chart" data-toggle="tab">Edit Existing</a></li>
-              
-            </ul>
-            <div class="tab-content no-padding">
-              <!-- Morris chart - Sales -->
-              <div class="chart tab-pane active" id="revenue-chart" style="position: relative; height: 300px;"></div>
-              <div class="chart tab-pane" id="sales-chart" style="position: relative; height: 300px;"></div>
-            </div>
-          </div>
-  <form class="form-horizontal">
+    <!-- Tabs within a box -->
+    <ul class="nav nav-tabs pull-left">
+      <li class="pull-left header"><i class="fa fa-archive"></i> Update Item Table</li>
+      <li class="active"><a href="#revenue-chart" data-toggle="tab">Add Item</a></li>
+      <li><a href="#sales-chart" data-toggle="tab">Edit Existing</a></li>
+      
+    </ul>
+    <br><br><br><br>
+    <div class="tab-content no-padding">
+    <form class="form-horizontal" id = "add-item">
     <div class="box-body">
       <div class="form-group">
-        <label for="reader-name" class="col-sm-2 control-label">Profile Name</label>
+        <label for="item-id" class="col-sm-2 control-label">Item Id</label>
 
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="reader-profile-name" placeholder="Profile Name">
+          <input type="text" class="form-control" id="item-id" placeholder="Item Id">
         </div>
       </div>
       <div class="form-group">
-        <label for="reader-id" class="col-sm-2 control-label">Reader Id</label>
+        <label for="item-name" class="col-sm-2 control-label">Item Name</label>
+
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="item-name" placeholder="Item Name">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="reader-id" class="col-sm-2 control-label">Employee Id</label>
 
         <div class="col-sm-10">
           <input type="text" class="form-control" id="reader-id" placeholder="Reader Id">
         </div>
       </div>
+      <div class="form-group">
+                                        <label class="control-label col-md-3">Goal Deadline</label>
+                                        <div class="col-md-4">
+                                            <input type="date" class="form-control" placeholder="yyyy-MM-dd" ng-model="newGoal.deadline">
+                                        </div>
+                                    </div>
       <div class="form-group">
         <label for="reader-frequency" class="col-sm-2 control-label">Frequency</label>
 
@@ -59,6 +64,9 @@
       <button type="submit" class="btn btn-info pull-right">Add</button>
     </div>
     <!-- /.box-footer -->
-  </form>
+  </form>  
+            </div>
+          </div>
+
 </div>
 <!-- /.box -->

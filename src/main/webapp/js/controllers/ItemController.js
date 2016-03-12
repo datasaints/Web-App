@@ -1,6 +1,6 @@
-angular.module('DataSaints')
-.controller('ItemController', [function ($scope, $http) {
-	/*
+angular.module('DataSaints', [])
+.controller('ItemController', function ($scope, $http) {
+	
 	$scope.newItem = {};
 	
 	$scope.loadItems = function(){
@@ -24,5 +24,5 @@ angular.module('DataSaints')
 		});
 	};
 
-	$scope.loadItems();*/
-}]);
+	$scope.loadItems();
+});

@@ -379,8 +379,10 @@
 <script src="https://code.angularjs.org/1.2.28/angular-route.min.js"></script>
 
 <!--  My Controllers -->
-<script src="js/controllers/MainController.js"></script>
 <script src="js/app.js"></script>
+
+<script src="js/controllers/MainController.js"></script>
+<!-- <script src="js/controllers/ItemController.js"></script> -->
 
 
 </body>

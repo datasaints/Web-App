@@ -8,4 +8,7 @@ public interface ItemDao {
 	public void deleteItem(String itemId);
 	
 	public Item getItemById(String itemId);
+	
+	public Item findItem(Item toFind);
+
 }

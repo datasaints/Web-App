@@ -141,4 +141,81 @@ public class ItemDaoImpl implements ItemDao {
 
         return item;
     }
+	
+	//TODO: convert datetime
+	public Item findItem(Item toFind) {
+		Connection conn = getConnection();		
+		PreparedStatement pst;
+        ResultSet rst;
+        Item item = new Item();
+		StringBuilder query = new StringBuilder();
+		boolean firstCriteria = true;
+		
+		query.append("SELECT * FROM DSaints.Equipment WHERE ");
+		
+		if (toFind.getItemId() != null) {
+			query.append("ItemID = \"" + toFind.getItemId() + "\" ");
+			firstCriteria = false;
+		}
+		
+		if (toFind.getItemName() != null) {
+			if (!firstCriteria) {
+				query.append("AND ");
+			} else {
+				firstCriteria = false;
+			}
+			
+			query.append("ItemName = \"" + toFind.getItemName() + "\" ");
+		}
+		
+		if (toFind.getEmployeeId() != 0) {
+			if (!firstCriteria) {
+				query.append("AND ");
+			} else {
+				firstCriteria = false;
+			}
+			
+			query.append("EmployeeID = " + toFind.getEmployeeId() + " ");
+		}
+		
+		if (toFind.getLastCalibrated() != null) {
+			if (!firstCriteria) {
+				query.append("AND ");
+			}
+			
+			query.append("LastCalibrated = " + toFind.getLastCalibrated());
+		}
+		
+		query.append(";");
+		
+		System.out.println("Attempting to query " +query.toString());
+		
+		try {
+            pst = conn.prepareStatement(query.toString());
+            rst = pst.executeQuery();
+
+            if (rst.next()) {
+                item = new Item();
+
+                item.setItemId(rst.getString("ItemID"));
+                item.setEmployeeId(rst.getInt("EmployeeID"));
+                item.setItemName(rst.getString("ItemName"));
+                item.setCheckIn(rst.getDate("CheckIn"));
+                item.setCheckOut(rst.getDate("CheckOut"));
+                item.setLastCalibrated(rst.getDate("LastCalibrated"));
+
+
+            } else {
+            	return null;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        finally {
+        	closeConnection(conn);
+        }
+		
+		return item;
+
+	}
 }

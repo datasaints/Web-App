@@ -12,7 +12,7 @@ app.config(['$routeProvider',
 	    templateUrl: 'pages/edit-reader.html'
 	  })
 	  .when('/edit-item', {
-	    controller: 'ItemController',
+	    controller: 'MainViewController', 
 	    templateUrl: 'pages/update-item.html'
 	  })
 	    .otherwise({ 
@@ -32,3 +32,4 @@ app.controller('ReaderProfileController', function($scope) {
     $scope.message = 'This is Show orders screen';
  
 });
+

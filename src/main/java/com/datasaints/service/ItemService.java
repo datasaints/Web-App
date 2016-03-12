@@ -11,4 +11,5 @@ public interface ItemService {
 	
 	public Item getItemById(String itemId);
 	
+	public Item findItem(Item toFind);
 }

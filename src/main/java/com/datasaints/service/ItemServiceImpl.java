@@ -68,4 +68,12 @@ public class ItemServiceImpl implements ItemService {
 
 		return recipeDao.getItemById(itemId);
 	}
+	
+	@Override
+	public Item findItem(Item toFind) {
+		ItemDao itemDao = new ItemDaoImpl();
+		Item foundItem = itemDao.findItem(toFind);
+		
+		return foundItem;
+	}
 }
