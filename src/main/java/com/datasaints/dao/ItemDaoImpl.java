@@ -46,22 +46,37 @@ public class ItemDaoImpl implements ItemDao {
 		Connection conn = getConnection();
 		PreparedStatement pst;
         ResultSet rst;
+        java.sql.Date sqlCheckIn = null; 
+        java.sql.Date sqlCheckOut = null;
+        java.sql.Date sqlLastCali = new java.sql.Date(item.getLastCalibrated().getTime());
 
         if (item.getItemId() ==  null) {
         	throw new AddItemException("No item id given");
         }
-
+        
+        if (item.getCheckIn() != null) {
+        	sqlCheckIn = new java.sql.Date(item.getCheckIn().getTime());
+        }
+        
+        if (item.getCheckOut() != null) {
+        	sqlCheckOut = new java.sql.Date(item.getCheckOut().getTime());
+        }
+        
         try {
         	  System.out.println("The item id attempting to be added is " +item.getItemId());
 
            //TO CHANGE
-           String insertStatement = "INSERT INTO DSaints.Equipment (ItemID, EmployeeID, ItemName) VALUES (?, ?, ?);";
+           String insertStatement = "INSERT INTO DSaints.Equipment (ItemID, EmployeeID, ItemName, CheckIn, CheckOut, LastCalibrated) VALUES (?, ?, ?, ?, ?, ?);";
 
            pst = conn.prepareStatement(insertStatement);
 
            pst.setString(1, item.getItemId());
            pst.setInt(2, item.getEmployeeId());
-           pst.setString(3, item.getItemName());
+           pst.setString(3, item.getItemName());          
+           pst.setDate(4, sqlCheckIn);
+           pst.setDate(5, sqlCheckOut);
+           pst.setDate(6, sqlLastCali);
+
 
 	        pst.executeUpdate();
 

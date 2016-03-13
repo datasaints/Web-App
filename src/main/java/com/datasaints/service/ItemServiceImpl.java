@@ -48,12 +48,12 @@ public class ItemServiceImpl implements ItemService {
       if (item.getItemName() == null || item.getItemName().isEmpty()) {
          return "addItem: item name missing";
       }
-      if (item.getCheckIn() == null) {
+      /*if (item.getCheckIn() == null) {
          return "addItem: check in time missing";
       }
       if (item.getCheckOut() == null) {
          return "addItem: check out time missing";
-      }
+      }*/
       if (item.getLastCalibrated() == null) {
          return "addItem: last calibration date missing";
       }

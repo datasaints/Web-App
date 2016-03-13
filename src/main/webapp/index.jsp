@@ -378,12 +378,14 @@
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
 <script src="https://code.angularjs.org/1.2.28/angular-route.min.js"></script>
 
-<!--  My Controllers -->
+
+<!--  My Angular Controllers -->
 <script src="js/app.js"></script>
-
 <script src="js/controllers/MainController.js"></script>
-<!-- <script src="js/controllers/ItemController.js"></script> -->
+<!--  <script src="js/controllers/ItemController.js"></script> -->
 
+<!--  My jQuery Assets -->
+<script src="js/assets/updateItem.js"></script>
 
 </body>
 </html>
