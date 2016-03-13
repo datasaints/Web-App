@@ -74,10 +74,6 @@ public class ItemController {
        System.out.println("Called find item with id: " + item.getItemId());
        
        Item foundItem = itemService.findItem(item);
-
-       if (foundItem == null) {
-    	   throw new NoItemFoundException("The requested item does not exist");
-       }
        
 	   return foundItem;
        

@@ -381,7 +381,7 @@
 
 <!--  My Angular Controllers -->
 <script src="js/app.js"></script>
-<script src="js/controllers/MainController.js"></script>
+<!--<script src="js/controllers/MainController.js"></script> -->
 <!--  <script src="js/controllers/ItemController.js"></script> -->
 
 <!--  My jQuery Assets -->

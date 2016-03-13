@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.datasaints.DataSaintsApplicationTests" time="0.005" tests="1" errors="0" skipped="0" failures="0">
+<testsuite name="com.datasaints.DataSaintsApplicationTests" time="0.003" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/Library/Java/JavaVirtualMachines/jdk1.8.0_51.jdk/Contents/Home/jre/lib"/>
@@ -26,7 +26,7 @@
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="os.name" value="Mac OS X"/>
     <property name="maven.ext.class.path" value="/Users/apple/Downloads/sts-bundle/STS.app/Contents/Eclipse/configuration/org.eclipse.osgi/24/0/.cp/:/Users/apple/Downloads/sts-bundle/STS.app/Contents/Eclipse/configuration/org.eclipse.osgi/11/0/.cp/"/>
-    <property name="classworlds.conf" value="/Users/apple/Documents/STS/.metadata/.plugins/org.eclipse.m2e.launching/launches/m2conf4136856930619371283.tmp"/>
+    <property name="classworlds.conf" value="/Users/apple/Documents/STS/.metadata/.plugins/org.eclipse.m2e.launching/launches/m2conf3102898957758028446.tmp"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
     <property name="java.library.path" value="/Users/apple/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:."/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
@@ -39,7 +39,7 @@
     <property name="java.awt.printerjob" value="sun.lwawt.macosx.CPrinterJob"/>
     <property name="java.specification.version" value="1.8"/>
     <property name="file.encoding" value="UTF-8"/>
-    <property name="m2e.buildListener.launchId" value="f2d02a50-a8e7-45aa-9de5-610d72aa75c0"/>
+    <property name="m2e.buildListener.launchId" value="75380dd9-654d-4e2f-bed0-03cbe549a37f"/>
     <property name="user.name" value="apple"/>
     <property name="java.class.path" value="/Users/apple/Downloads/sts-bundle/STS.app/Contents/Eclipse/plugins/org.eclipse.m2e.maven.runtime_1.6.2.20150902-0001/jars/plexus-classworlds-2.5.2.jar"/>
     <property name="java.vm.specification.version" value="1.8"/>
@@ -59,10 +59,10 @@
     <property name="java.vendor.url.bug" value="http://bugreport.sun.com/bugreport/"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="sun.io.unicode.encoding" value="UnicodeBig"/>
-    <property name="m2e.buildListener.port" value="61295"/>
+    <property name="m2e.buildListener.port" value="53561"/>
     <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase name="contextLoads" classname="com.datasaints.DataSaintsApplicationTests" time="0.005"/>
+  <testcase name="contextLoads" classname="com.datasaints.DataSaintsApplicationTests" time="0.003"/>
 </testsuite>

@@ -1,6 +1,6 @@
 
 <!-- Add Reader Profile Form -->
-<div class="box box-info" ng-controller="ItemController">
+<div class="box box-info">
 	<!-- form start -->
 	<div class="nav-tabs-custom">
     	<!-- Tabs within a box -->
@@ -36,7 +36,7 @@
 					<div class="form-group">
 						<label for="last-calibrated" class="col-sm-2 control-label">Last Calibrated</label>
 							<div class="col-sm-10">
-							    <input id="last-calibrated" type="date" class="form-control" placeholder="yyyy-MM-dd" data-ng-model="item.lastCalibrated">
+							    <input id="last-calibrated" type="date" class="form-control" placeholder="yyyy-MM-dd" ng-model="item.lastCalibrated">
 							</div>
 					</div>
 					
@@ -59,15 +59,23 @@
 			
 			<div ng-switch-when="edit-item-option">
 				<div class="form-group">
-	        			<label for="item-name" class="col-sm-2 control-label">Search Item Name</label>
+	        			<label for="item-name" class="col-sm-2 control-label">Search Item Id</label>
 	
 	        			<div class="col-sm-10 input-group input-group-sm">
-	          				<input type="text" class="form-control" id="search-item-name" placeholder="Item Name">
+	          				<input type="text" class="form-control" id="search-item-name" placeholder="Item Name" ng-model="toFind">
 	        				<span class="input-group-btn">
-	        					<button type="button" class="btn btn-info btn-flat fa fa-search"></button>
+	        					<button type="button" class="btn btn-info btn-flat fa fa-search" ng-click="searchItem(toFind)"></button>
 	        				</span>
 	        			</div>
 	      			</div>
+	      			<ul>
+	      			<li class="animate-repeat" ng-repeat="item in foundItems">
+    {{item.itemId}} {{item.itemName}} 
+  </li>
+  <li class="animate-repeat" ng-if="item == null">
+    <strong>No results found...</strong>
+  </li>
+	      			</ul>
 	      		<div class="box-footer">
 				  <button type="submit" class="btn btn-default">Cancel</button>
 				  <button type="submit" class="btn btn-info pull-right">Edit</button>

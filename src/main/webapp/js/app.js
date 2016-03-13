@@ -21,12 +21,45 @@ app.config(['$routeProvider',
 }]);
 
 
-app.controller('MainViewController', function($scope) {
+app.controller('MainViewController', function($scope, $http, $route) {
+	$scope.allItems = new Array();
+	
+	$scope.$on('$routeChangeSuccess', function(event, current) {
+
+	      $scope.loadItems();
+	});
 	$scope.reloadPage = function(){
 		console.log("reloading page");
 		window.location.reload();
 	}
-     
+	
+	$scope.loadItems = function() {
+		console.log("loading all items");
+		var res = $http.get('/datasaints/getItems');
+		res.success(function(data, status, headers, config) {
+			 console.log('found');
+
+			 if (data == null) {
+				alert('no item found');
+			 }
+			 else {
+				 console.log(data);
+				 $scope.allItems.push({
+					 	itemId : data.itemId,
+						employeeId: data.itemId,
+						itemName: data.itemName,
+						checkIn: data.checkIn,
+						checkOut: data.checkOut,
+						lastCalibrated: data.lastCalibrated
+				 	});
+			 }
+		});
+		res.error(function(data, status, headers, config) {
+			alert('no item found');
+		});		
+		
+	}
+	
 });
  
  
@@ -42,7 +75,7 @@ app.controller('ItemController', function ($scope, $http) {
     		itemName: '',
     		lastCalibrated: ''
           };
-    
+    $scope.foundItems = new Array();
 	$scope.updateOption = 'add-item-option';
 	
 	$scope.showEditItem = function()
@@ -91,13 +124,47 @@ app.controller('ItemController', function ($scope, $http) {
 		
 	};
 	
-	$scope.clearData = function(){
+	$scope.clearData = function() {
 		$scope.item.itemId = '';
 		$scope.item.itemName = '';
 		$scope.item.lastCalibrated = '';
 	}
 	
+	$scope.searchItem = function(toFind) {
+		var item = {
+				itemId : toFind,
+				employeeId: null,
+				itemName: null,
+				checkIn: null,
+				checkOut: null,
+				lastCalibrated: null	
+		};
+		
+		var res = $http.post('/datasaints/findItem', item);
+		res.success(function(data, status, headers, config) {
+			 console.log('found');
 
+			 if (data == null) {
+				alert('no item found');
+			 }
+			 else {
+				 console.log(data);
+				 $scope.foundItems.push({
+					 	itemId : data.itemId,
+						employeeId: data.itemId,
+						itemName: data.itemName,
+						checkIn: data.checkIn,
+						checkOut: data.checkOut,
+						lastCalibrated: data.lastCalibrated
+				 	});
+			 }
+		});
+		res.error(function(data, status, headers, config) {
+			alert('no item found');
+		});		
+		
+	}
+	
 	$scope.loadItems();
 });
 
