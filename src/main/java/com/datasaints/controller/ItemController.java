@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,6 +39,8 @@ public class ItemController {
 
 		return item;
 	}
+	
+	
 
    @RequestMapping(value = "/getItems", method = RequestMethod.GET)
    public ArrayList<Item> getItems() {
@@ -65,7 +68,17 @@ public class ItemController {
 	   
 	   return newItem;
    }
- 
+   
+   @RequestMapping(value = "/findItem", method = RequestMethod.POST)
+   public Item findItem(@RequestBody Item item) throws NoItemFoundException {
+       System.out.println("Called find item with id: " + item.getItemId());
+       
+       Item foundItem = itemService.findItem(item);
+       
+	   return foundItem;
+       
+   }
+   
    @RequestMapping(value = "/deleteItem", method = RequestMethod.DELETE)
    public String deleteItem(@RequestBody String itemId) {
 

@@ -1,5 +1,6 @@
 {
   "name": "Web-App",
+  "version": "0.0.1",
   "homepage": "https://github.com/datasaints/Web-App",
   "authors": [
     "csardo <christina.sardo@gmail.com>"
@@ -17,5 +18,16 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+        "angular": "~1.5.0",
+        "angular-cookies": "~1.5.0",
+        "angular-bootstrap": "~1.0.3",
+        "angular-ui-router": "^0.2.15",
+        "angular-mocks": "1.4.x",
+    	"jquery": "~2.1.1",
+    	"angular-route": "1.4.x",
+        "bootstrap": "~3.3.6",
+        "font-awesome": "~4.5.0"
+    }
 }

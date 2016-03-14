@@ -46,22 +46,37 @@ public class ItemDaoImpl implements ItemDao {
 		Connection conn = getConnection();
 		PreparedStatement pst;
         ResultSet rst;
+        java.sql.Date sqlCheckIn = null; 
+        java.sql.Date sqlCheckOut = null;
+        java.sql.Date sqlLastCali = new java.sql.Date(item.getLastCalibrated().getTime());
 
         if (item.getItemId() ==  null) {
         	throw new AddItemException("No item id given");
         }
-
+        
+        if (item.getCheckIn() != null) {
+        	sqlCheckIn = new java.sql.Date(item.getCheckIn().getTime());
+        }
+        
+        if (item.getCheckOut() != null) {
+        	sqlCheckOut = new java.sql.Date(item.getCheckOut().getTime());
+        }
+        
         try {
         	  System.out.println("The item id attempting to be added is " +item.getItemId());
 
            //TO CHANGE
-           String insertStatement = "INSERT INTO DSaints.Equipment (ItemID, EmployeeID, ItemName) VALUES (?, ?, ?);";
+           String insertStatement = "INSERT INTO DSaints.Equipment (ItemID, EmployeeID, ItemName, CheckIn, CheckOut, LastCalibrated) VALUES (?, ?, ?, ?, ?, ?);";
 
            pst = conn.prepareStatement(insertStatement);
 
            pst.setString(1, item.getItemId());
            pst.setInt(2, item.getEmployeeId());
-           pst.setString(3, item.getItemName());
+           pst.setString(3, item.getItemName());          
+           pst.setDate(4, sqlCheckIn);
+           pst.setDate(5, sqlCheckOut);
+           pst.setDate(6, sqlLastCali);
+
 
 	        pst.executeUpdate();
 
@@ -141,4 +156,81 @@ public class ItemDaoImpl implements ItemDao {
 
         return item;
     }
+	
+	//TODO: convert datetime
+	public Item findItem(Item toFind) {
+		Connection conn = getConnection();		
+		PreparedStatement pst;
+        ResultSet rst;
+        Item item = new Item();
+		StringBuilder query = new StringBuilder();
+		boolean firstCriteria = true;
+		
+		query.append("SELECT * FROM DSaints.Equipment WHERE ");
+		
+		if (toFind.getItemId() != null) {
+			query.append("ItemID = \"" + toFind.getItemId() + "\" ");
+			firstCriteria = false;
+		}
+		
+		if (toFind.getItemName() != null) {
+			if (!firstCriteria) {
+				query.append("AND ");
+			} else {
+				firstCriteria = false;
+			}
+			
+			query.append("ItemName = \"" + toFind.getItemName() + "\" ");
+		}
+		
+		if (toFind.getEmployeeId() != 0) {
+			if (!firstCriteria) {
+				query.append("AND ");
+			} else {
+				firstCriteria = false;
+			}
+			
+			query.append("EmployeeID = " + toFind.getEmployeeId() + " ");
+		}
+		
+		if (toFind.getLastCalibrated() != null) {
+			if (!firstCriteria) {
+				query.append("AND ");
+			}
+			
+			query.append("LastCalibrated = " + toFind.getLastCalibrated());
+		}
+		
+		query.append(";");
+		
+		System.out.println("Attempting to query " +query.toString());
+		
+		try {
+            pst = conn.prepareStatement(query.toString());
+            rst = pst.executeQuery();
+
+            if (rst.next()) {
+                item = new Item();
+
+                item.setItemId(rst.getString("ItemID"));
+                item.setEmployeeId(rst.getInt("EmployeeID"));
+                item.setItemName(rst.getString("ItemName"));
+                item.setCheckIn(rst.getDate("CheckIn"));
+                item.setCheckOut(rst.getDate("CheckOut"));
+                item.setLastCalibrated(rst.getDate("LastCalibrated"));
+
+
+            } else {
+            	return null;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        finally {
+        	closeConnection(conn);
+        }
+		
+		return item;
+
+	}
 }
