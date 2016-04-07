@@ -10,5 +10,7 @@ public interface ItemDao {
 	public Item getItemById(String itemId);
 	
 	public Item findItem(Item toFind);
+	
+	public int getItemCount(int whatToGet);
 
 }

@@ -14,6 +14,13 @@ public class ItemServiceImpl implements ItemService {
 
 		return itemDao.getItemById(itemDao.addItem(item));
 	}
+	
+	@Override
+	public int getItemCount(int whatToGet) {
+		ItemDao itemDao = new ItemDaoImpl();
+
+		return itemDao.getItemCount(whatToGet);
+	}
 
 	@Override
 	public void deleteItem(String itemId) {

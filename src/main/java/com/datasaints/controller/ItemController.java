@@ -15,7 +15,6 @@ import com.datasaints.domain.Item;
 import com.datasaints.exception.AddItemException;
 import com.datasaints.exception.NoItemFoundException;
 import com.datasaints.service.ItemService;
-
 import com.datasaints.dao.JDBCConnect;
 
 @RestController
@@ -26,21 +25,11 @@ public class ItemController {
 	
 	private JDBCConnect conn = new JDBCConnect();
 
-	@RequestMapping(value = "/test", method = RequestMethod.GET)
-	public Item item() {
-		System.out.println("called test");
-		
-		Item item = new Item();
-		item.setItemId("1");
-		item.setCheckIn(new Date());
-		item.setCheckOut(new Date());
-		item.setEmployeeId(2);
-		item.setLastCalibrated(new Date());
-
-		return item;
+	@RequestMapping(value = "/getItemCount/{whatToGet}", method = RequestMethod.GET)
+	public int getItemCount(@PathVariable Integer whatToGet) {
+		System.out.println("Called get amount of items");    
+	    return itemService.getItemCount(whatToGet);
 	}
-	
-	
 
    @RequestMapping(value = "/getItems", method = RequestMethod.GET)
    public ArrayList<Item> getItems() {

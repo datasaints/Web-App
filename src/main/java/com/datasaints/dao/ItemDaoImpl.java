@@ -41,7 +41,51 @@ public class ItemDaoImpl implements ItemDao {
 			e.printStackTrace();
 		}
 	}
+	public int getItemCount(int whatToGet) {
+		Connection conn = getConnection();
+		int count = 0;
+		PreparedStatement pst;
+		String statement = "";
+        ResultSet rst;
 
+		if (whatToGet == 1) {
+			statement = "SELECT COUNT(*) FROM DSaints.Equipment";
+		}
+		else if (whatToGet == 2) {
+			
+		}
+		else if (whatToGet == 2) {
+			
+		}
+		else if (whatToGet == 2) {
+	
+		}
+		else {
+			System.out.println("shouldn't have gotten in here..... GET ITEM COUNT");
+		}
+		
+        try {
+            pst = conn.prepareStatement(statement);
+
+            rst = pst.executeQuery();
+            
+            if (rst.next())
+            	count = rst.getInt(1);
+            
+            System.out.println("Atempted to count: " +count);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+
+        }
+        finally {
+        	closeConnection(conn);
+
+        }
+		
+		return count;
+	} 
+	
 	public String addItem(Item item) {
 		Connection conn = getConnection();
 		PreparedStatement pst;

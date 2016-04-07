@@ -1,7 +1,7 @@
 
 <div class="box">              
 	<div class="box-header">
-		<h3 class="box-title">Items Available for Checkout {{ allItems.length }}</h3>
+		<h3 class="box-title">Items Available for Checkout</h3>
 	</div>
 	<!-- /.box-header -->
 	<div class="box-body">
@@ -9,15 +9,15 @@
       		<thead>
       			<tr>
 					<th>Item ID</th>
-					<th>Employee ID</th>
 					<th>Item Name</th>
+					<th>Employee ID</th>
 					<th>Check In Time</th>
 					<th>Check Out Time</th>
 					<th>Last Calibrated</th>
       			</tr>
       		</thead>
       		
-      		<tbody ng-repeat="item in allItems">
+      		<tbody ng-repeat="item in allItems | orderBy:'itemName' : reverse">
 				<tr>
 					<td> {{ item.itemId }} </td>
 					<td> {{ item.itemName }} </td>

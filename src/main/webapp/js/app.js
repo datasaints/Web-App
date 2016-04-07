@@ -15,57 +15,82 @@ app.config(['$routeProvider',
 	    controller: 'ItemController', 
 	    templateUrl: 'pages/update-item.html'
 	  })
+	   .when('/advanced-search', {
+	    controller: 'ItemController', 
+	    templateUrl: 'pages/adv-search.html'
+	  })
 	    .otherwise({ 
 	      redirectTo: '/' 
 	    }); 
 }]);
 
+app.factory('itemService', function($http) {
 
-app.controller('MainViewController', function($scope, $http, $route) {
-	$scope.allItems = new Array();
+    var getData = function() {
+
+        // Angular $http() and then() both return promises themselves 
+        return $http({method:"GET", url:"/datasaints/getItems"}).then(function(result){
+
+            // What we return here is the data that will be accessible 
+            // to us after the promise resolves
+            return result.data;
+        });
+    };
+
+
+    return { getData: getData };
+});
+
+
+app.controller('MainViewController', function($scope, $http, $route, itemService) {
+	var myDataPromise = itemService.getData();
+	 myDataPromise.then(function(result) {  
+
+	       // this is only run after getData() resolves
+	       $scope.allItems = result;
+	    });
+	 
 	
-	$scope.$on('$routeChangeSuccess', function(event, current) {
-
-	      $scope.loadItems();
-	});
 	$scope.reloadPage = function(){
 		console.log("reloading page");
 		window.location.reload();
 	}
-	
-	$scope.loadItems = function() {
-		console.log("loading all items");
-		var res = $http.get('/datasaints/getItems');
-		res.success(function(data, status, headers, config) {
-			 console.log('found');
-
-			 if (data == null) {
-				alert('no item found');
-			 }
-			 else {
-				 console.log(data);
-				 $scope.allItems.push({
-					 	itemId : data.itemId,
-						employeeId: data.itemId,
-						itemName: data.itemName,
-						checkIn: data.checkIn,
-						checkOut: data.checkOut,
-						lastCalibrated: data.lastCalibrated
-				 	});
-			 }
-		});
-		res.error(function(data, status, headers, config) {
-			alert('no item found');
-		});		
 		
-	}
-	
 });
  
  
 app.controller('ReaderProfileController', function($scope) {
  
     $scope.message = 'This is Show orders screen';
+ 
+});
+
+app.controller('WidgetController', function($scope, itemService) {
+	var myDataPromise = itemService.getData();
+	 myDataPromise.then(function(result) {  
+
+	     // this is only run after getData() resolves
+		 $scope.totalCount = result.length;
+
+		 $scope.lastCalibratedCount = result.length;
+		 
+		 var inCount = 0, outCount = 0, caliCount = 0;
+		 for (var i = 0; i < result.length; i++) {
+			 if (!result[i].checkIn && result[i].checkOut) {
+				 outCount++;
+			 }
+			 
+			 if (!result[i].checkOut && result[i].checkIn)
+				 inCount++;
+			 
+			 if (!result[i].lastCalibrated)
+				 caliCount++;
+		 }
+		 
+		 $scope.checkedInCount = inCount;
+		 $scope.checkedOutCount = outCount;
+		 $scope.lastCalibratedCount = caliCount;
+	    });
  
 });
 
@@ -87,6 +112,10 @@ app.controller('ItemController', function ($scope, $http) {
     {
         $scope.updateOption = 'add-item-option';
     };
+    
+    $scope.emptyOrNull = function(item){
+    	  return !(item.checkIn === null)
+    	}
     
 	$scope.loadItems = function(){
 		$http.get('/datasaints/getItems')
