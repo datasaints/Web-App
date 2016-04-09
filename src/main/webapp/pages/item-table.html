@@ -1,23 +1,25 @@
-
+   
 <div class="box">              
 	<div class="box-header">
 		<h3 class="box-title">Items Available for Checkout</h3>
 	</div>
+
 	<!-- /.box-header -->
 	<div class="box-body">
     	<table id="itemTable" class="table table-bordered table-striped">
       		<thead>
       			<tr>
-					<th>Item ID</th>
-					<th>Item Name</th>
-					<th>Employee ID</th>
-					<th>Check In Time</th>
-					<th>Check Out Time</th>
-					<th>Last Calibrated</th>
+					<th>Item ID <button ng-click="type = 'itemId'; reverse = !reverse" i class="fa fa-filter"></button></th>
+					<th>Item Name <button ng-click="type = 'itemName'; reverse = !reverse" i class="fa fa-filter"></button></th>
+					<th>Employee ID <button ng-click="type = 'employeeId'; reverse = !reverse" i class="fa fa-filter"></button></th>
+					<th>Check In Date <button ng-click="type = 'checkIn'; reverse = !reverse" i class="fa fa-filter"></button></th>
+					<th>Check Out Date <button ng-click="type = 'checkOut'; reverse = !reverse" i class="fa fa-filter"></button></th>
+					<th>Last Calibrated <button ng-click="type = 'lastCalibrated'; reverse = !reverse" i class="fa fa-filter"></button></th>
       			</tr>
       		</thead>
       		
-      		<tbody ng-repeat="item in allItems | orderBy:'itemName' : reverse">
+      		<!--  <tbody ng-repeat="item in allItems | orderBy:'employeeId'">-->
+      		<tbody ng-repeat="item in allItems | orderBy:type:reverse | filter:getFilter()">
 				<tr>
 					<td> {{ item.itemId }} </td>
 					<td> {{ item.itemName }} </td>

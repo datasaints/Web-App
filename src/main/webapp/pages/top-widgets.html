@@ -11,7 +11,7 @@
             <div class="icon">
               <i class="ion ion-bag"></i>
             </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            <div class="small-box-footer" ng-click="changeFilter('')" style="cursor: pointer">More info <i class="fa fa-arrow-circle-right"></i></div>
           </div>
         </div>
         <!-- ./col -->
@@ -26,7 +26,7 @@
             <div class="icon">
               <i class="ion ion-stats-bars"></i>
             </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            <div class="small-box-footer" ng-click="changeFilter('checkedIn')" style="cursor: pointer">More info <i class="fa fa-arrow-circle-right"></i></div>
           </div>
         </div>
         <!-- ./col -->
@@ -41,7 +41,7 @@
             <div class="icon">
               <i class="ion ion-person-add"></i>
             </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            <div class="small-box-footer" ng-click="changeFilter('checkedOut')" style="cursor: pointer">More info <i class="fa fa-arrow-circle-right"></i></div>
           </div>
         </div>
         <!-- ./col -->
@@ -56,8 +56,14 @@
             <div class="icon">
               <i class="ion ion-pie-graph"></i>
             </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            <div class="small-box-footer" ng-click="changeFilter('needCalibration')" style="cursor: pointer">More info <i class="fa fa-arrow-circle-right"></i></div>
           </div>
         </div>
         <!-- ./col -->
+      </div>
+      <div>
+     <!--   <input type="text" ng-model="filter">
+  <br>Top widget is : <strong>{{filter}}</strong> -->
+  
+  
       </div>
