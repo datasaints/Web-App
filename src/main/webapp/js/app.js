@@ -4,7 +4,7 @@ app.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider
 	    .when('/', { 
-	      controller: 'MainViewController', 
+	      controller: 'TableController', 
 	      templateUrl: 'pages/item-table.html' 
 	    }) 
 	    .when('/update-reader', {
@@ -15,51 +15,90 @@ app.config(['$routeProvider',
 	    controller: 'ItemController', 
 	    templateUrl: 'pages/update-item.html'
 	  })
+	   .when('/advanced-search', {
+	    controller: 'ItemController', 
+	    templateUrl: 'pages/adv-search.html'
+	  })
 	    .otherwise({ 
 	      redirectTo: '/' 
 	    }); 
 }]);
 
+app.factory('itemService', function($http) {
 
-app.controller('MainViewController', function($scope, $http, $route) {
-	$scope.allItems = new Array();
+    var getData = function() {
+
+        // Angular $http() and then() both return promises themselves 
+        return $http({method:"GET", url:"/datasaints/getItems"}).then(function(result){
+
+            // What we return here is the data that will be accessible 
+            // to us after the promise resolves
+            return result.data;
+        });
+    };
+
+
+    return { getData: getData };
+});
+
+app.factory('filterByFactory', function () {
+    var filterBy = { };
+
+    return {
+        getFilter: function () {
+            return filterBy;
+        },
+        setFilter: function(value) {
+        	filterBy = value;
+        }
+    };
+});
+
+
+app.controller('TableController', function($rootScope, $scope, $http, $route, itemService, filterByFactory) {
+	/*$scope.filter = filterByFactory.filterBy;
 	
-	$scope.$on('$routeChangeSuccess', function(event, current) {
+	$scope.$watch(function () { return filterByFactory.getFilter(); }, function (newValue, oldValue) {
+        if (newValue !== oldValue) $scope.filter = newValue;
+    });*/
+	$scope.filter = "$";
 
-	      $scope.loadItems();
+	if (!$scope.allItems) {
+		var myDataPromise = itemService.getData();
+		 myDataPromise.then(function(result) {  
+		       // this is only run after getData() resolves
+		       $scope.allItems = result;
+			 	console.log(result);
+			 	
+			 	// send data to widget controller
+				$rootScope.$emit('widgets:initialize', result);
+	
+		    });
+	}
+	
+	var filterListener = $rootScope.$on('itemtable:filter', function (event, newFilter) {
+		$scope.filter = newFilter; 
 	});
+    
+	$scope.getFilter = function() {
+        switch ($scope.filter) {
+            case 'checkedIn':
+                return {checkIn:'!!'};
+            case 'checkedOut':
+                return {checkOut:'!!'};
+            case 'needCalibration':
+                return {};
+            default: //default -- no filter
+                return {}
+        }
+    }
+	
 	$scope.reloadPage = function(){
 		console.log("reloading page");
 		window.location.reload();
 	}
 	
-	$scope.loadItems = function() {
-		console.log("loading all items");
-		var res = $http.get('/datasaints/getItems');
-		res.success(function(data, status, headers, config) {
-			 console.log('found');
-
-			 if (data == null) {
-				alert('no item found');
-			 }
-			 else {
-				 console.log(data);
-				 $scope.allItems.push({
-					 	itemId : data.itemId,
-						employeeId: data.itemId,
-						itemName: data.itemName,
-						checkIn: data.checkIn,
-						checkOut: data.checkOut,
-						lastCalibrated: data.lastCalibrated
-				 	});
-			 }
-		});
-		res.error(function(data, status, headers, config) {
-			alert('no item found');
-		});		
-		
-	}
-	
+	$scope.$on('$destroy', filterListener);
 });
  
  
@@ -69,7 +108,46 @@ app.controller('ReaderProfileController', function($scope) {
  
 });
 
-app.controller('ItemController', function ($scope, $http) {    
+app.controller('WidgetController', function($rootScope, $scope) {
+	var initListener = $rootScope.$on('widgets:initialize', function (event, itemList) {	
+		console.log('init data');
+		$scope.totalCount = itemList.length;
+
+		 $scope.lastCalibratedCount = itemList.length;
+		 
+		 var inCount = 0, outCount = 0, caliCount = 0;
+		 for (var i = 0; i < itemList.length; i++) {
+			 if (!itemList[i].checkIn && itemList[i].checkOut) {
+				 outCount++;
+			 }
+			 
+			 if (!itemList[i].checkOut && itemList[i].checkIn)
+				 inCount++;
+			 
+			 if (!itemList[i].lastCalibrated)
+				 caliCount++;
+		 }
+		 
+		 $scope.checkedInCount = inCount;
+		 $scope.checkedOutCount = outCount;
+		 $scope.lastCalibratedCount = caliCount;
+	});
+
+	var updateListener = $rootScope.$on('widgets:update', function (event, item) {	
+		console.log('total count was ' +$scope.totalCount);
+		$scope.totalCount +=1;
+	});
+		
+	$scope.changeFilter = function(newFilter) {
+        $rootScope.$emit('itemtable:filter', newFilter); 
+    }
+	
+	$scope.$on('$destroy', initListener);
+	$scope.$on('$destroy', updateListener);
+
+});
+
+app.controller('ItemController', function ($rootScope, $scope, $http, filterByFactory) {    
     $scope.item = {
     		itemId: '',
     		itemName: '',
@@ -88,15 +166,9 @@ app.controller('ItemController', function ($scope, $http) {
         $scope.updateOption = 'add-item-option';
     };
     
-	$scope.loadItems = function(){
-		$http.get('/datasaints/getItems')
-		.success(function(data, status, headers, config) {
-			$scope.items = data;
-		 })
-		.error(function(data, status, headers, config) {
-		      alert('Error loading Items');
-		});
-	};
+    $scope.emptyOrNull = function(item){
+    	  return !(item.checkIn === null)
+    	}
 	
 	$scope.addItem = function(){
 		console.log("itemId=" +$scope.item.itemId);
@@ -117,6 +189,8 @@ app.controller('ItemController', function ($scope, $http) {
 			alert('Item with id: ' +item.itemId +' sucessfully added');
 			$scope.message = data;
 			$scope.clearData();
+			
+			$rootScope.$emit('widgets:update', item);
 		});
 		res.error(function(data, status, headers, config) {
 			alert( "failure message: " + JSON.stringify({data: data}));
@@ -165,6 +239,5 @@ app.controller('ItemController', function ($scope, $http) {
 		
 	}
 	
-	$scope.loadItems();
 });
 

@@ -49,7 +49,7 @@
 			          </div>
 			        </div>
 				</div>
-				
+					
 				<div class="box-footer">
 				  <button id="clear-form" type="submit" class="btn btn-default" ng-click="clearData()">Clear</button>
 				  <button id ="save-item" type="submit" class="btn btn-info pull-right" ng-click="addItem()">Add</button>
@@ -61,20 +61,21 @@
 				<div class="form-group">
 	        			<label for="item-name" class="col-sm-2 control-label">Search Item Id</label>
 	
-	        			<div class="col-sm-10 input-group input-group-sm">
+	        			<div class="col-sm-8 input-group input-group-sm">
 	          				<input type="text" class="form-control" id="search-item-name" placeholder="Item Name" ng-model="toFind">
 	        				<span class="input-group-btn">
 	        					<button type="button" class="btn btn-info btn-flat fa fa-search" ng-click="searchItem(toFind)"></button>
 	        				</span>
 	        			</div>
+	        			<div class="col-sm-2"></div>
 	      			</div>
 	      			<ul>
 	      			<li class="animate-repeat" ng-repeat="item in foundItems">
-    {{item.itemId}} {{item.itemName}} 
-  </li>
-  <li class="animate-repeat" ng-if="item == null">
-    <strong>No results found...</strong>
-  </li>
+                {{item.itemId}} {{item.itemName}} 
+              </li>
+						  <li class="animate-repeat" ng-if="item == null">
+						    <strong>No results found...</strong>
+						  </li>
 	      			</ul>
 	      		<div class="box-footer">
 				  <button type="submit" class="btn btn-default">Cancel</button>
