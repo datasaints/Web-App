@@ -82,9 +82,14 @@ local.properties
 
 *.original
 
+*.datasaints.DataSaintsApplicationTests.xml
 
 # Maven 
 .mvn/
 mvnw
 mvnw.cmd
-pom.properties
+*pom.properties
+*.MF
+*.lst
+
+
