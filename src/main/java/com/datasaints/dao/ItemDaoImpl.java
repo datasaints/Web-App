@@ -128,6 +128,8 @@ public class ItemDaoImpl implements ItemDao {
         }
         catch (SQLException e) {
 			System.out.println(e.getMessage());
+			
+			//TODO: DUPLICATE ENTRY
         }
         finally {
         	closeConnection(conn);

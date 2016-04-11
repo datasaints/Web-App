@@ -31,24 +31,42 @@
 	          				<input type="text" class="form-control" id="item-name" placeholder="Item Name" ng-model="item.itemName">
 	        			</div>
 	      			</div>
-	
+
 	
 					<div class="form-group">
 						<label for="last-calibrated" class="col-sm-2 control-label">Last Calibrated</label>
-							<div class="col-sm-10">
+							<div class="col-sm-3">
 							    <input id="last-calibrated" type="date" class="form-control" placeholder="yyyy-MM-dd" ng-model="item.lastCalibrated">
 							</div>
-					</div>
-					
-			 		<div class="form-group">
-			        	<div class="col-sm-offset-2 col-sm-10">
-			          	<div class="checkbox">
-			            <label>
-			              <input type="checkbox"> Checked Out
-			            </label>
-			          </div>
-			        </div>
-				</div>
+					</div>					 
+              
+			 		<div class="form-group">	 		
+	        	<div class="col-sm-offset-2 col-sm-10">
+	          	<div class="checkbox">
+	            <label>
+	              <input type="checkbox" ng-true-value="checkedOut" ng-false-value="checkedIn" ng-model="checkStatus"> Checked Out
+	            </label>
+	           </div>
+	         </div>
+			    </div>
+			        
+	        <div ng-show="checkStatus == 'checkedOut'">
+              <div class="form-group">
+                <label for="employee-id" class="col-sm-2 control-label">Checked Out By</label>
+
+               <div class="col-sm-10">
+                   <input type="text" class="form-control" id="employee-id" placeholder="Employee Id" ng-model="item.employeeId">
+               </div>
+              </div>
+              
+              <div class="form-group">
+	            <label for="checkout-date" class="col-sm-2 control-label">Check Out Date</label>
+	              <div class="col-sm-3">
+	                  <input id="checkout-date" type="date" class="form-control" placeholder="yyyy-MM-dd" ng-model="item.checkOut">
+	              </div>
+	          </div>
+          </div>
+    
 					
 				<div class="box-footer">
 				  <button id="clear-form" type="submit" class="btn btn-default" ng-click="clearData()">Clear</button>
@@ -77,6 +95,14 @@
 						    <strong>No results found...</strong>
 						  </li>
 	      			</ul>
+	      			
+	      			
+	      			<ul class="data-ctrl">
+                <li ng-repeat="i in items | searchFor:searchString">
+                    <p>{{i.title}}
+                </li>
+            </ul>
+            
 	      		<div class="box-footer">
 				  <button type="submit" class="btn btn-default">Cancel</button>
 				  <button type="submit" class="btn btn-info pull-right">Edit</button>

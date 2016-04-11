@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
   <title>DataSaints</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -322,8 +323,10 @@
 
 <!--  My Angular Controllers -->
 <script src="js/app.js"></script>
-<!--<script src="js/controllers/MainController.js"></script> -->
-<!--  <script src="js/controllers/ItemController.js"></script> -->
+<script src="js/controllers/WidgetController.js"></script>
+<script src="js/controllers/ItemController.js"></script>
+<script src="js/controllers/TableController.js"></script>
+
 
 <!--  My jQuery Assets -->
 <script src="js/assets/updateItem.js"></script>
