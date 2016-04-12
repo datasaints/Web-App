@@ -59,12 +59,12 @@ public class ItemController {
    }
    
    @RequestMapping(value = "/findItem", method = RequestMethod.POST)
-   public Item findItem(@RequestBody Item item) throws NoItemFoundException {
+   public ArrayList<Item> findItem(@RequestBody Item item) throws NoItemFoundException {
        System.out.println("Called find item with id: " + item.getItemId());
        
-       Item foundItem = itemService.findItem(item);
+       ArrayList<Item> foundItems = itemService.findItem(item);
        
-	   return foundItem;
+	   return foundItems;
        
    }
    

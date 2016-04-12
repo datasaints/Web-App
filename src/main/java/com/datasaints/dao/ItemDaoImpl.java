@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Date;
 
 import com.datasaints.domain.Item;
@@ -41,6 +42,7 @@ public class ItemDaoImpl implements ItemDao {
 			e.printStackTrace();
 		}
 	}
+	 
 	public int getItemCount(int whatToGet) {
 		Connection conn = getConnection();
 		int count = 0;
@@ -51,14 +53,15 @@ public class ItemDaoImpl implements ItemDao {
 		if (whatToGet == 1) {
 			statement = "SELECT COUNT(*) FROM DSaints.Equipment";
 		}
-		else if (whatToGet == 2) {
-			
+		else if (whatToGet == 2) { //CheckIn count
+			statement = "SELECT COUNT(*) FROM DSaints.Equipment WHERE CheckOut is null";
 		}
-		else if (whatToGet == 2) {
-			
+		else if (whatToGet == 3) { //CheckOut Count
+			statement = "SELECT COUNT(*) FROM DSaints.Equipment WHERE CheckIn is null";
 		}
-		else if (whatToGet == 2) {
-	
+		else if (whatToGet == 4) { //lastCalibratedCount
+			//TODO: logic for last calibrated count
+			return 1;
 		}
 		else {
 			System.out.println("shouldn't have gotten in here..... GET ITEM COUNT");
@@ -204,18 +207,19 @@ public class ItemDaoImpl implements ItemDao {
     }
 	
 	//TODO: convert datetime
-	public Item findItem(Item toFind) {
+	public ArrayList<Item> findItem(Item toFind) {
 		Connection conn = getConnection();		
 		PreparedStatement pst;
         ResultSet rst;
-        Item item = new Item();
+        ArrayList<Item> itemList = new ArrayList<Item>();
 		StringBuilder query = new StringBuilder();
 		boolean firstCriteria = true;
+		int itemIdx = 0;
 		
 		query.append("SELECT * FROM DSaints.Equipment WHERE ");
 		
 		if (toFind.getItemId() != null) {
-			query.append("ItemID = \"" + toFind.getItemId() + "\" ");
+			query.append("ItemID LIKE \"%" + toFind.getItemId() + "%\" ");
 			firstCriteria = false;
 		}
 		
@@ -226,7 +230,7 @@ public class ItemDaoImpl implements ItemDao {
 				firstCriteria = false;
 			}
 			
-			query.append("ItemName = \"" + toFind.getItemName() + "\" ");
+			query.append("ItemName LIKE \"%" + toFind.getItemName() + "%\" ");
 		}
 		
 		if (toFind.getEmployeeId() != 0) {
@@ -255,19 +259,17 @@ public class ItemDaoImpl implements ItemDao {
             pst = conn.prepareStatement(query.toString());
             rst = pst.executeQuery();
 
-            if (rst.next()) {
-                item = new Item();
+            while (rst.next()) {
+                itemList.add(itemIdx, new Item());
 
-                item.setItemId(rst.getString("ItemID"));
-                item.setEmployeeId(rst.getInt("EmployeeID"));
-                item.setItemName(rst.getString("ItemName"));
-                item.setCheckIn(rst.getDate("CheckIn"));
-                item.setCheckOut(rst.getDate("CheckOut"));
-                item.setLastCalibrated(rst.getDate("LastCalibrated"));
+                itemList.get(itemIdx).setItemId(rst.getString("ItemID"));
+                itemList.get(itemIdx).setEmployeeId(rst.getInt("EmployeeID"));
+                itemList.get(itemIdx).setItemName(rst.getString("ItemName"));
+                itemList.get(itemIdx).setCheckIn(rst.getDate("CheckIn"));
+                itemList.get(itemIdx).setCheckOut(rst.getDate("CheckOut"));
+                itemList.get(itemIdx).setLastCalibrated(rst.getDate("LastCalibrated"));
 
-
-            } else {
-            	return null;
+                itemIdx++;
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -276,7 +278,7 @@ public class ItemDaoImpl implements ItemDao {
         	closeConnection(conn);
         }
 		
-		return item;
+		return itemList;
 
 	}
 }

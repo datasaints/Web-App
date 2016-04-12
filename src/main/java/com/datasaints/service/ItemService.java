@@ -1,5 +1,7 @@
 package com.datasaints.service;
 
+import java.util.ArrayList;
+
 import com.datasaints.domain.Item;
 
 public interface ItemService {
@@ -11,7 +13,7 @@ public interface ItemService {
 	
 	public Item getItemById(String itemId);
 	
-	public Item findItem(Item toFind);
+	public ArrayList<Item> findItem(Item toFind);
 	
 	public int getItemCount(int whatToGet);
 }

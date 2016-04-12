@@ -1,5 +1,7 @@
 package com.datasaints.service;
 
+import java.util.ArrayList;
+
 import org.springframework.stereotype.Service;
 
 import com.datasaints.dao.ItemDao;
@@ -77,10 +79,10 @@ public class ItemServiceImpl implements ItemService {
 	}
 	
 	@Override
-	public Item findItem(Item toFind) {
+	public ArrayList<Item> findItem(Item toFind) {
 		ItemDao itemDao = new ItemDaoImpl();
-		Item foundItem = itemDao.findItem(toFind);
+		ArrayList<Item> foundItems = itemDao.findItem(toFind);
 		
-		return foundItem;
+		return foundItems;
 	}
 }
