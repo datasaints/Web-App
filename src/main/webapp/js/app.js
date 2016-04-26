@@ -1,27 +1,111 @@
-var app = angular.module('DataSaints', []);
+var app = angular.module('DataSaints', ['ui.router',
+                                        'ngCookies'
+                                        ]);
 
-app.config(function($routeProvider) {
-
-    $routeProvider
-    .when('/', { 
-	      controller: 'TableController', 
-	      templateUrl: 'pages/item-table.html' 
-	    }) 
-	    .when('/update-reader', {
-	    controller: 'ReaderProfileController',
-	    templateUrl: 'pages/edit-reader.html'
-	  })
-	  .when('/edit-item', {
-	    controller: 'ItemController', 
-	    templateUrl: 'pages/update-item.html'
-	  })
-	   .when('/advanced-search', {
-	    controller: 'ItemController', 
-	    templateUrl: 'pages/adv-search.html'
-	  })
-	    .otherwise({ 
-	      redirectTo: '/' 
-	    }); 
+app.config(function($stateProvider, $urlRouterProvider) {
+	$urlRouterProvider.otherwise('/login');
+    
+    $stateProvider
+        // Home states and nested views
+        .state('home', {
+            url: '/home',
+            views: {
+            	'': {
+        	       templateUrl: 'pages/home.html',
+            	},
+                'navbar@home': {
+                    templateUrl: 'pages/navbar.html',
+                },
+                'sidebar@home': {
+                    templateUrl: 'pages/sidebar.html',
+                },
+                'widgets@home': {
+        	        templateUrl: 'pages/top-widgets.html',
+        	        controller: 'WidgetController'
+                },
+                'content@home': {
+        	        templateUrl: 'pages/item-table.html',
+        	        controller: 'TableController'
+                }
+            }
+        })
+        
+        .state('update-item', {
+            url: '/update-item',
+            views: {
+            	'': {
+         	       templateUrl: 'pages/home.html',
+            	},
+                'navbar@update-item': {
+                    templateUrl: 'pages/navbar.html',
+                },
+                'sidebar@update-item': {
+                    templateUrl: 'pages/sidebar.html',
+                },
+                'widgets@update-item': {
+        	        templateUrl: 'pages/top-widgets.html',
+        	        controller: 'WidgetController'
+                },
+                'content@update-item': {
+        	        templateUrl: 'pages/update-item.html',
+        	        controller: 'ItemController'
+                }
+            }
+        })
+        
+        .state('update-reader', {
+            url: '/update-reader',
+            views: {
+            	'': {
+         	       templateUrl: 'pages/home.html',
+            	},
+                'navbar@update-reader': {
+                    templateUrl: 'pages/navbar.html',
+                },
+                'sidebar@update-reader': {
+                    templateUrl: 'pages/sidebar.html',
+                },
+                'widgets@update-reader': {
+        	        templateUrl: 'pages/top-widgets.html',
+        	        controller: 'WidgetController'
+                },
+                'content@update-reader': {
+        	        templateUrl: 'pages/edit-reader.html',
+        	        controller: 'ReaderProfileController'
+                }
+            }
+        })
+        
+        .state('advanced-search', {
+            url: '/advanced-search',
+            views: {
+            	'': {
+         	       templateUrl: 'pages/home.html',
+            	},
+                'navbar@advanced-search': {
+                    templateUrl: 'pages/navbar.html',
+                },
+                'sidebar@advanced-search': {
+                    templateUrl: 'pages/sidebar.html',
+                },
+                'widgets@advanced-search': {
+        	        templateUrl: 'pages/top-widgets.html',
+        	        controller: 'WidgetController'
+                },
+                'content@advanced-search': {
+        	        templateUrl: 'pages/edit-reader.html',
+        	        controller: 'ReaderProfileController'
+                }
+            }
+        })
+    
+        // Login state
+        .state('login', {
+            url: '/login',
+            controller: 'LoginController',
+            templateUrl: 'pages/login.html'
+        });
+    
 /*
     // use the HTML5 History API
     $locationProvider.html5Mode(true);*/
