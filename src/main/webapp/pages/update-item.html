@@ -87,28 +87,36 @@
 	        			</div>
 	        			<div class="col-sm-2"></div>
 	      			</div>
-	      			<ul>
-	      			<li class="animate-repeat" ng-repeat="item in foundItems">
-                {{item.itemId}} {{item.itemName}} 
-              </li>
-						  <li class="animate-repeat" ng-if="item == null">
-						    <strong>No results found...</strong>
-						  </li>
-	      			</ul>
-	      			
-	      			<!--  YOU STOPPED HERE 
-	      			<ul class="data-ctrl">
-                <li ng-repeat="i in items | searchFor:searchString">
-                    <p>{{i.title}}
-                </li>
-            </ul>
-            -->
+						<ul>
+							<table id="itemTable" class="table table-bordered table-striped" ng-show="results">
+								<thead>
+									<tr>
+										<th>Item ID</th>
+										<th>Item Name</th>
+										<th>Employee ID</th>
+										<th>Check In Date</th>
+										<th>Check Out Date</th>
+										<th>Last Calibrated</th>
+									</tr>
+								</thead>
+
+								<tbody ng-repeat="item in foundItems">
+									<tr>
+										<td>{{ item.itemId }}</td>
+										<td>{{ item.itemName }}</td>
+										<td>{{ item.employeeId }}</td>
+										<td>{{ item.checkIn }}</td>
+										<td>{{ item.checkOut }}</td>
+										<td>{{ item.lastCalibrated }}</td>
+									</tr>
+								</tbody>
+								<!--  
 	      		<div class="box-footer">
 				  <button type="submit" class="btn btn-default">Cancel</button>
 				  <button type="submit" class="btn btn-info pull-right">Edit</button>
-				</div>
-				<!-- /.box-footer -->
-			</div>
+				</div>-->
+								<!-- /.box-footer -->
+					</div>
 	
 	     
       </div>
