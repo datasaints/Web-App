@@ -6,6 +6,22 @@ app.config(function($stateProvider, $urlRouterProvider) {
 	$urlRouterProvider.otherwise('/login');
     
     $stateProvider
+   /* .state('home', {
+    	    url: '/home',
+    	    template: '<div>Home</div>  <a ui-sref="home.news"> change state</a><br><a ui-sref="home.main"> change state2</a><div ui-view></div>'
+    	  })
+    	  .state('home.main', {
+    	    url: '/main',
+    	    template: '<div>Main News</div>'
+    	  })
+    	  .state('home.news', {
+    	    url: '/news',
+    	    template: '<div>List of News</div><ul><li ng-repeat="new in news"><a>{{new.title}}</a></li></ul>',
+    	    controller: function($scope){
+    	      $scope.news = [{ title: 'First News' }, { title: 'Second News' }];
+    	    }
+    	  })
+*/
         // Home states and nested views
         .state('home', {
             url: '/home',
@@ -22,14 +38,30 @@ app.config(function($stateProvider, $urlRouterProvider) {
                 'widgets@home': {
         	        templateUrl: 'pages/top-widgets.html',
         	        controller: 'WidgetController'
-                },
-                'content@home': {
-        	        templateUrl: 'pages/item-table.html',
-        	        controller: 'TableController'
                 }
             }
         })
-        
+        .state('home.table', {
+			url: '/item-table',
+			templateUrl: 'pages/item-table.html',
+			controller: 'TableController'
+    	  })
+		.state('home.update-item', {
+			url: '/update-item',
+			templateUrl: 'pages/update-item.html',
+			controller: 'ItemController'
+		})
+		.state('home.advanced-search', {
+			url: '/advanced-search',
+			templateUrl: 'pages/adv-search.html',
+			controller: 'SearchController'
+		})
+		.state('home.update-reader', {
+			url: '/update-reader',
+			templateUrl: 'pages/update-reader.html',
+			controller: 'ReaderProfileController'
+		})
+/*
         .state('update-item', {
             url: '/update-item',
             views: {
@@ -98,7 +130,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
         })
-    
+    */
         // Login state
         .state('login', {
             url: '/login',

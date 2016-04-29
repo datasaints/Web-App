@@ -1,6 +1,5 @@
 angular.module('DataSaints').controller('WidgetController', function($rootScope, $scope, $location) {
 	var initListener = $rootScope.$on('widgets:initialize', function (event, itemList) {	
-		console.log('current path ' +$location.path());
 		$scope.totalCount = itemList.length;
 
 		 $scope.lastCalibratedCount = itemList.length;

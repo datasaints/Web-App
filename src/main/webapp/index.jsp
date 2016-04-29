@@ -37,9 +37,14 @@
   <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
+  
+  <style>
+body {background-color:#d2d6de;}
+
+</style>
 </head>
 <body  ng-app="DataSaints">
-<div ui-view autoscroll="true"></div>
+	<div ui-view></div>
 
 <!-- jQuery 2.2.0 -->
 <script src="plugins/jQuery/jQuery-2.2.0.min.js"></script>
@@ -56,6 +61,8 @@
 <script src="plugins/morris/morris.min.js"></script>-->
 <!-- Sparkline -->
 <script src="plugins/sparkline/jquery.sparkline.min.js"></script>
+<!-- iCheck -->
+<script src="plugins/iCheck/icheck.min.js"></script>
 <!-- jvectormap -->
 <script src="plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
 <script src="plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
@@ -90,6 +97,9 @@
 <script src="js/controllers/ItemController.js"></script>
 <script src="js/controllers/TableController.js"></script>
 <script type="text/javascript" src="js/controllers/LoginController.js"></script>
+<script type="text/javascript" src="js/controllers/SearchController.js"></script>
+<script type="text/javascript" src="js/controllers/SidebarController.js"></script>
+
 <script src="js/services/AuthenticationService.js"></script>
 <!--  My jQuery Assets -->
 <script src="js/assets/updateItem.js"></script>

@@ -1,3 +1,13 @@
+<style>
+.slider {
+	overflow-y: hidden;
+	max-height: 500px; /* approximate max height */
+
+	transition-property: all;
+	transition-duration: .5s;
+	transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+}
+</style>
   <!-- Left side column. contains the logo and sidebar -->
   <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
@@ -27,26 +37,27 @@
       <ul class="sidebar-menu">
         <li class="header">MAIN NAVIGATION</li>
         <li class="active treeview">
-          <i class="fa fa-th"></i> <span>Labs</span> <i class="fa fa-angle-left pull-right"></i>
+        <a href="" class="slider">
+          <i class="fa fa-th"></i> <span>Labs</span> <i class="fa fa-angle-left pull-right"></i></a>
             <ul class="treeview-menu">
-              <li class="active"><a ui-sref="home"><i class="fa fa-circle-o"></i> Lab 1</a></li>
+              <li class="active"><a ui-sref="home.table"><i class="fa fa-circle-o"></i> Lab 1</a></li>
               <li><a href="#"><i class="fa fa-circle-o"></i> Lab 2</a></li>
             </ul>
           </li>
         <li class="treeview">
-          <a ui-sref="update-reader">
+          <a ui-sref="home.update-reader">
             <i class="fa fa-laptop"></i>
             <span>Reader Profiles</span>
           </a>
           
         </li>
         <li>
-          <a ui-sref="update-item">
+          <a ui-sref="home.update-item">
             <i class="fa fa-edit"></i> <span>Edit Items</span>
           </a>
         </li>
         <li>
-          <a ui-sref="advanced-search">
+          <a ui-sref="home.advanced-search">
             <i class="fa fa-search"></i> <span>Advanced Search</span>
           </a>
         </li>

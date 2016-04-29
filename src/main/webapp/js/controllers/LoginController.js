@@ -1,7 +1,7 @@
 'use strict';
   
 angular.module('DataSaints').controller('LoginController',
-    ['$scope', '$rootScope', '$location', 'AuthenticationService',
+    ['$scope', '$state', '$rootScope', 'AuthenticationService',
     function ($scope, $rootScope, $location, AuthenticationService) {
         // reset login status
         AuthenticationService.ClearCredentials();
@@ -12,8 +12,10 @@ angular.module('DataSaints').controller('LoginController',
             AuthenticationService.Login($scope.username, $scope.password, function(response) {
                 if(response.success) {
                     AuthenticationService.SetCredentials($scope.username, $scope.password);
-                    $location.path('/home');
-                } else {
+                    console.log('SUCCESS');
+                    $state.go('home.table');
+                 } else {
+                	console.log('NOT SUCCESS');
                     $scope.error = response.message;
                     $scope.dataLoading = false;
                 }
