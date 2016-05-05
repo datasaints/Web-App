@@ -37,13 +37,9 @@
   <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
-  
-  <style>
-body {background-color:#d2d6de;}
 
-</style>
 </head>
-<body  ng-app="DataSaints">
+<body  ng-app="DataSaints" style="background-color:#d2d6de">
 	<div ui-view></div>
 
 <!-- jQuery 2.2.0 -->
@@ -86,10 +82,16 @@ body {background-color:#d2d6de;}
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
 <!--  AngularJS -->	
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+ <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.js"></script>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+<!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.min.js"></script>-->
 <script src="https://code.angularjs.org/1.2.28/angular-route.min.js"></script>
 <script src="plugins/angular-ui-router/release/angular-ui-router.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular-cookies.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-cookies.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-animate.js"></script>
+<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-1.3.2.js"></script>
+
 
 <!--  My Angular Controllers -->
 <script src="js/app.js"></script>
@@ -101,6 +103,8 @@ body {background-color:#d2d6de;}
 <script type="text/javascript" src="js/controllers/SidebarController.js"></script>
 
 <script src="js/services/AuthenticationService.js"></script>
+<script src="js/directives/SlideableDirective.js"></script>
+
 <!--  My jQuery Assets -->
 <script src="js/assets/updateItem.js"></script>
 
