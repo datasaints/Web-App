@@ -24,6 +24,11 @@ public class ItemController {
 	private ItemService itemService;
 	
 	private JDBCConnect conn = new JDBCConnect();
+	
+	@RequestMapping(value = "/getItems/{location}", method = RequestMethod.GET)
+	public ArrayList<Item> getItems(@RequestBody int location) {
+		
+	}
 
 	@RequestMapping(value = "/getItemCount/{whatToGet}", method = RequestMethod.GET)
 	public int getItemCount(@PathVariable Integer whatToGet) {
