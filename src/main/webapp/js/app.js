@@ -1,5 +1,8 @@
 var app = angular.module('DataSaints', ['ui.router',
-                                        'ngCookies'
+                                        'ngCookies',
+                                        'ngRoute',
+                                        'ngAnimate',
+                                        'ui.bootstrap'
                                         ]);
 
 app.config(function($stateProvider, $urlRouterProvider) {

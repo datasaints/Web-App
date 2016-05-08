@@ -1,15 +1,9 @@
 <style>
-.slider {
-	overflow-y: hidden;
-	max-height: 500px; /* approximate max height */
+    position:absolute;
 
-	transition-property: all;
-	transition-duration: .5s;
-	transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-}
 </style>
-  <!-- Left side column. contains the logo and sidebar -->
-  <aside class="main-sidebar">
+<!-- Left side column. contains the logo and sidebar -->
+  <aside class="main-sidebar" >
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
       <!-- Sidebar user panel -->
@@ -37,12 +31,14 @@
       <ul class="sidebar-menu">
         <li class="header">MAIN NAVIGATION</li>
         <li class="active treeview">
-        <a href="" class="slider">
-          <i class="fa fa-th"></i> <span>Labs</span> <i class="fa fa-angle-left pull-right"></i></a>
-            <ul class="treeview-menu">
-              <li class="active"><a ui-sref="home.table"><i class="fa fa-circle-o"></i> Lab 1</a></li>
-              <li><a href="#"><i class="fa fa-circle-o"></i> Lab 2</a></li>
-            </ul>
+        <a>
+          <i class="fa fa-th"></i> <span>Locations</span> <i class="fa fa-angle-left pull-right"></i></a>
+	            <ul class="treeview-menu" id="location-list" class="slideable">
+	              <li class="active"><a ui-sref="home.table"><i class="fa fa-circle-o"></i> Production</a></li>
+	              <li><a href="#"><i class="fa fa-circle-o"></i> Metrology</a></li>
+	              <li><a href="#"><i class="fa fa-circle-o"></i> Software Dept</a></li>
+	              
+	            </ul>
           </li>
         <li class="treeview">
           <a ui-sref="home.update-reader">
