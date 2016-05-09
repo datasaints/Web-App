@@ -26,7 +26,7 @@ public class JDBCConnect {
         
         items = new ArrayList<Item>();
 
-        populateItems();
+        populateItems(0);
     }
     
     public void populateItems(int location) {
@@ -60,6 +60,13 @@ public class JDBCConnect {
     		
     		while (rst.next()) {
     			// Get columns needed
+    			items.add(new Item(
+    					rst.getString("serial"),
+    					0,
+    					null,
+    					null,
+    					null,
+    					rst.getDate("lastCalibrated")));
     		}
     	}
     	catch (Exception ex) {
@@ -88,7 +95,7 @@ public class JDBCConnect {
     			break;
     	}
     	
-    	query = "SELECT * FROM ebdb." + locationName + " WHERE DATEDIFF(lastCalibrated, NOW()) < 14";
+    	query = "SELECT * FROM ebdb." + locationName + " WHERE DATEDIFF(NOW(), lastCalibrated) >= 14";
     	
     	ResultSet rst;
     	PreparedStatement pst;
@@ -100,8 +107,13 @@ public class JDBCConnect {
     		rst = pst.executeQuery();
     		
     		while (rst.next()) {
-    			// Get columns needed
-    		}
+    			items.add(new Item(
+    					rst.getString("serial"),
+    					0,
+    					null,
+    					null,
+    					null,
+    					rst.getDate("lastCalibrated")));    		}
     	}
     	catch (Exception ex) {
     		ex.printStackTrace();
@@ -130,7 +142,7 @@ public class JDBCConnect {
             ex.printStackTrace();
         }
     }
-
+	
     public ArrayList<Item> getItems() {
         return this.items;
     }

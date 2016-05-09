@@ -26,9 +26,17 @@ public class ItemController {
 	private JDBCConnect conn = new JDBCConnect();
 	
 	@RequestMapping(value = "/getItems/{location}", method = RequestMethod.GET)
-	public ArrayList<Item> getItems(@RequestBody int location) {
+	public ArrayList<Item> getItems(@PathVariable int location) {
 		System.out.println("Called get items at location " + location);
 		conn.populateItems(location);
+		
+		return conn.getItems();
+	}
+	
+	@RequestMapping(value = "/getItemsToCalibrate/{location}", method = RequestMethod.GET)
+	public ArrayList<Item> getItemsToCalibrate(@PathVariable int location) {
+		System.out.println("Called get items to calibrate at location " + location);
+		conn.populateItemsToCalibrate(location);
 		
 		return conn.getItems();
 	}
@@ -43,7 +51,7 @@ public class ItemController {
    public ArrayList<Item> getItems() {
 	   System.out.println("Called get items");
 
-	   conn.populateItems();
+	   // conn.populateItems();
       return conn.getItems();
    }
    
