@@ -19,7 +19,7 @@ public class JDBCConnect {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(
-                    "jdbc:mysql://datasaintsdbinstance.chsdnjuecf9v.us-west-1.rds.amazonaws.com:3306/DSaints?user=datasaints&password=datasaints");
+                    "jdbc:mysql://aa1id9u2m7qsv38.chsdnjuecf9v.us-west-1.rds.amazonaws.com/ebdb?user=datasaints&password=datasaints");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -27,6 +27,85 @@ public class JDBCConnect {
         items = new ArrayList<Item>();
 
         populateItems();
+    }
+    
+    public void populateItems(int location) {
+    	// Might have to hard code this
+    	String query;
+    	
+    	switch (location) {
+    		case 0:
+    			query = "SELECT * FROM ebdb.Metrology;";
+    			break;
+    		case 1:
+    			query = "SELECT * FROM ebdb.Production;";
+    			break;
+    		case 2:
+    			query = "SELECT * FROM  ebdb.SoftwareEngineering;";
+    			break;
+    		default:
+    			// Default to metrology, shouldn't get here anyway
+    			query = "SELECT * FROM ebdb.Metrology;";
+    			break;
+    	}
+    	
+    	ResultSet rst;
+    	PreparedStatement pst;
+    	
+    	items.clear();
+    	
+    	try {
+    		pst = conn.prepareStatement(query);
+    		rst = pst.executeQuery();
+    		
+    		while (rst.next()) {
+    			// Get columns needed
+    		}
+    	}
+    	catch (Exception ex) {
+    		ex.printStackTrace();
+    	}
+    }
+    
+    public void populateItemsToCalibrate(int location) {
+    	// Might have to hard code this
+    	String query;
+    	String locationName;
+    	
+    	switch (location) {
+    		case 0:
+    			locationName = "Metrology";
+    			break;
+    		case 1:
+    			locationName = "Production";
+    			break;
+    		case 2:
+    			locationName = "SoftwareEngineering";
+    			break;
+    		default:
+    			// Default to metrology, shouldn't get here anyway
+    			locationName = "Metrology";
+    			break;
+    	}
+    	
+    	query = "SELECT * FROM ebdb." + locationName + " WHERE DATEDIFF(lastCalibrated, NOW()) < 14";
+    	
+    	ResultSet rst;
+    	PreparedStatement pst;
+    	
+    	items.clear();
+    	
+    	try {
+    		pst = conn.prepareStatement(query);
+    		rst = pst.executeQuery();
+    		
+    		while (rst.next()) {
+    			// Get columns needed
+    		}
+    	}
+    	catch (Exception ex) {
+    		ex.printStackTrace();
+    	}
     }
 
     public void populateItems() {

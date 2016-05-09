@@ -27,7 +27,10 @@ public class ItemController {
 	
 	@RequestMapping(value = "/getItems/{location}", method = RequestMethod.GET)
 	public ArrayList<Item> getItems(@RequestBody int location) {
+		System.out.println("Called get items at location " + location);
+		conn.populateItems(location);
 		
+		return conn.getItems();
 	}
 
 	@RequestMapping(value = "/getItemCount/{whatToGet}", method = RequestMethod.GET)
