@@ -40,6 +40,22 @@ public class ItemController {
 		
 		return conn.getItems();
 	}
+	
+	@RequestMapping(value = "/getCheckedOut/{location}", method = RequestMethod.GET)
+	public ArrayList<Item> getCheckedOutItems(@PathVariable int location) {
+		System.out.println("Called get checked out items at location " + location);
+		conn.populateCheckedOutItems(location);
+		
+		return conn.getItems();
+	}
+	
+	@RequestMapping(value = "/getCheckedIn/{location}", method = RequestMethod.GET)
+	public ArrayList<Item> getCheckedInItems(@PathVariable int location) {
+		System.out.println("Called get checked in items at location " + location);
+		conn.populateCheckedInItems(location);
+		
+		return conn.getItems();
+	}
 
 	@RequestMapping(value = "/getItemCount/{whatToGet}", method = RequestMethod.GET)
 	public int getItemCount(@PathVariable Integer whatToGet) {

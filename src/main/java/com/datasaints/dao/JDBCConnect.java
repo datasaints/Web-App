@@ -95,7 +95,101 @@ public class JDBCConnect {
     			break;
     	}
     	
-    	query = "SELECT * FROM ebdb." + locationName + " WHERE DATEDIFF(NOW(), lastCalibrated) >= 14";
+    	query = "SELECT * FROM ebdb." + locationName + " WHERE DATEDIFF(NOW(), lastCalibrated) >= 14;";
+    	
+    	ResultSet rst;
+    	PreparedStatement pst;
+    	
+    	items.clear();
+    	
+    	try {
+    		pst = conn.prepareStatement(query);
+    		rst = pst.executeQuery();
+    		
+    		while (rst.next()) {
+    			items.add(new Item(
+    					rst.getString("serial"),
+    					0,
+    					null,
+    					null,
+    					null,
+    					rst.getDate("lastCalibrated")));    		}
+    	}
+    	catch (Exception ex) {
+    		ex.printStackTrace();
+    	}
+    }
+    
+    
+    
+    public void populateCheckedOutItems(int location) {
+    	// Might have to hard code this
+    	String query;
+    	String locationName;
+    	
+    	switch (location) {
+    		case 0:
+    			locationName = "Metrology";
+    			break;
+    		case 1:
+    			locationName = "Production";
+    			break;
+    		case 2:
+    			locationName = "SoftwareEngineering";
+    			break;
+    		default:
+    			// Default to metrology, shouldn't get here anyway
+    			locationName = "Metrology";
+    			break;
+    	}
+    	
+    	query = "SELECT * FROM ebdb." + locationName + " JOIN ebdb.CheckedOut ON ownerId = id;";
+    	
+    	ResultSet rst;
+    	PreparedStatement pst;
+    	
+    	items.clear();
+    	
+    	try {
+    		pst = conn.prepareStatement(query);
+    		rst = pst.executeQuery();
+    		
+    		while (rst.next()) {
+    			items.add(new Item(
+    					rst.getString("serial"),
+    					0,
+    					null,
+    					null,
+    					null,
+    					rst.getDate("lastCalibrated")));    		}
+    	}
+    	catch (Exception ex) {
+    		ex.printStackTrace();
+    	}
+    }
+    
+    public void populateCheckedInItems(int location) {
+    	// Might have to hard code this
+    	String query;
+    	String locationName;
+    	
+    	switch (location) {
+    		case 0:
+    			locationName = "Metrology";
+    			break;
+    		case 1:
+    			locationName = "Production";
+    			break;
+    		case 2:
+    			locationName = "SoftwareEngineering";
+    			break;
+    		default:
+    			// Default to metrology, shouldn't get here anyway
+    			locationName = "Metrology";
+    			break;
+    	}
+    	
+    	query = "SELECT * FROM ebdb." + locationName + " JOIN ebdb.CheckedIn ON ownerId = id;";
     	
     	ResultSet rst;
     	PreparedStatement pst;
