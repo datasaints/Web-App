@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 
 import java.util.ArrayList;
 
@@ -30,214 +31,413 @@ public class JDBCConnect {
     }
     
     public void populateItems(int location) {
-    	// Might have to hard code this
-    	String query;
-    	
-    	switch (location) {
-    		case 0:
-    			query = "SELECT * FROM ebdb.Metrology;";
-    			break;
-    		case 1:
-    			query = "SELECT * FROM ebdb.Production;";
-    			break;
-    		case 2:
-    			query = "SELECT * FROM  ebdb.SoftwareEngineering;";
-    			break;
-    		default:
-    			// Default to metrology, shouldn't get here anyway
-    			query = "SELECT * FROM ebdb.Metrology;";
-    			break;
-    	}
-    	
-    	ResultSet rst;
-    	PreparedStatement pst;
+    	PreparedStatement getItemsQuery = null;
+    	PreparedStatement getStatusQuery = null;
+    	ResultSet getItemsResult = null;
+    	ResultSet getStatusResult = null;
+    	int id;
+    	Item.Status status = Item.Status.CHECKED_IN;
+    	Timestamp checkTime = null;
     	
     	items.clear();
     	
     	try {
-    		pst = conn.prepareStatement(query);
-    		rst = pst.executeQuery();
+    		getItemsQuery = conn.prepareStatement("SELECT e.id, internalId, " + 
+    			"owner, serial, itemName, l.name AS 'location', " + 
+    			"lastCalibrated FROM Equipment e JOIN Location l ON l.id = " +
+    			"currentLocation WHERE owner = ?");
+    		getItemsQuery.setInt(1, location);
     		
-    		while (rst.next()) {
-    			// Get columns needed
+    		getItemsResult = getItemsQuery.executeQuery();
+    		
+    		while (getItemsResult.next()) {    			
+    			// For now, assume that if an item isn't checked in, it's checked out
+    			id = getItemsResult.getInt("id");
+    			getStatusQuery = conn.prepareStatement("SELECT * FROM CheckedOut WHERE id = ?");
+    			getStatusQuery.setInt(1, id);
+    			
+    			getStatusResult = getStatusQuery.executeQuery();
+    			
+    			if (getStatusResult.next()) {
+    				status = Item.Status.CHECKED_OUT;
+    				checkTime = getStatusResult.getTimestamp("checkTime");
+    			}
+    			else {
+    				status = Item.Status.CHECKED_IN;
+    				getStatusQuery.close();
+    				getStatusResult.close();
+    				
+    				getStatusQuery = conn.prepareStatement("SELECT * FROM CheckedIn WHERE id = ?");
+    				getStatusQuery.setInt(1, id);
+    				getStatusResult = getStatusQuery.executeQuery();
+    				
+    				getStatusResult.next();
+    				checkTime = getStatusResult.getTimestamp("checkTime");
+    			}
+    			
     			items.add(new Item(
-    					rst.getString("serial"),
-    					0,
-    					null,
-    					null,
-    					null,
-    					rst.getDate("lastCalibrated")));
+    					getItemsResult.getInt("internalId"),
+    					getItemsResult.getInt("serial"),
+    					getItemsResult.getString("itemName"),
+    					getItemsResult.getString("location"),
+    					status,
+    					getItemsResult.getDate("lastCalibrated"),
+    					checkTime));
     		}
     	}
     	catch (Exception ex) {
     		ex.printStackTrace();
     	}
+    	finally {
+    		close(getItemsQuery, getItemsResult, getStatusQuery, getStatusResult);
+    	}
+    }
+    
+    public void populateItems() {
+    	PreparedStatement getItemsQuery = null;
+    	PreparedStatement getStatusQuery = null;
+    	ResultSet getItemsResult = null;
+    	ResultSet getStatusResult = null;
+    	int id;
+    	Item.Status status = Item.Status.CHECKED_IN;
+    	Timestamp checkTime = null;
+    	
+    	items.clear();
+    	
+    	try {
+    		getItemsQuery = conn.prepareStatement("SELECT e.id, internalId, " + 
+    			"owner, serial, itemName, l.name AS 'location', " + 
+    			"lastCalibrated FROM Equipment e JOIN Location l ON l.id = " +
+    			"currentLocation");
+    		
+    		getItemsResult = getItemsQuery.executeQuery();
+    		
+    		while (getItemsResult.next()) {    			
+    			// For now, assume that if an item isn't checked in, it's checked out
+    			id = getItemsResult.getInt("id");
+    			getStatusQuery = conn.prepareStatement("SELECT * FROM CheckedOut WHERE id = ?");
+    			getStatusQuery.setInt(1, id);
+    			
+    			getStatusResult = getStatusQuery.executeQuery();
+    			
+    			if (getStatusResult.next()) {
+    				status = Item.Status.CHECKED_OUT;
+    				checkTime = getStatusResult.getTimestamp("checkTime");
+    			}
+    			else {
+    				status = Item.Status.CHECKED_IN;
+    				getStatusQuery.close();
+    				getStatusResult.close();
+    				
+    				getStatusQuery = conn.prepareStatement("SELECT * FROM CheckedIn WHERE id = ?");
+    				getStatusQuery.setInt(1, id);
+    				getStatusResult = getStatusQuery.executeQuery();
+    				
+    				getStatusResult.next();
+    				checkTime = getStatusResult.getTimestamp("checkTime");
+    			}
+    			
+    			items.add(new Item(
+    					getItemsResult.getInt("internalId"),
+    					getItemsResult.getInt("serial"),
+    					getItemsResult.getString("itemName"),
+    					getItemsResult.getString("location"),
+    					status,
+    					getItemsResult.getDate("lastCalibrated"),
+    					checkTime));
+    		}
+    	}
+    	catch (Exception ex) {
+    		ex.printStackTrace();
+    	}
+    	finally {
+    		close(getItemsQuery, getItemsResult, getStatusQuery, getStatusResult);
+    	}
     }
     
     public void populateItemsToCalibrate(int location) {
-    	// Might have to hard code this
-    	String query;
-    	String locationName;
-    	
-    	switch (location) {
-    		case 0:
-    			locationName = "Metrology";
-    			break;
-    		case 1:
-    			locationName = "Production";
-    			break;
-    		case 2:
-    			locationName = "SoftwareEngineering";
-    			break;
-    		default:
-    			// Default to metrology, shouldn't get here anyway
-    			locationName = "Metrology";
-    			break;
-    	}
-    	
-    	query = "SELECT * FROM ebdb." + locationName + " WHERE DATEDIFF(NOW(), lastCalibrated) >= 14;";
-    	
-    	ResultSet rst;
-    	PreparedStatement pst;
+    	PreparedStatement getItemsQuery = null;
+    	PreparedStatement getStatusQuery = null;
+    	ResultSet getItemsResult = null;
+    	ResultSet getStatusResult = null;
+    	int id;
+    	Item.Status status = Item.Status.CHECKED_IN;
+    	Timestamp checkTime = null;
     	
     	items.clear();
     	
     	try {
-    		pst = conn.prepareStatement(query);
-    		rst = pst.executeQuery();
+    		getItemsQuery = conn.prepareStatement("SELECT e.id, internalId, " + 
+    			"owner, serial, itemName, l.name AS 'location', " + 
+    			"lastCalibrated FROM Equipment e JOIN Location l ON l.id = " +
+    			"currentLocation WHERE owner = ? AND DATEDIFF(NOW(), " + 
+    			"lastCalibrated) >= 14");
+    		getItemsQuery.setInt(1, location);
     		
-    		while (rst.next()) {
+    		getItemsResult = getItemsQuery.executeQuery();
+    		
+    		while (getItemsResult.next()) {    			
+    			// For now, assume that if an item isn't checked in, it's checked out
+    			id = getItemsResult.getInt("id");
+    			getStatusQuery = conn.prepareStatement("SELECT * FROM CheckedOut WHERE id = ?");
+    			getStatusQuery.setInt(1, id);
+    			
+    			getStatusResult = getStatusQuery.executeQuery();
+    			
+    			if (getStatusResult.next()) {
+    				status = Item.Status.CHECKED_OUT;
+    				checkTime = getStatusResult.getTimestamp("checkTime");
+    			}
+    			else {
+    				status = Item.Status.CHECKED_IN;
+    				getStatusQuery.close();
+    				getStatusResult.close();
+    				
+    				getStatusQuery = conn.prepareStatement("SELECT * FROM CheckedIn WHERE id = ?");
+    				getStatusQuery.setInt(1, id);
+    				getStatusResult = getStatusQuery.executeQuery();
+    				
+    				getStatusResult.next();
+    				checkTime = getStatusResult.getTimestamp("checkTime");
+    			}
+    			
     			items.add(new Item(
-    					rst.getString("serial"),
-    					0,
-    					null,
-    					null,
-    					null,
-    					rst.getDate("lastCalibrated")));    		}
+    					getItemsResult.getInt("internalId"),
+    					getItemsResult.getInt("serial"),
+    					getItemsResult.getString("itemName"),
+    					getItemsResult.getString("location"),
+    					status,
+    					getItemsResult.getDate("lastCalibrated"),
+    					checkTime));
+    		}
     	}
     	catch (Exception ex) {
     		ex.printStackTrace();
+    	}
+    	finally {
+    		close(getItemsQuery, getItemsResult, getStatusQuery, getStatusResult);
     	}
     }
     
-    
-    
-    public void populateCheckedOutItems(int location) {
-    	// Might have to hard code this
-    	String query;
-    	String locationName;
-    	
-    	switch (location) {
-    		case 0:
-    			locationName = "Metrology";
-    			break;
-    		case 1:
-    			locationName = "Production";
-    			break;
-    		case 2:
-    			locationName = "SoftwareEngineering";
-    			break;
-    		default:
-    			// Default to metrology, shouldn't get here anyway
-    			locationName = "Metrology";
-    			break;
-    	}
-    	
-    	query = "SELECT * FROM ebdb." + locationName + " JOIN ebdb.CheckedOut ON ownerId = id;";
-    	
-    	ResultSet rst;
-    	PreparedStatement pst;
+    public void populateItemsToCalibrate() {
+    	PreparedStatement getItemsQuery = null;
+    	PreparedStatement getStatusQuery = null;
+    	ResultSet getItemsResult = null;
+    	ResultSet getStatusResult = null;
+    	int id;
+    	Item.Status status = Item.Status.CHECKED_IN;
+    	Timestamp checkTime = null;
     	
     	items.clear();
     	
     	try {
-    		pst = conn.prepareStatement(query);
-    		rst = pst.executeQuery();
+    		getItemsQuery = conn.prepareStatement("SELECT e.id, internalId, " + 
+    			"owner, serial, itemName, l.name AS 'location', " + 
+    			"lastCalibrated FROM Equipment e JOIN Location l ON l.id = " +
+    			"currentLocation WHERE DATEDIFF(NOW(), " + 
+    			"lastCalibrated) >= 14");
     		
-    		while (rst.next()) {
+    		getItemsResult = getItemsQuery.executeQuery();
+    		
+    		while (getItemsResult.next()) {    			
+    			// For now, assume that if an item isn't checked in, it's checked out
+    			id = getItemsResult.getInt("id");
+    			getStatusQuery = conn.prepareStatement("SELECT * FROM CheckedOut WHERE id = ?");
+    			getStatusQuery.setInt(1, id);
+    			
+    			getStatusResult = getStatusQuery.executeQuery();
+    			
+    			if (getStatusResult.next()) {
+    				status = Item.Status.CHECKED_OUT;
+    				checkTime = getStatusResult.getTimestamp("checkTime");
+    			}
+    			else {
+    				status = Item.Status.CHECKED_IN;
+    				getStatusQuery.close();
+    				getStatusResult.close();
+    				
+    				getStatusQuery = conn.prepareStatement("SELECT * FROM CheckedIn WHERE id = ?");
+    				getStatusQuery.setInt(1, id);
+    				getStatusResult = getStatusQuery.executeQuery();
+    				
+    				getStatusResult.next();
+    				checkTime = getStatusResult.getTimestamp("checkTime");
+    			}
+    			
     			items.add(new Item(
-    					rst.getString("serial"),
-    					0,
-    					null,
-    					null,
-    					null,
-    					rst.getDate("lastCalibrated")));    		}
+    					getItemsResult.getInt("internalId"),
+    					getItemsResult.getInt("serial"),
+    					getItemsResult.getString("itemName"),
+    					getItemsResult.getString("location"),
+    					status,
+    					getItemsResult.getDate("lastCalibrated"),
+    					checkTime));
+    		}
     	}
     	catch (Exception ex) {
     		ex.printStackTrace();
+    	}
+    	finally {
+    		close(getItemsQuery, getItemsResult, getStatusQuery, getStatusResult);
+    	}
+    }
+    
+    public void populateCheckedOutItems(int location) {
+    	PreparedStatement getItemsQuery = null;
+    	ResultSet getItemsResult = null;
+    	Item.Status status = Item.Status.CHECKED_OUT;
+    	
+    	items.clear();
+    	
+    	try {
+    		getItemsQuery = conn.prepareStatement("SELECT internalId," + 
+    			"owner, serial, itemName, l.name AS 'location', " + 
+    			"lastCalibrated, checkTime FROM Equipment e JOIN Location l ON l.id = " +
+    			"currentLocation JOIN CheckedOut c ON c.id = " + 
+    			"e.id WHERE owner = ?");
+    		getItemsQuery.setInt(1, location);
+    		
+    		getItemsResult = getItemsQuery.executeQuery();
+    		
+    		while (getItemsResult.next()) {
+    			items.add(new Item(
+    					getItemsResult.getInt("internalId"),
+    					getItemsResult.getInt("serial"),
+    					getItemsResult.getString("itemName"),
+    					getItemsResult.getString("location"),
+    					status,
+    					getItemsResult.getDate("lastCalibrated"),
+    					getItemsResult.getTimestamp("checkTime")));
+    		}
+    	}
+    	catch (Exception ex) {
+    		ex.printStackTrace();
+    	}
+    	finally {
+    		close(getItemsQuery, getItemsResult);
+    	}
+    }
+    
+    public void populateCheckedOutItems() {
+    	PreparedStatement getItemsQuery = null;
+    	ResultSet getItemsResult = null;
+    	Item.Status status = Item.Status.CHECKED_OUT;
+    	
+    	items.clear();
+    	
+    	try {
+    		getItemsQuery = conn.prepareStatement("SELECT internalId," + 
+    			"owner, serial, itemName, l.name AS 'location', " + 
+    			"lastCalibrated, checkTime FROM Equipment e JOIN Location l ON l.id = " +
+    			"currentLocation JOIN CheckedOut c ON c.id = " + 
+    			"e.id");
+    		
+    		getItemsResult = getItemsQuery.executeQuery();
+    		
+    		while (getItemsResult.next()) {
+    			items.add(new Item(
+    					getItemsResult.getInt("internalId"),
+    					getItemsResult.getInt("serial"),
+    					getItemsResult.getString("itemName"),
+    					getItemsResult.getString("location"),
+    					status,
+    					getItemsResult.getDate("lastCalibrated"),
+    					getItemsResult.getTimestamp("checkTime")));
+    		}
+    	}
+    	catch (Exception ex) {
+    		ex.printStackTrace();
+    	}
+    	finally {
+    		close(getItemsQuery, getItemsResult);
     	}
     }
     
     public void populateCheckedInItems(int location) {
-    	// Might have to hard code this
-    	String query;
-    	String locationName;
-    	
-    	switch (location) {
-    		case 0:
-    			locationName = "Metrology";
-    			break;
-    		case 1:
-    			locationName = "Production";
-    			break;
-    		case 2:
-    			locationName = "SoftwareEngineering";
-    			break;
-    		default:
-    			// Default to metrology, shouldn't get here anyway
-    			locationName = "Metrology";
-    			break;
-    	}
-    	
-    	query = "SELECT * FROM ebdb." + locationName + " JOIN ebdb.CheckedIn ON ownerId = id;";
-    	
-    	ResultSet rst;
-    	PreparedStatement pst;
+    	PreparedStatement getItemsQuery = null;
+    	ResultSet getItemsResult = null;
+    	Item.Status status = Item.Status.CHECKED_IN;
     	
     	items.clear();
     	
     	try {
-    		pst = conn.prepareStatement(query);
-    		rst = pst.executeQuery();
+    		getItemsQuery = conn.prepareStatement("SELECT internalId," + 
+    			"owner, serial, itemName, l.name AS 'location', " + 
+    			"lastCalibrated, checkTime FROM Equipment e JOIN Location l ON l.id = " +
+    			"currentLocation JOIN CheckedIn c ON c.id = " + 
+    			"e.id WHERE owner = ?");
+    		getItemsQuery.setInt(1, location);
     		
-    		while (rst.next()) {
+    		getItemsResult = getItemsQuery.executeQuery();
+    		
+    		while (getItemsResult.next()) {
     			items.add(new Item(
-    					rst.getString("serial"),
-    					0,
-    					null,
-    					null,
-    					null,
-    					rst.getDate("lastCalibrated")));    		}
+    					getItemsResult.getInt("internalId"),
+    					getItemsResult.getInt("serial"),
+    					getItemsResult.getString("itemName"),
+    					getItemsResult.getString("location"),
+    					status,
+    					getItemsResult.getDate("lastCalibrated"),
+    					getItemsResult.getTimestamp("checkTime")));
+    		}
     	}
     	catch (Exception ex) {
     		ex.printStackTrace();
     	}
+    	finally {
+    		close(getItemsQuery, getItemsResult);
+    	}
     }
-
-    public void populateItems() {
-        String sql = "SELECT * FROM DSaints.Equipment;";
-
-        ResultSet rst;
-        PreparedStatement pst;
-        
-        // Clear item list in case it is full
-        items.clear();
-
-        try {
-            pst = conn.prepareStatement(sql);
-            rst = pst.executeQuery();
-
-            while (rst.next()) {
-            	items.add(new Item(rst.getString("ItemID"), rst.getInt("EmployeeID"),
-            			rst.getString("ItemName"), rst.getDate("CheckIn"),
-            			rst.getDate("CheckOut"), rst.getDate("LastCalibrated")));
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+    
+    public void populateCheckedInItems() {
+    	PreparedStatement getItemsQuery = null;
+    	ResultSet getItemsResult = null;
+    	Item.Status status = Item.Status.CHECKED_IN;
+    	
+    	items.clear();
+    	
+    	try {
+    		getItemsQuery = conn.prepareStatement("SELECT internalId," + 
+    			"owner, serial, itemName, l.name AS 'location', " + 
+    			"lastCalibrated, checkTime FROM Equipment e JOIN Location l ON l.id = " +
+    			"currentLocation JOIN CheckedIn c ON c.id = " + 
+    			"e.id");
+    		
+    		getItemsResult = getItemsQuery.executeQuery();
+    		
+    		while (getItemsResult.next()) {
+    			items.add(new Item(
+    					getItemsResult.getInt("internalId"),
+    					getItemsResult.getInt("serial"),
+    					getItemsResult.getString("itemName"),
+    					getItemsResult.getString("location"),
+    					status,
+    					getItemsResult.getDate("lastCalibrated"),
+    					getItemsResult.getTimestamp("checkTime")));
+    		}
+    	}
+    	catch (Exception ex) {
+    		ex.printStackTrace();
+    	}
+    	finally {
+    		close(getItemsQuery, getItemsResult);
+    	}
     }
 	
     public ArrayList<Item> getItems() {
         return this.items;
+    }
+    
+    private void close(Object... toClose) {
+    	for (Object obj : toClose) {
+    		if (obj != null) {
+    			try {
+    				obj.getClass().getMethod("close").invoke(obj);
+    			}
+    			catch (Throwable t) {
+    				System.out.println("Failed to close");
+    			}
+    		}
+    	}
     }
 }

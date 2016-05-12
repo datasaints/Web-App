@@ -67,7 +67,7 @@ public class ItemController {
    public ArrayList<Item> getItems() {
 	   System.out.println("Called get items");
 
-	   // conn.populateItems();
+	   conn.populateItems();
       return conn.getItems();
    }
    
@@ -90,6 +90,7 @@ public class ItemController {
 	   return newItem;
    }
    
+   /*
    @RequestMapping(value = "/findItem", method = RequestMethod.POST)
    public ArrayList<Item> findItem(@RequestBody Item item) throws NoItemFoundException {
        System.out.println("Called find item with id: " + item.getItemId());
@@ -99,6 +100,7 @@ public class ItemController {
 	   return foundItems;
        
    }
+   */
    
    @RequestMapping(value = "/deleteItem", method = RequestMethod.DELETE)
    public String deleteItem(@RequestBody String itemId) {

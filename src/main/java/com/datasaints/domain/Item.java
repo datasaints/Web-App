@@ -1,70 +1,100 @@
 package com.datasaints.domain;
 
 //import java.sql.Time;
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Timestamp;
 
 public class Item {
-	private String itemId;
-	private int employeeId;
+	public enum Status {
+		CHECKED_IN, CHECKED_OUT
+	}
+	
+	private int internalId;
+	private int serial;
 	private String itemName;
-	private Date checkIn;
-	private Date checkOut;
+	private String location;
+	private Status status;
 	private Date lastCalibrated;
+	private Timestamp checkTime;	// Date and time checked in or checked out 
 
    public Item() {
-      this.itemId = "";
-      this.employeeId = 0;
-      this.itemName = "";
-      this.checkIn = null;
-      this.checkOut = null;
-      this.lastCalibrated = null;
+	   this.internalId = 0;
+	   this.serial = 0;
+	   this.itemName = "";
+	   this.location = "";
+	   this.status = Status.CHECKED_IN;
+	   this.lastCalibrated = null;
+	   this.checkTime = null;
    }
-
-	public Item(String itemID, int employeeID, String name, Date checkIn,
-			Date checkOut, Date lastCalibrated) {
-		this.itemId = itemID;
-		this.employeeId = employeeID;
-		this.itemName = name;
-		this.checkIn = checkIn;
-		this.checkOut = checkOut;
-		this.lastCalibrated = lastCalibrated;
-	}
-
-	public String getItemId() {
-		return itemId;
-	}
-	public void setItemId(String itemId) {
-		this.itemId = itemId;
-	}
-	public int getEmployeeId() {
-		return employeeId;
-	}
-	public void setEmployeeId(int employeeId) {
-		this.employeeId = employeeId;
-	}
-	public String getItemName() {
-		return itemName;
-	}
-	public void setItemName(String itemName) {
-		this.itemName = itemName;
-	}
-	public Date getCheckIn() {
-		return checkIn;
-	}
-	public void setCheckIn(Date checkIn) {
-		this.checkIn = checkIn;
-	}
-	public Date getCheckOut() {
-		return checkOut;
-	}
-	public void setCheckOut(Date checkOut) {
-		this.checkOut = checkOut;
-	}
-	public Date getLastCalibrated() {
-		return lastCalibrated;
-	}
-	public void setLastCalibrated(Date lastCalibrated) {
-		this.lastCalibrated = lastCalibrated;
-	}
-
+   
+   public Item(int internalId, int serial, String itemName, String location,
+		   Status status, Date lastCalibrated, Timestamp checkTime) {
+	   this.internalId = internalId;
+	   this.serial = serial;
+	   this.itemName = itemName;
+	   this.location = location;
+	   this.status = status;
+	   this.lastCalibrated = lastCalibrated;
+	   this.checkTime = checkTime;
+   }
+   
+   // Getters
+   
+   public int getInternalId() {
+	   return this.internalId;
+   }
+   
+   public int getSerial() {
+	   return this.serial;
+   }
+   
+   public String getItemName() {
+	   return this.itemName;
+   }
+   
+   public String getLocation() {
+	   return this.location;
+   }
+   
+   public Status getStatus() {
+	   return this.status;
+   }
+   
+   public Date getLastCalibrated() {
+	   return this.lastCalibrated;
+   }
+   
+   public Timestamp getCheckTime() {
+	   return this.checkTime;
+   }
+   
+   // Setters
+   
+   public void setInternalId(int internalId) {
+	   this.internalId = internalId;
+   }
+   
+   public void setSerial(int serial) {
+	   this.serial = serial;
+   }
+   
+   public void setItemName(String itemName) {
+	   this.itemName = itemName;
+   }
+   
+   public void setLocation(String location) {
+	   this.location = location;
+   }
+   
+   public void setStatus(Status status) {
+	   this.status = status;
+   }
+   
+   public void setLastCalibrated(Date lastCalibrated) {
+	   this.lastCalibrated = lastCalibrated;
+   }
+   
+   public void setCheckTime(Timestamp checkTime) {
+	   this.checkTime = checkTime;
+   }
 }
