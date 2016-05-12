@@ -5,15 +5,19 @@ import java.util.ArrayList;
 import com.datasaints.domain.Item;
 
 public interface ItemService {
-	public Item addItem(Item item);
+	public boolean addItem(Item item);
 
-	void deleteItem(String itemId);
+	public boolean deleteItem(String owner, int internalId);
 
-	public String checkAddItemArguments(Item item);
+	// public String checkAddItemArguments(Item item);
 	
-	public Item getItemById(String itemId);
+	public Item getItem(String owner, int internalId);
 	
-	public ArrayList<Item> findItem(Item toFind);
+	public boolean updateItemLocation(String owner, int internalId, String newLocation);
+	
+	// public ArrayList<Item> findItem(Item toFind);
 	
 	public int getItemCount(int whatToGet);
+	
+	public int getItemCount(String location, int whatToGet);
 }

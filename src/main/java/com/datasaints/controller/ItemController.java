@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.datasaints.domain.Item;
@@ -41,10 +42,26 @@ public class ItemController {
 		return conn.getItems();
 	}
 	
+	@RequestMapping(value = "/getItemsToCalibrate", method = RequestMethod.GET)
+	public ArrayList<Item> getItemsToCalibrate() {
+		System.out.println("Called get items to calibrate");
+		conn.populateItemsToCalibrate();
+		
+		return conn.getItems();
+	}
+	
 	@RequestMapping(value = "/getCheckedOut/{location}", method = RequestMethod.GET)
 	public ArrayList<Item> getCheckedOutItems(@PathVariable int location) {
 		System.out.println("Called get checked out items at location " + location);
 		conn.populateCheckedOutItems(location);
+		
+		return conn.getItems();
+	}
+	
+	@RequestMapping(value = "/getCheckedOut/", method = RequestMethod.GET)
+	public ArrayList<Item> getCheckedOutItems() {
+		System.out.println("Called get checked out items");
+		conn.populateCheckedOutItems();
 		
 		return conn.getItems();
 	}
@@ -55,6 +72,20 @@ public class ItemController {
 		conn.populateCheckedInItems(location);
 		
 		return conn.getItems();
+	}
+	
+	@RequestMapping(value = "/getCheckedIn", method = RequestMethod.GET)
+	public ArrayList<Item> getCheckedInItems() {
+		System.out.println("Called get checked in items");
+		conn.populateCheckedInItems();
+		
+		return conn.getItems();
+	}
+	
+	@RequestMapping(value = "/getItemCount/{location}/{whatToGet}", method = RequestMethod.GET)
+	public int getItemCount(@PathVariable String location, int whatToGet) {
+		System.out.println("Called get amount of items at " + location);
+		return itemService.getItemCount(location, whatToGet);
 	}
 
 	@RequestMapping(value = "/getItemCount/{whatToGet}", method = RequestMethod.GET)
@@ -72,22 +103,38 @@ public class ItemController {
    }
    
    @RequestMapping(value = "/addItem", method = RequestMethod.POST)
-   public Item addItem(@RequestBody Item item) {
+   public boolean addItem(@RequestBody Item item) {
 	   System.out.println("Called add item");
-	  //TODO: ADD MORE ERROR CHECKING
+	  //TODO: Reimplement error checking
+	   /*
 	   String checkArgumentResponse = itemService.checkAddItemArguments(item);
 	   
 	   if (checkArgumentResponse != null) {
 	       	throw new IllegalArgumentException(checkArgumentResponse);
 	   }
+	   */
 	   
-	   Item newItem = itemService.addItem(item);
-	   
-	   if (newItem == null) {
-	       	throw new AddItemException("There was an error attempting to add the item to the database");
+	   return itemService.addItem(item);
+   }
+   
+   @RequestMapping(value = "/updateLocation/{owner}/{internalId}/{newLocation}", method = RequestMethod.POST)
+   public String updateItemLocation(@PathVariable String owner,
+     @PathVariable int internalId, @PathVariable String newLocation) {
+	   if (owner == null) {
+		   throw new IllegalArgumentException("owner is required");
 	   }
 	   
-	   return newItem;
+	   System.out.println("Updating location of " + owner + "'s " + internalId + 
+	       " to " + newLocation);
+	   
+	   if (itemService.updateItemLocation(owner, internalId, newLocation)) {
+		   return "Successfully updated location of " + owner + "'s " + internalId +
+		       " to " + newLocation;
+	   }
+	   else {
+		   return "Failed to update location of " + owner + "'s " + internalId +
+		       " to " + newLocation;
+	   }
    }
    
    /*
@@ -102,21 +149,35 @@ public class ItemController {
    }
    */
    
-   @RequestMapping(value = "/deleteItem", method = RequestMethod.DELETE)
-   public String deleteItem(@RequestBody String itemId) {
+   @RequestMapping(value = "/findItem/{owner}/{internalId}", method = RequestMethod.POST)
+   public Item findItem(@PathVariable String owner, @PathVariable int internalId) {
+	   if (owner == null) {
+		   throw new IllegalArgumentException("owner is required");
+	   }
+	   
+	   System.out.println("Finding item with owner = " + owner + ", internalId = " + internalId);
+	   
+	   return itemService.getItem(owner, internalId);
+   }
+   
+   @RequestMapping(value = "/deleteItem/{owner}/{internalId}", method = RequestMethod.DELETE)
+   public String deleteItem(@PathVariable String owner, @PathVariable int internalId) {
 
-   	if (itemId == null) {
-   		throw new IllegalArgumentException("itemId is required");
+   	if (owner == null) {
+   		throw new IllegalArgumentException("owner is required");
    	}
    	
-   	System.out.println("Called delete with itemId: " + itemId);
+   	System.out.println("Called delete with owner: " + owner + ", internalId = " + internalId);
    	
-   	if (itemService.getItemById(itemId) == null) {
-       	throw new NoItemFoundException("Item with id '" + itemId + "' does not exist");
+   	if (itemService.getItem(owner, internalId) == null) {
+       	throw new NoItemFoundException(owner + " does not have item with internalId " + internalId);
        }
    	
-       itemService.deleteItem(itemId);
-
-       return "Deleted item with ID " + itemId;
+       if (itemService.deleteItem(owner, internalId)) {
+    	   return "Deleted " + owner + "'s item with internalId " + internalId;
+       }
+       else {
+    	   return "Failed to delete " + owner + "'s item with internalId " + internalId;
+       }
    }
 }

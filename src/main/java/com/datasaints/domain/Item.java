@@ -9,6 +9,7 @@ public class Item {
 		CHECKED_IN, CHECKED_OUT
 	}
 	
+	private String owner;
 	private int internalId;
 	private int serial;
 	private String itemName;
@@ -18,6 +19,7 @@ public class Item {
 	private Timestamp checkTime;	// Date and time checked in or checked out 
 
    public Item() {
+	   this.owner = "";
 	   this.internalId = 0;
 	   this.serial = 0;
 	   this.itemName = "";
@@ -27,8 +29,9 @@ public class Item {
 	   this.checkTime = null;
    }
    
-   public Item(int internalId, int serial, String itemName, String location,
-		   Status status, Date lastCalibrated, Timestamp checkTime) {
+   public Item(String owner, int internalId, int serial, String itemName,
+		   String location, Status status, Date lastCalibrated, Timestamp checkTime) {
+	   this.owner = owner;
 	   this.internalId = internalId;
 	   this.serial = serial;
 	   this.itemName = itemName;
@@ -39,6 +42,10 @@ public class Item {
    }
    
    // Getters
+   
+   public String getOwner() {
+	   return this.owner;
+   }
    
    public int getInternalId() {
 	   return this.internalId;
@@ -69,6 +76,10 @@ public class Item {
    }
    
    // Setters
+   
+   public void setOwner(String owner) {
+	   this.owner = owner;
+   }
    
    public void setInternalId(int internalId) {
 	   this.internalId = internalId;

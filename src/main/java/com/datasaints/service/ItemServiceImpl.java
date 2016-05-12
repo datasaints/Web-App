@@ -11,10 +11,10 @@ import com.datasaints.domain.Item;
 @Service
 public class ItemServiceImpl implements ItemService {
 	@Override
-	public Item addItem(Item item) {
+	public boolean addItem(Item item) {
 		ItemDao itemDao = new ItemDaoImpl();
 
-		return itemDao.getItemById(itemDao.addItem(item));
+		return itemDao.addItem(item);
 	}
 	
 	@Override
@@ -23,23 +23,31 @@ public class ItemServiceImpl implements ItemService {
 
 		return itemDao.getItemCount(whatToGet);
 	}
+	
+	@Override
+	public int getItemCount(String location, int whatToGet) {
+		ItemDao itemDao = new ItemDaoImpl();
+		
+		return itemDao.getItemCount(location, whatToGet);
+	}
 
 	@Override
-	public void deleteItem(String itemId) {
+	public boolean deleteItem(String owner, int internalId) {
 		/* At this point it should already be checked if the item is null,
 		 * but let's do it again because we don't know who will call it in
 		 * the future.
 		 */
 
-		if (itemId == null) {
-	   		throw new IllegalArgumentException("itemId is required");
+		if (owner == null) {
+	   		throw new IllegalArgumentException("owner is required");
 		}
 
 		ItemDao itemDao = new ItemDaoImpl();
 
-		itemDao.deleteItem(itemId);
+		return itemDao.deleteItem(owner, internalId);
 	}
 
+	/*
 	@Override
 	public String checkAddItemArguments(Item item) {
       if (item == null) {
@@ -49,35 +57,33 @@ public class ItemServiceImpl implements ItemService {
 		if (item.getItemId() == null || item.getItemId().isEmpty()) {
 			return "addItem: item ID missing";
 		}
-      /*
-      if (item.getEmployeeId() == null) {
-         return "addItem: employee ID missing";
-      }
-      */
       if (item.getItemName() == null || item.getItemName().isEmpty()) {
          return "addItem: item name missing";
       }
-      /*if (item.getCheckIn() == null) {
-         return "addItem: check in time missing";
-      }
-      if (item.getCheckOut() == null) {
-         return "addItem: check out time missing";
-      }*/
       if (item.getLastCalibrated() == null) {
          return "addItem: last calibration date missing";
       }
 
-		/* If all goes well, just return null */
+		// If all goes well, just return null
 		return null;
+	}
+	*/
+	
+	@Override
+	public boolean updateItemLocation(String owner, int internalId, String newLocation) {
+		ItemDao itemDao = new ItemDaoImpl();
+		
+		return itemDao.updateLocation(owner, internalId, newLocation);
 	}
 
 	@Override
-	public Item getItemById(String itemId) {
-		ItemDao recipeDao = new ItemDaoImpl();
+	public Item getItem(String owner, int internalId) {
+		ItemDao itemDao = new ItemDaoImpl();
 
-		return recipeDao.getItemById(itemId);
+		return itemDao.getItem(owner, internalId);
 	}
 	
+	/*
 	@Override
 	public ArrayList<Item> findItem(Item toFind) {
 		ItemDao itemDao = new ItemDaoImpl();
@@ -85,4 +91,5 @@ public class ItemServiceImpl implements ItemService {
 		
 		return foundItems;
 	}
+	*/
 }

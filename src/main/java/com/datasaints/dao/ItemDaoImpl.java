@@ -1,13 +1,13 @@
 package com.datasaints.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Date;
 
 import com.datasaints.domain.Item;
 import com.datasaints.exception.AddItemException;
@@ -19,7 +19,7 @@ public class ItemDaoImpl implements ItemDao {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(
-                    "jdbc:mysql://datasaintsdbinstance.chsdnjuecf9v.us-west-1.rds.amazonaws.com:3306/DSaints?user=datasaints&password=datasaints");
+                    "jdbc:mysql://aa1id9u2m7qsv38.chsdnjuecf9v.us-west-1.rds.amazonaws.com/ebdb?user=datasaints&password=datasaints");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -51,13 +51,13 @@ public class ItemDaoImpl implements ItemDao {
         ResultSet rst;
 
 		if (whatToGet == 1) {
-			statement = "SELECT COUNT(*) FROM DSaints.Equipment";
+			statement = "SELECT COUNT(*) FROM Equipment";
 		}
 		else if (whatToGet == 2) { //CheckIn count
-			statement = "SELECT COUNT(*) FROM DSaints.Equipment WHERE CheckOut is null";
+			statement = "SELECT COUNT(*) FROM CheckedIn";
 		}
 		else if (whatToGet == 3) { //CheckOut Count
-			statement = "SELECT COUNT(*) FROM DSaints.Equipment WHERE CheckIn is null";
+			statement = "SELECT COUNT(*) FROM CheckedOut";
 		}
 		else if (whatToGet == 4) { //lastCalibratedCount
 			//TODO: logic for last calibrated count
@@ -87,72 +87,47 @@ public class ItemDaoImpl implements ItemDao {
         }
 		
 		return count;
-	} 
-	
-	public String addItem(Item item) {
-		Connection conn = getConnection();
-		PreparedStatement pst;
-        ResultSet rst;
-        java.sql.Date sqlCheckIn = null; 
-        java.sql.Date sqlCheckOut = null;
-        java.sql.Date sqlLastCali = new java.sql.Date(item.getLastCalibrated().getTime());
-
-        if (item.getItemId() ==  null) {
-        	throw new AddItemException("No item id given");
-        }
-        
-        if (item.getCheckIn() != null) {
-        	sqlCheckIn = new java.sql.Date(item.getCheckIn().getTime());
-        }
-        
-        if (item.getCheckOut() != null) {
-        	sqlCheckOut = new java.sql.Date(item.getCheckOut().getTime());
-        }
-        
-        try {
-        	  System.out.println("The item id attempting to be added is " +item.getItemId());
-
-           //TO CHANGE
-           String insertStatement = "INSERT INTO DSaints.Equipment (ItemID, EmployeeID, ItemName, CheckIn, CheckOut, LastCalibrated) VALUES (?, ?, ?, ?, ?, ?);";
-
-           pst = conn.prepareStatement(insertStatement);
-
-           pst.setString(1, item.getItemId());
-           pst.setInt(2, item.getEmployeeId());
-           pst.setString(3, item.getItemName());          
-           pst.setDate(4, sqlCheckIn);
-           pst.setDate(5, sqlCheckOut);
-           pst.setDate(6, sqlLastCali);
-
-
-	        pst.executeUpdate();
-
-	        System.out.println("Added item " +item.getItemId() + " to the database");
-        }
-        catch (SQLException e) {
-			System.out.println(e.getMessage());
-			
-			//TODO: DUPLICATE ENTRY
-        }
-        finally {
-        	closeConnection(conn);
-        }
-
-        return item.getItemId();
 	}
-
-	public void deleteItem(String itemId) {
+	
+	public int getItemCount(String location, int whatToGet) {
 		Connection conn = getConnection();
-        PreparedStatement pst;
+		int count = 0;
+		PreparedStatement pst;
+		String statement = "";
+        ResultSet rst;
 
-        String deleteStatement = "DELETE FROM DSaints.Equipment WHERE itemID = " + itemId + ";";
-
+		if (whatToGet == 1) {
+			statement = "SELECT COUNT(*) FROM Equipment e JOIN " +
+				"Location l ON e.owner = l.id WHERE l.name = ?";
+		}
+		else if (whatToGet == 2) { //CheckIn count
+			statement = "SELECT COUNT(*) FROM Equipment e JOIN " +
+				"Location l ON e.owner = l.id JOIN CheckedIn c " +
+				"ON c.id = e.id WHERE l.name = ?";
+		}
+		else if (whatToGet == 3) { //CheckOut Count
+			statement = "SELECT COUNT(*) FROM Equipment e JOIN " +
+				"Location l ON e.owner = l.id JOIN CheckedOut c " +
+				"ON c.id = e.id WHERE l.name = ?";
+		}
+		else if (whatToGet == 4) { //lastCalibratedCount
+			//TODO: logic for last calibrated count
+			return 1;
+		}
+		else {
+			System.out.println("shouldn't have gotten in here..... GET ITEM COUNT");
+		}
+		
         try {
-            pst = conn.prepareStatement(deleteStatement);
+            pst = conn.prepareStatement(statement);
+            pst.setString(1, location);
 
-            pst.executeUpdate();
-
-            System.out.println("Item Deleted From Database");
+            rst = pst.executeQuery();
+            
+            if (rst.next())
+            	count = rst.getInt(1);
+            
+            System.out.println("Atempted to count: " +count);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -162,36 +137,168 @@ public class ItemDaoImpl implements ItemDao {
         	closeConnection(conn);
 
         }
+		
+		return count;
+	}
+	
+	public boolean addItem(Item item) {
+		Connection conn = getConnection();
+		PreparedStatement pst;
+        
+        boolean success = false;
+        
+        if (item.getOwner() == null) {
+        	throw new AddItemException("No owner given");
+        }
+        
+        try {
+           //TO CHANGE
+           String insertStatement = "INSERT INTO Equipment (owner, " +
+               "internalId, serial, itemName, currentLocation, lastCalibrated) " +
+               "VALUES (?, ?, ?, ?, ?, ?);";
+
+           pst = conn.prepareStatement(insertStatement);
+
+           pst.setString(1, item.getOwner());
+           pst.setInt(2, item.getInternalId());
+           pst.setInt(3, item.getSerial());
+           pst.setString(4, item.getItemName());
+           pst.setString(5, item.getLocation());
+           pst.setDate(6, item.getLastCalibrated());
+
+	        success = (pst.executeUpdate() == 1);
+
+	        System.out.println("Added item " + item.getOwner() + "'s " +
+	        	item.getInternalId()+ " to the database");
+        }
+        catch (SQLException e) {
+			System.out.println(e.getMessage());
+			
+			//TODO: DUPLICATE ENTRY
+        }
+        finally {
+        	closeConnection(conn);
+        }
+        
+        return success;
+	}
+	
+	public boolean updateLocation(String owner, int internalId, String newLocation) {
+		Connection conn = getConnection();
+		PreparedStatement pst;
+		boolean success = false;
+		
+		try {
+			pst = conn.prepareStatement("UPDATE Equipment SET currentLocation = " + 
+				"(SELECT id FROM Location WHERE name = ?) WHERE owner = " + 
+				"(SELECT id FROM Location WHERE name = ?) AND internalId = ?");
+			pst.setString(1, newLocation);
+			pst.setString(2, owner);
+			pst.setInt(3, internalId);
+			
+			success = (pst.executeUpdate() == 1);
+			
+			System.out.println("Updated location of " + owner + "'s " + 
+				internalId + " to be " + newLocation);
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		finally {
+			closeConnection(conn);
+		}
+		
+		return success;
+	}
+
+	public boolean deleteItem(String owner, int internalId) {
+		Connection conn = getConnection();
+        PreparedStatement pst;
+        boolean success = false;
+        
+        PreparedStatement deleteStatus = null;
+        ResultSet deleteStatusResult = null;
+
+        try {
+        	deleteStatus = conn.prepareStatement("SELECT * FROM CheckedOut " +
+        		"WHERE id = (SELECT id FROM Equipment WHERE owner = ? " + 
+        		"AND internalId = ?)");
+        	deleteStatus.setString(1, owner);
+        	deleteStatus.setInt(2, internalId);
+        	
+        	deleteStatusResult = deleteStatus.executeQuery();
+        	if (deleteStatusResult.next()) {
+        		deleteStatus.close();
+        		deleteStatusResult.close();
+        		
+        		deleteStatus = conn.prepareStatement("DELETE FROM CheckedOut " +
+        			"WHERE id = (SELECT id FROM Equipment WHERE owner = ? " +
+        			"AND internalID = ?)");
+        		deleteStatus.setString(1, owner);
+        		deleteStatus.setInt(2, internalId);
+        		
+        		deleteStatus.executeUpdate();
+        	}
+        	else {
+        		deleteStatus.close();
+        		deleteStatusResult.close();
+        		
+        		deleteStatus = conn.prepareStatement("DELETE FROM CheckedIn " +
+        			"WHERE id = (SELECT id FROM Equipment WHERE owner = ? " +
+        			"AND internalID = ?)");
+        		deleteStatus.setString(1, owner);
+        		deleteStatus.setInt(2, internalId);
+        		
+        		deleteStatus.executeUpdate();
+        	}
+        	
+            pst = conn.prepareStatement("DELETE FROM Equipment WHERE owner = " + 
+            	"(SELECT id FROM Location WHERE name = ?) AND internalID = ?");
+            pst.setString(1, owner);
+            pst.setInt(2, internalId);
+
+            success = (pst.executeUpdate() == 1);
+
+            System.out.println("Item Deleted From Database");
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        finally {
+        	closeConnection(conn);
+        }
+        
+        return success;
 	}
 
 	@Override
-    public Item getItemById(String itemId) {
+    public Item getItem(String owner, int internalId) {
         Connection conn = getConnection();
-
         ResultSet rst;
         PreparedStatement pst;
-
-        /* Check if the string is in the proper format -- need to add "" marks
-         * around it.
-         */
-        if (itemId.charAt(0) != '"') {
-        	itemId = '"' + itemId + '"';
-        }
-
-        String itemQuery = "SELECT * FROM DSaints.Equipment WHERE ItemID = " + itemId + ";";
-
-        System.out.println("database query executed: " + itemQuery);
 
         Item item = new Item();
 
         try {
-            pst = conn.prepareStatement(itemQuery);
+            pst = conn.prepareStatement("SELECT l1.name AS 'owner', " + 
+            	"internalId, serial, itemName, l2.name AS 'location', " +
+            	"lastCalibrated FROM Equipment e JOIN Location l1 ON " +
+            	"l1.name = ? AND l1.id = e.owner JOIN Location l2 ON l2.name = ? WHERE " + 
+            	"internalId = ?");
+            pst.setString(1, owner);
+            pst.setString(2, owner);
+            pst.setInt(3, internalId);
         	rst = pst.executeQuery();
 
             if (rst.next()) {
+            	System.out.println("Found item");
                 item = new Item();
+                item.setOwner(rst.getString("owner"));
+                item.setInternalId(rst.getInt("internalId"));
+                item.setItemName(rst.getString("itemName"));
+                item.setLocation(rst.getString("location"));
+                item.setLastCalibrated(rst.getDate("lastCalibrated"));
 
-                item.setItemId(rst.getString("itemID"));
             } else {
             	return null;
             }
@@ -207,6 +314,7 @@ public class ItemDaoImpl implements ItemDao {
     }
 	
 	//TODO: convert datetime
+	/*
 	public ArrayList<Item> findItem(Item toFind) {
 		Connection conn = getConnection();		
 		PreparedStatement pst;
@@ -281,4 +389,5 @@ public class ItemDaoImpl implements ItemDao {
 		return itemList;
 
 	}
+	*/
 }

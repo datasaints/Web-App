@@ -43,9 +43,10 @@ public class JDBCConnect {
     	
     	try {
     		getItemsQuery = conn.prepareStatement("SELECT e.id, internalId, " + 
-    			"owner, serial, itemName, l.name AS 'location', " + 
+    			"l2.name AS 'owner', serial, itemName, l.name AS 'location', " + 
     			"lastCalibrated FROM Equipment e JOIN Location l ON l.id = " +
-    			"currentLocation WHERE owner = ?");
+    			"currentLocation JOIN Location l2 ON l2.id = " + 
+    			"owner WHERE owner = ?");
     		getItemsQuery.setInt(1, location);
     		
     		getItemsResult = getItemsQuery.executeQuery();
@@ -76,6 +77,7 @@ public class JDBCConnect {
     			}
     			
     			items.add(new Item(
+    					getItemsResult.getString("owner"),
     					getItemsResult.getInt("internalId"),
     					getItemsResult.getInt("serial"),
     					getItemsResult.getString("itemName"),
@@ -106,9 +108,9 @@ public class JDBCConnect {
     	
     	try {
     		getItemsQuery = conn.prepareStatement("SELECT e.id, internalId, " + 
-    			"owner, serial, itemName, l.name AS 'location', " + 
+    			"l2.name AS 'owner', serial, itemName, l.name AS 'location', " + 
     			"lastCalibrated FROM Equipment e JOIN Location l ON l.id = " +
-    			"currentLocation");
+    			"currentLocation JOIN Location l2 ON l2.id = owner");
     		
     		getItemsResult = getItemsQuery.executeQuery();
     		
@@ -138,6 +140,7 @@ public class JDBCConnect {
     			}
     			
     			items.add(new Item(
+    					getItemsResult.getString("owner"),
     					getItemsResult.getInt("internalId"),
     					getItemsResult.getInt("serial"),
     					getItemsResult.getString("itemName"),
@@ -168,9 +171,10 @@ public class JDBCConnect {
     	
     	try {
     		getItemsQuery = conn.prepareStatement("SELECT e.id, internalId, " + 
-    			"owner, serial, itemName, l.name AS 'location', " + 
+    			"l2.name AS 'owner', serial, itemName, l.name AS 'location', " + 
     			"lastCalibrated FROM Equipment e JOIN Location l ON l.id = " +
-    			"currentLocation WHERE owner = ? AND DATEDIFF(NOW(), " + 
+    			"currentLocation JOIN Location l2 ON l2.id = owner " +
+    			"WHERE owner = ? AND DATEDIFF(NOW(), " + 
     			"lastCalibrated) >= 14");
     		getItemsQuery.setInt(1, location);
     		
@@ -202,6 +206,7 @@ public class JDBCConnect {
     			}
     			
     			items.add(new Item(
+    					getItemsResult.getString("owner"),
     					getItemsResult.getInt("internalId"),
     					getItemsResult.getInt("serial"),
     					getItemsResult.getString("itemName"),
@@ -232,9 +237,9 @@ public class JDBCConnect {
     	
     	try {
     		getItemsQuery = conn.prepareStatement("SELECT e.id, internalId, " + 
-    			"owner, serial, itemName, l.name AS 'location', " + 
+    			"l2.name AS 'owner', serial, itemName, l.name AS 'location', " + 
     			"lastCalibrated FROM Equipment e JOIN Location l ON l.id = " +
-    			"currentLocation WHERE DATEDIFF(NOW(), " + 
+    			"currentLocation JOIN Location l2 ON l2.id = owner WHERE DATEDIFF(NOW(), " + 
     			"lastCalibrated) >= 14");
     		
     		getItemsResult = getItemsQuery.executeQuery();
@@ -265,6 +270,7 @@ public class JDBCConnect {
     			}
     			
     			items.add(new Item(
+    					getItemsResult.getString("owner"),
     					getItemsResult.getInt("internalId"),
     					getItemsResult.getInt("serial"),
     					getItemsResult.getString("itemName"),
@@ -291,16 +297,17 @@ public class JDBCConnect {
     	
     	try {
     		getItemsQuery = conn.prepareStatement("SELECT internalId," + 
-    			"owner, serial, itemName, l.name AS 'location', " + 
+    			"l2.name AS 'owner', serial, itemName, l.name AS 'location', " + 
     			"lastCalibrated, checkTime FROM Equipment e JOIN Location l ON l.id = " +
     			"currentLocation JOIN CheckedOut c ON c.id = " + 
-    			"e.id WHERE owner = ?");
+    			"e.id JOIN Location l2 ON l2.id = owner WHERE owner = ?");
     		getItemsQuery.setInt(1, location);
     		
     		getItemsResult = getItemsQuery.executeQuery();
     		
     		while (getItemsResult.next()) {
     			items.add(new Item(
+    					getItemsResult.getString("owner"),
     					getItemsResult.getInt("internalId"),
     					getItemsResult.getInt("serial"),
     					getItemsResult.getString("itemName"),
@@ -327,15 +334,16 @@ public class JDBCConnect {
     	
     	try {
     		getItemsQuery = conn.prepareStatement("SELECT internalId," + 
-    			"owner, serial, itemName, l.name AS 'location', " + 
+    			"l2.name AS 'owner', serial, itemName, l.name AS 'location', " + 
     			"lastCalibrated, checkTime FROM Equipment e JOIN Location l ON l.id = " +
     			"currentLocation JOIN CheckedOut c ON c.id = " + 
-    			"e.id");
+    			"e.id JOIN Location l2 ON l2.id = owner");
     		
     		getItemsResult = getItemsQuery.executeQuery();
     		
     		while (getItemsResult.next()) {
     			items.add(new Item(
+    					getItemsResult.getString("owner"),
     					getItemsResult.getInt("internalId"),
     					getItemsResult.getInt("serial"),
     					getItemsResult.getString("itemName"),
@@ -362,16 +370,17 @@ public class JDBCConnect {
     	
     	try {
     		getItemsQuery = conn.prepareStatement("SELECT internalId," + 
-    			"owner, serial, itemName, l.name AS 'location', " + 
+    			"l2.name AS 'owner', serial, itemName, l.name AS 'location', " + 
     			"lastCalibrated, checkTime FROM Equipment e JOIN Location l ON l.id = " +
     			"currentLocation JOIN CheckedIn c ON c.id = " + 
-    			"e.id WHERE owner = ?");
+    			"e.id JOIN Location l2 ON l2.id = owner WHERE owner = ?");
     		getItemsQuery.setInt(1, location);
     		
     		getItemsResult = getItemsQuery.executeQuery();
     		
     		while (getItemsResult.next()) {
     			items.add(new Item(
+    					getItemsResult.getString("owner"),
     					getItemsResult.getInt("internalId"),
     					getItemsResult.getInt("serial"),
     					getItemsResult.getString("itemName"),
@@ -398,15 +407,16 @@ public class JDBCConnect {
     	
     	try {
     		getItemsQuery = conn.prepareStatement("SELECT internalId," + 
-    			"owner, serial, itemName, l.name AS 'location', " + 
+    			"l2.name AS 'owner', serial, itemName, l.name AS 'location', " + 
     			"lastCalibrated, checkTime FROM Equipment e JOIN Location l ON l.id = " +
     			"currentLocation JOIN CheckedIn c ON c.id = " + 
-    			"e.id");
+    			"e.id JOIN Location l2 ON l2.id = owner");
     		
     		getItemsResult = getItemsQuery.executeQuery();
     		
     		while (getItemsResult.next()) {
     			items.add(new Item(
+    					getItemsResult.getString("owner"),
     					getItemsResult.getInt("internalId"),
     					getItemsResult.getInt("serial"),
     					getItemsResult.getString("itemName"),

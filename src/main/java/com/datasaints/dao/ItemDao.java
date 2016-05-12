@@ -5,14 +5,18 @@ import java.util.ArrayList;
 import com.datasaints.domain.Item;
 
 public interface ItemDao {
-	public String addItem(Item item);
+	public boolean addItem(Item item);
+	
+	public boolean updateLocation(String owner, int internalId, String newLocation);
 
-	public void deleteItem(String itemId);
+	public boolean deleteItem(String owner, int internalId);
 	
-	public Item getItemById(String itemId);
+	public Item getItem(String owner, int internalId);
 	
-	public ArrayList<Item> findItem(Item toFind);
+	// public ArrayList<Item> findItem(Item toFind);
 	
 	public int getItemCount(int whatToGet);
+	
+	public int getItemCount(String location, int whatToGet);
 
 }
