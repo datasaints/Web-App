@@ -32,19 +32,19 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public boolean deleteItem(String owner, int internalId) {
+	public boolean deleteItem(String id) {
 		/* At this point it should already be checked if the item is null,
 		 * but let's do it again because we don't know who will call it in
 		 * the future.
 		 */
 
-		if (owner == null) {
-	   		throw new IllegalArgumentException("owner is required");
+		if (id == null) {
+	   		throw new IllegalArgumentException("id is required");
 		}
 
 		ItemDao itemDao = new ItemDaoImpl();
 
-		return itemDao.deleteItem(owner, internalId);
+		return itemDao.deleteItem(id);
 	}
 
 	/*
@@ -70,17 +70,17 @@ public class ItemServiceImpl implements ItemService {
 	*/
 	
 	@Override
-	public boolean updateItemLocation(String owner, int internalId, String newLocation) {
+	public boolean updateItemLocation(String id, String newLocation) {
 		ItemDao itemDao = new ItemDaoImpl();
 		
-		return itemDao.updateLocation(owner, internalId, newLocation);
+		return itemDao.updateLocation(id, newLocation);
 	}
 
 	@Override
-	public Item getItem(String owner, int internalId) {
+	public Item getItem(String id) {
 		ItemDao itemDao = new ItemDaoImpl();
 
-		return itemDao.getItem(owner, internalId);
+		return itemDao.getItem(id);
 	}
 	
 	/*

@@ -117,23 +117,19 @@ public class ItemController {
 	   return itemService.addItem(item);
    }
    
-   @RequestMapping(value = "/updateLocation/{owner}/{internalId}/{newLocation}", method = RequestMethod.POST)
-   public String updateItemLocation(@PathVariable String owner,
-     @PathVariable int internalId, @PathVariable String newLocation) {
-	   if (owner == null) {
-		   throw new IllegalArgumentException("owner is required");
+   @RequestMapping(value = "/updateLocation/{id}/{newLocation}", method = RequestMethod.POST)
+   public String updateItemLocation(@PathVariable String id, @PathVariable String newLocation) {
+	   if (id == null) {
+		   throw new IllegalArgumentException("id is required");
 	   }
 	   
-	   System.out.println("Updating location of " + owner + "'s " + internalId + 
-	       " to " + newLocation);
+	   System.out.println("Updating location of " + id + " to " + newLocation);
 	   
-	   if (itemService.updateItemLocation(owner, internalId, newLocation)) {
-		   return "Successfully updated location of " + owner + "'s " + internalId +
-		       " to " + newLocation;
+	   if (itemService.updateItemLocation(id, newLocation)) {
+		   return "Successfully updated location of " + id + " to " + newLocation;
 	   }
 	   else {
-		   return "Failed to update location of " + owner + "'s " + internalId +
-		       " to " + newLocation;
+		   return "Failed to update location of " + id + " to " + newLocation;
 	   }
    }
    
@@ -149,35 +145,35 @@ public class ItemController {
    }
    */
    
-   @RequestMapping(value = "/findItem/{owner}/{internalId}", method = RequestMethod.POST)
-   public Item findItem(@PathVariable String owner, @PathVariable int internalId) {
-	   if (owner == null) {
-		   throw new IllegalArgumentException("owner is required");
+   @RequestMapping(value = "/findItem/{id}", method = RequestMethod.POST)
+   public Item findItem(@PathVariable String id) {
+	   if (id == null) {
+		   throw new IllegalArgumentException("id is required");
 	   }
 	   
-	   System.out.println("Finding item with owner = " + owner + ", internalId = " + internalId);
+	   System.out.println("Finding item with id = " + id);
 	   
-	   return itemService.getItem(owner, internalId);
+	   return itemService.getItem(id);
    }
    
-   @RequestMapping(value = "/deleteItem/{owner}/{internalId}", method = RequestMethod.DELETE)
-   public String deleteItem(@PathVariable String owner, @PathVariable int internalId) {
+   @RequestMapping(value = "/deleteItem/{id}", method = RequestMethod.DELETE)
+   public String deleteItem(@PathVariable String id) {
 
-   	if (owner == null) {
-   		throw new IllegalArgumentException("owner is required");
+   	if (id == null) {
+   		throw new IllegalArgumentException("id is required");
    	}
    	
-   	System.out.println("Called delete with owner: " + owner + ", internalId = " + internalId);
+   	System.out.println("Called delete with id = " + id);
    	
-   	if (itemService.getItem(owner, internalId) == null) {
-       	throw new NoItemFoundException(owner + " does not have item with internalId " + internalId);
+   	if (itemService.getItem(id) == null) {
+       	throw new NoItemFoundException("Item with id " + id + " does not exist");
        }
    	
-       if (itemService.deleteItem(owner, internalId)) {
-    	   return "Deleted " + owner + "'s item with internalId " + internalId;
+       if (itemService.deleteItem(id)) {
+    	   return "Deleted item with id" + id;
        }
        else {
-    	   return "Failed to delete " + owner + "'s item with internalId " + internalId;
+    	   return "Failed to delete item with id " + id;
        }
    }
 }

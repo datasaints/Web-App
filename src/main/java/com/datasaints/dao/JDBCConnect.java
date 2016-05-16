@@ -35,14 +35,14 @@ public class JDBCConnect {
     	PreparedStatement getStatusQuery = null;
     	ResultSet getItemsResult = null;
     	ResultSet getStatusResult = null;
-    	int id;
+    	String id;
     	Item.Status status = Item.Status.CHECKED_IN;
     	Timestamp checkTime = null;
     	
     	items.clear();
     	
     	try {
-    		getItemsQuery = conn.prepareStatement("SELECT e.id, internalId, " + 
+    		getItemsQuery = conn.prepareStatement("SELECT e.id, " + 
     			"l2.name AS 'owner', serial, itemName, l.name AS 'location', " + 
     			"lastCalibrated FROM Equipment e JOIN Location l ON l.id = " +
     			"currentLocation JOIN Location l2 ON l2.id = " + 
@@ -53,9 +53,9 @@ public class JDBCConnect {
     		
     		while (getItemsResult.next()) {    			
     			// For now, assume that if an item isn't checked in, it's checked out
-    			id = getItemsResult.getInt("id");
+    			id = getItemsResult.getString("id");
     			getStatusQuery = conn.prepareStatement("SELECT * FROM CheckedOut WHERE id = ?");
-    			getStatusQuery.setInt(1, id);
+    			getStatusQuery.setString(1, id);
     			
     			getStatusResult = getStatusQuery.executeQuery();
     			
@@ -69,7 +69,7 @@ public class JDBCConnect {
     				getStatusResult.close();
     				
     				getStatusQuery = conn.prepareStatement("SELECT * FROM CheckedIn WHERE id = ?");
-    				getStatusQuery.setInt(1, id);
+    				getStatusQuery.setString(1, id);
     				getStatusResult = getStatusQuery.executeQuery();
     				
     				getStatusResult.next();
@@ -77,8 +77,8 @@ public class JDBCConnect {
     			}
     			
     			items.add(new Item(
+    					getItemsResult.getString("id"),
     					getItemsResult.getString("owner"),
-    					getItemsResult.getInt("internalId"),
     					getItemsResult.getInt("serial"),
     					getItemsResult.getString("itemName"),
     					getItemsResult.getString("location"),
@@ -100,14 +100,14 @@ public class JDBCConnect {
     	PreparedStatement getStatusQuery = null;
     	ResultSet getItemsResult = null;
     	ResultSet getStatusResult = null;
-    	int id;
+    	String id;
     	Item.Status status = Item.Status.CHECKED_IN;
     	Timestamp checkTime = null;
     	
     	items.clear();
     	
     	try {
-    		getItemsQuery = conn.prepareStatement("SELECT e.id, internalId, " + 
+    		getItemsQuery = conn.prepareStatement("SELECT e.id, " + 
     			"l2.name AS 'owner', serial, itemName, l.name AS 'location', " + 
     			"lastCalibrated FROM Equipment e JOIN Location l ON l.id = " +
     			"currentLocation JOIN Location l2 ON l2.id = owner");
@@ -116,9 +116,9 @@ public class JDBCConnect {
     		
     		while (getItemsResult.next()) {    			
     			// For now, assume that if an item isn't checked in, it's checked out
-    			id = getItemsResult.getInt("id");
+    			id = getItemsResult.getString("id");
     			getStatusQuery = conn.prepareStatement("SELECT * FROM CheckedOut WHERE id = ?");
-    			getStatusQuery.setInt(1, id);
+    			getStatusQuery.setString(1, id);
     			
     			getStatusResult = getStatusQuery.executeQuery();
     			
@@ -132,7 +132,7 @@ public class JDBCConnect {
     				getStatusResult.close();
     				
     				getStatusQuery = conn.prepareStatement("SELECT * FROM CheckedIn WHERE id = ?");
-    				getStatusQuery.setInt(1, id);
+    				getStatusQuery.setString(1, id);
     				getStatusResult = getStatusQuery.executeQuery();
     				
     				getStatusResult.next();
@@ -140,8 +140,8 @@ public class JDBCConnect {
     			}
     			
     			items.add(new Item(
+    					getItemsResult.getString("id"),
     					getItemsResult.getString("owner"),
-    					getItemsResult.getInt("internalId"),
     					getItemsResult.getInt("serial"),
     					getItemsResult.getString("itemName"),
     					getItemsResult.getString("location"),
@@ -163,14 +163,14 @@ public class JDBCConnect {
     	PreparedStatement getStatusQuery = null;
     	ResultSet getItemsResult = null;
     	ResultSet getStatusResult = null;
-    	int id;
+    	String id;
     	Item.Status status = Item.Status.CHECKED_IN;
     	Timestamp checkTime = null;
     	
     	items.clear();
     	
     	try {
-    		getItemsQuery = conn.prepareStatement("SELECT e.id, internalId, " + 
+    		getItemsQuery = conn.prepareStatement("SELECT e.id, " + 
     			"l2.name AS 'owner', serial, itemName, l.name AS 'location', " + 
     			"lastCalibrated FROM Equipment e JOIN Location l ON l.id = " +
     			"currentLocation JOIN Location l2 ON l2.id = owner " +
@@ -182,9 +182,9 @@ public class JDBCConnect {
     		
     		while (getItemsResult.next()) {    			
     			// For now, assume that if an item isn't checked in, it's checked out
-    			id = getItemsResult.getInt("id");
+    			id = getItemsResult.getString("id");
     			getStatusQuery = conn.prepareStatement("SELECT * FROM CheckedOut WHERE id = ?");
-    			getStatusQuery.setInt(1, id);
+    			getStatusQuery.setString(1, id);
     			
     			getStatusResult = getStatusQuery.executeQuery();
     			
@@ -198,7 +198,7 @@ public class JDBCConnect {
     				getStatusResult.close();
     				
     				getStatusQuery = conn.prepareStatement("SELECT * FROM CheckedIn WHERE id = ?");
-    				getStatusQuery.setInt(1, id);
+    				getStatusQuery.setString(1, id);
     				getStatusResult = getStatusQuery.executeQuery();
     				
     				getStatusResult.next();
@@ -206,8 +206,8 @@ public class JDBCConnect {
     			}
     			
     			items.add(new Item(
+    					getItemsResult.getString("id"),
     					getItemsResult.getString("owner"),
-    					getItemsResult.getInt("internalId"),
     					getItemsResult.getInt("serial"),
     					getItemsResult.getString("itemName"),
     					getItemsResult.getString("location"),
@@ -229,14 +229,14 @@ public class JDBCConnect {
     	PreparedStatement getStatusQuery = null;
     	ResultSet getItemsResult = null;
     	ResultSet getStatusResult = null;
-    	int id;
+    	String id;
     	Item.Status status = Item.Status.CHECKED_IN;
     	Timestamp checkTime = null;
     	
     	items.clear();
     	
     	try {
-    		getItemsQuery = conn.prepareStatement("SELECT e.id, internalId, " + 
+    		getItemsQuery = conn.prepareStatement("SELECT e.id, " + 
     			"l2.name AS 'owner', serial, itemName, l.name AS 'location', " + 
     			"lastCalibrated FROM Equipment e JOIN Location l ON l.id = " +
     			"currentLocation JOIN Location l2 ON l2.id = owner WHERE DATEDIFF(NOW(), " + 
@@ -246,9 +246,9 @@ public class JDBCConnect {
     		
     		while (getItemsResult.next()) {    			
     			// For now, assume that if an item isn't checked in, it's checked out
-    			id = getItemsResult.getInt("id");
+    			id = getItemsResult.getString("id");
     			getStatusQuery = conn.prepareStatement("SELECT * FROM CheckedOut WHERE id = ?");
-    			getStatusQuery.setInt(1, id);
+    			getStatusQuery.setString(1, id);
     			
     			getStatusResult = getStatusQuery.executeQuery();
     			
@@ -262,7 +262,7 @@ public class JDBCConnect {
     				getStatusResult.close();
     				
     				getStatusQuery = conn.prepareStatement("SELECT * FROM CheckedIn WHERE id = ?");
-    				getStatusQuery.setInt(1, id);
+    				getStatusQuery.setString(1, id);
     				getStatusResult = getStatusQuery.executeQuery();
     				
     				getStatusResult.next();
@@ -270,8 +270,8 @@ public class JDBCConnect {
     			}
     			
     			items.add(new Item(
+    					getItemsResult.getString("id"),
     					getItemsResult.getString("owner"),
-    					getItemsResult.getInt("internalId"),
     					getItemsResult.getInt("serial"),
     					getItemsResult.getString("itemName"),
     					getItemsResult.getString("location"),
@@ -296,7 +296,7 @@ public class JDBCConnect {
     	items.clear();
     	
     	try {
-    		getItemsQuery = conn.prepareStatement("SELECT internalId," + 
+    		getItemsQuery = conn.prepareStatement("SELECT e.id," + 
     			"l2.name AS 'owner', serial, itemName, l.name AS 'location', " + 
     			"lastCalibrated, checkTime FROM Equipment e JOIN Location l ON l.id = " +
     			"currentLocation JOIN CheckedOut c ON c.id = " + 
@@ -307,8 +307,8 @@ public class JDBCConnect {
     		
     		while (getItemsResult.next()) {
     			items.add(new Item(
+    					getItemsResult.getString("id"),
     					getItemsResult.getString("owner"),
-    					getItemsResult.getInt("internalId"),
     					getItemsResult.getInt("serial"),
     					getItemsResult.getString("itemName"),
     					getItemsResult.getString("location"),
@@ -333,7 +333,7 @@ public class JDBCConnect {
     	items.clear();
     	
     	try {
-    		getItemsQuery = conn.prepareStatement("SELECT internalId," + 
+    		getItemsQuery = conn.prepareStatement("SELECT e.id," + 
     			"l2.name AS 'owner', serial, itemName, l.name AS 'location', " + 
     			"lastCalibrated, checkTime FROM Equipment e JOIN Location l ON l.id = " +
     			"currentLocation JOIN CheckedOut c ON c.id = " + 
@@ -343,8 +343,8 @@ public class JDBCConnect {
     		
     		while (getItemsResult.next()) {
     			items.add(new Item(
+    					getItemsResult.getString("id"),
     					getItemsResult.getString("owner"),
-    					getItemsResult.getInt("internalId"),
     					getItemsResult.getInt("serial"),
     					getItemsResult.getString("itemName"),
     					getItemsResult.getString("location"),
@@ -369,7 +369,7 @@ public class JDBCConnect {
     	items.clear();
     	
     	try {
-    		getItemsQuery = conn.prepareStatement("SELECT internalId," + 
+    		getItemsQuery = conn.prepareStatement("SELECT e.id," + 
     			"l2.name AS 'owner', serial, itemName, l.name AS 'location', " + 
     			"lastCalibrated, checkTime FROM Equipment e JOIN Location l ON l.id = " +
     			"currentLocation JOIN CheckedIn c ON c.id = " + 
@@ -380,8 +380,8 @@ public class JDBCConnect {
     		
     		while (getItemsResult.next()) {
     			items.add(new Item(
+    					getItemsResult.getString("id"),
     					getItemsResult.getString("owner"),
-    					getItemsResult.getInt("internalId"),
     					getItemsResult.getInt("serial"),
     					getItemsResult.getString("itemName"),
     					getItemsResult.getString("location"),
@@ -406,7 +406,7 @@ public class JDBCConnect {
     	items.clear();
     	
     	try {
-    		getItemsQuery = conn.prepareStatement("SELECT internalId," + 
+    		getItemsQuery = conn.prepareStatement("SELECT e.id," + 
     			"l2.name AS 'owner', serial, itemName, l.name AS 'location', " + 
     			"lastCalibrated, checkTime FROM Equipment e JOIN Location l ON l.id = " +
     			"currentLocation JOIN CheckedIn c ON c.id = " + 
@@ -416,8 +416,8 @@ public class JDBCConnect {
     		
     		while (getItemsResult.next()) {
     			items.add(new Item(
+    					getItemsResult.getString("id"),
     					getItemsResult.getString("owner"),
-    					getItemsResult.getInt("internalId"),
     					getItemsResult.getInt("serial"),
     					getItemsResult.getString("itemName"),
     					getItemsResult.getString("location"),

@@ -7,13 +7,13 @@ import com.datasaints.domain.Item;
 public interface ItemService {
 	public boolean addItem(Item item);
 
-	public boolean deleteItem(String owner, int internalId);
+	public boolean deleteItem(String id);
 
 	// public String checkAddItemArguments(Item item);
 	
-	public Item getItem(String owner, int internalId);
+	public Item getItem(String id);
 	
-	public boolean updateItemLocation(String owner, int internalId, String newLocation);
+	public boolean updateItemLocation(String id, String newLocation);
 	
 	// public ArrayList<Item> findItem(Item toFind);
 	

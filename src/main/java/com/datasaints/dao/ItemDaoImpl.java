@@ -153,14 +153,14 @@ public class ItemDaoImpl implements ItemDao {
         
         try {
            //TO CHANGE
-           String insertStatement = "INSERT INTO Equipment (owner, " +
-               "internalId, serial, itemName, currentLocation, lastCalibrated) " +
+           String insertStatement = "INSERT INTO Equipment (id, owner, " +
+               "serial, itemName, currentLocation, lastCalibrated) " +
                "VALUES (?, ?, ?, ?, ?, ?);";
 
            pst = conn.prepareStatement(insertStatement);
 
-           pst.setString(1, item.getOwner());
-           pst.setInt(2, item.getInternalId());
+           pst.setString(1, item.getId());
+           pst.setString(2, item.getOwner());
            pst.setInt(3, item.getSerial());
            pst.setString(4, item.getItemName());
            pst.setString(5, item.getLocation());
@@ -168,8 +168,7 @@ public class ItemDaoImpl implements ItemDao {
 
 	        success = (pst.executeUpdate() == 1);
 
-	        System.out.println("Added item " + item.getOwner() + "'s " +
-	        	item.getInternalId()+ " to the database");
+	        System.out.println("Added item " + item.getId() + " to the database");
         }
         catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -183,23 +182,21 @@ public class ItemDaoImpl implements ItemDao {
         return success;
 	}
 	
-	public boolean updateLocation(String owner, int internalId, String newLocation) {
+	@Override
+	public boolean updateLocation(String id, String newLocation) {
 		Connection conn = getConnection();
 		PreparedStatement pst;
 		boolean success = false;
 		
 		try {
 			pst = conn.prepareStatement("UPDATE Equipment SET currentLocation = " + 
-				"(SELECT id FROM Location WHERE name = ?) WHERE owner = " + 
-				"(SELECT id FROM Location WHERE name = ?) AND internalId = ?");
+				"(SELECT id FROM Location WHERE name = ?) WHERE id = ?");
 			pst.setString(1, newLocation);
-			pst.setString(2, owner);
-			pst.setInt(3, internalId);
+			pst.setString(2, id);
 			
 			success = (pst.executeUpdate() == 1);
 			
-			System.out.println("Updated location of " + owner + "'s " + 
-				internalId + " to be " + newLocation);
+			System.out.println("Updated location of " + id + " to be " + newLocation);
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();
@@ -211,7 +208,8 @@ public class ItemDaoImpl implements ItemDao {
 		return success;
 	}
 
-	public boolean deleteItem(String owner, int internalId) {
+	@Override
+	public boolean deleteItem(String id) {
 		Connection conn = getConnection();
         PreparedStatement pst;
         boolean success = false;
@@ -221,10 +219,8 @@ public class ItemDaoImpl implements ItemDao {
 
         try {
         	deleteStatus = conn.prepareStatement("SELECT * FROM CheckedOut " +
-        		"WHERE id = (SELECT id FROM Equipment WHERE owner = ? " + 
-        		"AND internalId = ?)");
-        	deleteStatus.setString(1, owner);
-        	deleteStatus.setInt(2, internalId);
+        		"WHERE id = ?");
+        	deleteStatus.setString(1, id);
         	
         	deleteStatusResult = deleteStatus.executeQuery();
         	if (deleteStatusResult.next()) {
@@ -232,10 +228,8 @@ public class ItemDaoImpl implements ItemDao {
         		deleteStatusResult.close();
         		
         		deleteStatus = conn.prepareStatement("DELETE FROM CheckedOut " +
-        			"WHERE id = (SELECT id FROM Equipment WHERE owner = ? " +
-        			"AND internalID = ?)");
-        		deleteStatus.setString(1, owner);
-        		deleteStatus.setInt(2, internalId);
+        			"WHERE id = ?");
+        		deleteStatus.setString(1, id);
         		
         		deleteStatus.executeUpdate();
         	}
@@ -244,18 +238,14 @@ public class ItemDaoImpl implements ItemDao {
         		deleteStatusResult.close();
         		
         		deleteStatus = conn.prepareStatement("DELETE FROM CheckedIn " +
-        			"WHERE id = (SELECT id FROM Equipment WHERE owner = ? " +
-        			"AND internalID = ?)");
-        		deleteStatus.setString(1, owner);
-        		deleteStatus.setInt(2, internalId);
+        			"WHERE id = ?");
+        		deleteStatus.setString(1, id);
         		
         		deleteStatus.executeUpdate();
         	}
         	
-            pst = conn.prepareStatement("DELETE FROM Equipment WHERE owner = " + 
-            	"(SELECT id FROM Location WHERE name = ?) AND internalID = ?");
-            pst.setString(1, owner);
-            pst.setInt(2, internalId);
+            pst = conn.prepareStatement("DELETE FROM Equipment WHERE id = ?");
+            pst.setString(1, id);
 
             success = (pst.executeUpdate() == 1);
 
@@ -272,38 +262,68 @@ public class ItemDaoImpl implements ItemDao {
 	}
 
 	@Override
-    public Item getItem(String owner, int internalId) {
+    public Item getItem(String id) {
         Connection conn = getConnection();
-        ResultSet rst;
-        PreparedStatement pst;
+
+        PreparedStatement getItemsQuery;
+        ResultSet getItemsResult;
+        PreparedStatement getStatusQuery;
+        ResultSet getStatusResult;
+        Item.Status status;
+        Timestamp checkTime;
 
         Item item = new Item();
 
         try {
-            pst = conn.prepareStatement("SELECT l1.name AS 'owner', " + 
-            	"internalId, serial, itemName, l2.name AS 'location', " +
-            	"lastCalibrated FROM Equipment e JOIN Location l1 ON " +
-            	"l1.name = ? AND l1.id = e.owner JOIN Location l2 ON l2.name = ? WHERE " + 
-            	"internalId = ?");
-            pst.setString(1, owner);
-            pst.setString(2, owner);
-            pst.setInt(3, internalId);
-        	rst = pst.executeQuery();
-
-            if (rst.next()) {
-            	System.out.println("Found item");
-                item = new Item();
-                item.setOwner(rst.getString("owner"));
-                item.setInternalId(rst.getInt("internalId"));
-                item.setItemName(rst.getString("itemName"));
-                item.setLocation(rst.getString("location"));
-                item.setLastCalibrated(rst.getDate("lastCalibrated"));
-
-            } else {
-            	return null;
-            }
-
-
+        	getItemsQuery = conn.prepareStatement("SELECT e.id, " + 
+        		"l2.name AS 'owner', serial, itemName, l.name AS 'location', " + 
+        		"lastCalibrated FROM Equipment e JOIN Location l ON l.id = " +
+        		"currentLocation JOIN Location l2 ON l2.id = " + 
+        		"owner WHERE e.id = ?");
+        	getItemsQuery.setString(1, id);
+        		
+        	getItemsResult = getItemsQuery.executeQuery();
+        		
+        	if (getItemsResult.next()) {
+        		System.out.println("Found item with id " + id);
+        			
+        		// For now, assume that if an item isn't checked in, it's checked out
+        		id = getItemsResult.getString("id");
+        		getStatusQuery = conn.prepareStatement("SELECT * FROM CheckedOut WHERE id = ?");
+        		getStatusQuery.setString(1, id);
+        			
+        		getStatusResult = getStatusQuery.executeQuery();
+        			
+        		if (getStatusResult.next()) {
+        			status = Item.Status.CHECKED_OUT;
+        			checkTime = getStatusResult.getTimestamp("checkTime");
+        		}
+        		else {
+        			status = Item.Status.CHECKED_IN;
+        			getStatusQuery.close();
+        			getStatusResult.close();
+        				
+        			getStatusQuery = conn.prepareStatement("SELECT * FROM CheckedIn WHERE id = ?");
+        			getStatusQuery.setString(1, id);
+        			getStatusResult = getStatusQuery.executeQuery();
+        			
+        			getStatusResult.next();
+        			checkTime = getStatusResult.getTimestamp("checkTime");
+        		}
+        			
+        		item = new Item(
+        			getItemsResult.getString("id"),
+        			getItemsResult.getString("owner"),
+        			getItemsResult.getInt("serial"),
+        			getItemsResult.getString("itemName"),
+        			getItemsResult.getString("location"),
+        			status,
+        			getItemsResult.getDate("lastCalibrated"),
+        			checkTime);
+        	}
+        	else {
+        		return null;
+        	}
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {

@@ -7,11 +7,11 @@ import com.datasaints.domain.Item;
 public interface ItemDao {
 	public boolean addItem(Item item);
 	
-	public boolean updateLocation(String owner, int internalId, String newLocation);
+	public boolean updateLocation(String id, String newLocation);
 
-	public boolean deleteItem(String owner, int internalId);
+	public boolean deleteItem(String id);
 	
-	public Item getItem(String owner, int internalId);
+	public Item getItem(String id);
 	
 	// public ArrayList<Item> findItem(Item toFind);
 	
