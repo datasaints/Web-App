@@ -9,9 +9,11 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.datasaints.domain.Item;
+import com.datasaints.domain.Location;
 
 public class JDBCConnect {
     private ArrayList<Item> items;
+    private ArrayList<Location> locations;
 
     private Connection conn;
 
@@ -26,6 +28,7 @@ public class JDBCConnect {
         }
         
         items = new ArrayList<Item>();
+        locations = new ArrayList<Location>();
 
         populateItems(0);
     }
@@ -433,9 +436,38 @@ public class JDBCConnect {
     		close(getItemsQuery, getItemsResult);
     	}
     }
+    
+    public void populateLocations() {
+    	PreparedStatement pst = null;
+    	ResultSet rst = null;
+    	
+    	locations.clear();
+    	
+    	try {
+    		pst = conn.prepareStatement("SELECT id, name FROM Location");
+    		
+    		rst = pst.executeQuery();
+    		
+    		while (rst.next()) {
+    			locations.add(new Location(
+    				rst.getInt("id"),
+    				rst.getString("name")));
+    		}
+    	}
+    	catch (Exception ex) {
+    		ex.printStackTrace();
+    	}
+    	finally {
+    		close(pst, rst);
+    	}
+    }
 	
     public ArrayList<Item> getItems() {
         return this.items;
+    }
+    
+    public ArrayList<Location> getLocations() {
+    	return this.locations;
     }
     
     private void close(Object... toClose) {
