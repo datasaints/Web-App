@@ -45,7 +45,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
             }
         })
         .state('home.table', {
-			url: '/item-table',
+			url: '/item-table/:location',
 			templateUrl: 'pages/item-table.html',
 			controller: 'TableController'
     	  })
@@ -146,22 +146,6 @@ app.config(function($stateProvider, $urlRouterProvider) {
     $locationProvider.html5Mode(true);*/
 });
 
-app.factory('itemService', function($http) {
-
-    var getData = function() {
-
-        // Angular $http() and then() both return promises themselves 
-        return $http({method:"GET", url:"/datasaints/getItems"}).then(function(result){
-
-            // What we return here is the data that will be accessible 
-            // to us after the promise resolves
-            return result.data;
-        });
-    };
-
-
-    return { getData: getData };
-});
 
 app.factory('filterByFactory', function () {
     var filterBy = { };

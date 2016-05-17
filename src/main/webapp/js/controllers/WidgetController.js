@@ -1,25 +1,22 @@
-angular.module('DataSaints').controller('WidgetController', function($rootScope, $scope, $location) {
-	var initListener = $rootScope.$on('widgets:initialize', function (event, itemList) {	
+angular.module('DataSaints').controller('WidgetController', function($rootScope, $scope, $location, CountService, LocationService) {
+	var initListener = $rootScope.$on('widgets:initialize', function (event, itemList, location) {	
 		$scope.totalCount = itemList.length;
-
+console.log('called initialize with location ' +location);
 		 $scope.lastCalibratedCount = itemList.length;
 		 
-		 var inCount = 0, outCount = 0, caliCount = 0;
-		 for (var i = 0; i < itemList.length; i++) {
-			 if (!itemList[i].checkIn && itemList[i].checkOut) {
-				 outCount++;
-			 }
-			 
-			 if (!itemList[i].checkOut && itemList[i].checkIn)
-				 inCount++;
-			 
-			 if (!itemList[i].lastCalibrated)
-				 caliCount++;
-		 }
-		 
-		 $scope.checkedInCount = inCount;
-		 $scope.checkedOutCount = outCount;
-		 $scope.lastCalibratedCount = caliCount;
+		 $scope.checkedInCount = null;
+		 $scope.checkedOutCount = null;
+		 $scope.lastCalibratedCount = null;
+		 CountService.getCount(2, location).then(function(dataResponse) {
+		        $scope.checkedInCount = dataResponse;
+		    });
+		 CountService.getCount(3, location).then(function(dataResponse) {
+		        $scope.checkedOutCount = dataResponse;
+		    });
+		 CountService.getCount(4, location).then(function(dataResponse) {
+		        $scope.lastCalibratedCount = dataResponse;
+		    });
+
 	});
 
 	var updateListener = $rootScope.$on('widgets:update', function (event, item) {	

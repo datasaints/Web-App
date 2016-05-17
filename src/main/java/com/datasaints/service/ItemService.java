@@ -19,5 +19,5 @@ public interface ItemService {
 	
 	public int getItemCount(int whatToGet);
 	
-	public int getItemCount(String location, int whatToGet);
+	public int getItemCountByLocation(String location, int whatToGet);
 }

@@ -82,10 +82,10 @@ public class ItemController {
 		return conn.getItems();
 	}
 	
-	@RequestMapping(value = "/getItemCount/{location}/{whatToGet}", method = RequestMethod.GET)
-	public int getItemCount(@PathVariable String location, int whatToGet) {
-		System.out.println("Called get amount of items at " + location);
-		return itemService.getItemCount(location, whatToGet);
+	@RequestMapping(value = "/getItemCountByLocation/{location}/{whatToGet}", method = RequestMethod.GET)
+	public int getItemCountByLocation(@PathVariable String location, @PathVariable Integer whatToGet) {
+		System.out.println("Called get amount of items at " + location + "what to get = " +whatToGet);
+		return itemService.getItemCountByLocation(location, whatToGet);
 	}
 
 	@RequestMapping(value = "/getItemCount/{whatToGet}", method = RequestMethod.GET)

@@ -1,7 +1,7 @@
 
 <div class="box">              
 	<div class="box-header">
-		<h3 class="box-title">Items Available for Checkout</h3>
+		<h3 class="box-title">Items Available for Checkout: {{ location }}</h3>
 	</div>
 
 	<!-- /.box-header -->
@@ -10,10 +10,10 @@
       		<thead>
       			<tr>
 					<th>Item ID <button ng-click="type = 'itemId'; reverse = !reverse" i class="fa fa-filter"></button></th>
+					<th>Serial <button ng-click="type = 'employeeId'; reverse = !reverse" i class="fa fa-filter"></button></th>	
 					<th>Item Name <button ng-click="type = 'itemName'; reverse = !reverse" i class="fa fa-filter"></button></th>
-					<th>Employee ID <button ng-click="type = 'employeeId'; reverse = !reverse" i class="fa fa-filter"></button></th>
-					<th>Check In Date <button ng-click="type = 'checkIn'; reverse = !reverse" i class="fa fa-filter"></button></th>
-					<th>Check Out Date <button ng-click="type = 'checkOut'; reverse = !reverse" i class="fa fa-filter"></button></th>
+					<th>Status <button ng-click="type = 'checkIn'; reverse = !reverse" i class="fa fa-filter"></button></th>
+					<th>Location <button ng-click="type = 'checkOut'; reverse = !reverse" i class="fa fa-filter"></button></th>
 					<th>Last Calibrated <button ng-click="type = 'lastCalibrated'; reverse = !reverse" i class="fa fa-filter"></button></th>
       			</tr>
       		</thead>
@@ -21,11 +21,11 @@
       		<!--  <tbody ng-repeat="item in allItems | orderBy:'employeeId'">-->
       		<tbody ng-repeat="item in allItems | orderBy:type:reverse | filter:getFilter()">
 				<tr>
-					<td> {{ item.itemId }} </td>
+					<td> {{ item.id }} </td>
 					<td> {{ item.itemName }} </td>
-					<td> {{ item.employeeId }} </td>
-					<td> {{ item.checkIn }} </td>
-					<td> {{ item.checkOut }} </td>
+					<td> {{ item.serial }} </td>
+					<td> {{ item.status }} </td>
+					<td> {{ item.location }} </td>
 					<td> {{ item.lastCalibrated }} </td>				
 				</tr>
       		</tbody>

@@ -25,7 +25,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 	
 	@Override
-	public int getItemCount(String location, int whatToGet) {
+	public int getItemCountByLocation(String location, int whatToGet) {
 		ItemDao itemDao = new ItemDaoImpl();
 		
 		return itemDao.getItemCount(location, whatToGet);

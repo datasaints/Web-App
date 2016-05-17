@@ -1,19 +1,20 @@
-angular.module('DataSaints').controller('TableController', function($rootScope, $scope, $http, $route, itemService, filterByFactory) {
+angular.module('DataSaints').controller('TableController', function($rootScope, $scope, $http, $route, $stateParams, itemService, filterByFactory) {
 	/*$scope.filter = filterByFactory.filterBy;
 	
 	$scope.$watch(function () { return filterByFactory.getFilter(); }, function (newValue, oldValue) {
         if (newValue !== oldValue) $scope.filter = newValue;
     });*/
 	$scope.filter = "$";
+	$scope.location = $stateParams.location;
 	
-		var myDataPromise = itemService.getData();
+		var myDataPromise = itemService.getData($scope.location);
 		 myDataPromise.then(function(result) {  
 		       // this is only run after getData() resolves
 		       $scope.allItems = result;
 			 	console.log(result);
 			 	
 			 	// send data to widget controller
-				$rootScope.$emit('widgets:initialize', result);
+				$rootScope.$emit('widgets:initialize', result, $stateParams.location);
 	
 		    });
 	

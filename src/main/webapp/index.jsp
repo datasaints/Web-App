@@ -103,6 +103,9 @@
 <script type="text/javascript" src="js/controllers/SidebarController.js"></script>
 
 <script src="js/services/AuthenticationService.js"></script>
+<script src="js/services/CountService.js"></script>
+<script src="js/services/ItemService.js"></script>
+<script src="js/services/LocationService.js"></script>
 <script src="js/directives/SlideableDirective.js"></script>
 
 <!--  My jQuery Assets -->
