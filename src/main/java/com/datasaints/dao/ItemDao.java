@@ -1,13 +1,13 @@
 package com.datasaints.dao;
 
-import java.util.ArrayList;
-
 import com.datasaints.domain.Item;
 
 public interface ItemDao {
 	public boolean addItem(Item item);
 	
 	public boolean updateLocation(String id, String newLocation);
+	
+	public boolean updateItem(Item item);
 
 	public boolean deleteItem(String id);
 	

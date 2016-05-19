@@ -1,7 +1,6 @@
 package com.datasaints.controller;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -9,11 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.datasaints.domain.Item;
-import com.datasaints.exception.AddItemException;
 import com.datasaints.exception.NoItemFoundException;
 import com.datasaints.service.ItemService;
 import com.datasaints.dao.JDBCConnect;
@@ -26,58 +23,66 @@ public class ItemController {
 	
 	private JDBCConnect conn = new JDBCConnect();
 	
-	@RequestMapping(value = "/getItems/{location}", method = RequestMethod.GET)
-	public ArrayList<Item> getItems(@PathVariable int location) {
+   @RequestMapping(value = "/getItems/{page}/{numPerPage}", method = RequestMethod.GET)
+   public ArrayList<Item> getItems(@PathVariable Integer page, @PathVariable Integer numPerPage) {
+	   System.out.println("Called get items");
+
+	   conn.populateItems(page, numPerPage);
+      return conn.getItems();
+   }
+	
+	@RequestMapping(value = "/getItems/{location}/{page}/{numPerPage}", method = RequestMethod.GET)
+	public ArrayList<Item> getItems(@PathVariable Integer location, @PathVariable Integer page, @PathVariable Integer numPerPage) {
 		System.out.println("Called get items at location " + location);
-		conn.populateItems(location);
+		conn.populateItems(location, page, numPerPage);
 		
 		return conn.getItems();
 	}
 	
-	@RequestMapping(value = "/getItemsToCalibrate/{location}", method = RequestMethod.GET)
-	public ArrayList<Item> getItemsToCalibrate(@PathVariable int location) {
+	@RequestMapping(value = "/getItemsToCalibrate/{location}/{period}/{page}/{numPerPage}", method = RequestMethod.GET)
+	public ArrayList<Item> getItemsToCalibrate(@PathVariable Integer location, @PathVariable Integer period, @PathVariable Integer page, @PathVariable Integer numPerPage) {
 		System.out.println("Called get items to calibrate at location " + location);
-		conn.populateItemsToCalibrate(location);
+		conn.populateItemsToCalibrate(location, period, page, numPerPage);
 		
 		return conn.getItems();
 	}
 	
-	@RequestMapping(value = "/getItemsToCalibrate", method = RequestMethod.GET)
-	public ArrayList<Item> getItemsToCalibrate() {
+	@RequestMapping(value = "/getItemsToCalibrate/{period}/{page}/{numPerPage}", method = RequestMethod.GET)
+	public ArrayList<Item> getItemsToCalibrate(@PathVariable Integer period, @PathVariable Integer page, @PathVariable Integer numPerPage) {
 		System.out.println("Called get items to calibrate");
-		conn.populateItemsToCalibrate();
+		conn.populateItemsToCalibrate(period, page, numPerPage);
 		
 		return conn.getItems();
 	}
 	
-	@RequestMapping(value = "/getCheckedOut/{location}", method = RequestMethod.GET)
-	public ArrayList<Item> getCheckedOutItems(@PathVariable int location) {
+	@RequestMapping(value = "/getCheckedOut/{location}/{page}/{numPerPage}", method = RequestMethod.GET)
+	public ArrayList<Item> getCheckedOutItems(@PathVariable Integer location, @PathVariable Integer page, @PathVariable Integer numPerPage) {
 		System.out.println("Called get checked out items at location " + location);
-		conn.populateCheckedOutItems(location);
+		conn.populateCheckedOutItems(location, page, numPerPage);
 		
 		return conn.getItems();
 	}
 	
-	@RequestMapping(value = "/getCheckedOut/", method = RequestMethod.GET)
-	public ArrayList<Item> getCheckedOutItems() {
+	@RequestMapping(value = "/getCheckedOut/{page}/{numPerPage}", method = RequestMethod.GET)
+	public ArrayList<Item> getCheckedOutItems(@PathVariable Integer page, @PathVariable Integer numPerPage) {
 		System.out.println("Called get checked out items");
-		conn.populateCheckedOutItems();
+		conn.populateCheckedOutItems(page, numPerPage);
 		
 		return conn.getItems();
 	}
 	
-	@RequestMapping(value = "/getCheckedIn/{location}", method = RequestMethod.GET)
-	public ArrayList<Item> getCheckedInItems(@PathVariable int location) {
+	@RequestMapping(value = "/getCheckedIn/{location}/{page}/{numPerPage}", method = RequestMethod.GET)
+	public ArrayList<Item> getCheckedInItems(@PathVariable Integer location, @PathVariable Integer page, @PathVariable Integer numPerPage) {
 		System.out.println("Called get checked in items at location " + location);
-		conn.populateCheckedInItems(location);
+		conn.populateCheckedInItems(location, page, numPerPage);
 		
 		return conn.getItems();
 	}
 	
-	@RequestMapping(value = "/getCheckedIn", method = RequestMethod.GET)
-	public ArrayList<Item> getCheckedInItems() {
+	@RequestMapping(value = "/getCheckedIn/{page}/{numPerPage}", method = RequestMethod.GET)
+	public ArrayList<Item> getCheckedInItems(@PathVariable Integer page, @PathVariable Integer numPerPage) {
 		System.out.println("Called get checked in items");
-		conn.populateCheckedInItems();
+		conn.populateCheckedInItems(page, numPerPage);
 		
 		return conn.getItems();
 	}
@@ -93,14 +98,6 @@ public class ItemController {
 		System.out.println("Called get amount of items");    
 	    return itemService.getItemCount(whatToGet);
 	}
-
-   @RequestMapping(value = "/getItems", method = RequestMethod.GET)
-   public ArrayList<Item> getItems() {
-	   System.out.println("Called get items");
-
-	   conn.populateItems();
-      return conn.getItems();
-   }
    
    @RequestMapping(value = "/addItem", method = RequestMethod.POST)
    public boolean addItem(@RequestBody Item item) {
@@ -131,6 +128,13 @@ public class ItemController {
 	   else {
 		   return "Failed to update location of " + id + " to " + newLocation;
 	   }
+   }
+   
+   @RequestMapping(value = "/updateItem", method = RequestMethod.POST)
+   public boolean updateItem(@RequestBody Item item) {
+	   System.out.println("Called update item with id: " + item.getId());
+	   
+	   return itemService.updateItem(item);
    }
    
    /*

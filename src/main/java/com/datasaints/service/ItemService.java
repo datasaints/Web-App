@@ -15,6 +15,8 @@ public interface ItemService {
 	
 	public boolean updateItemLocation(String id, String newLocation);
 	
+	public boolean updateItem(Item item);
+	
 	// public ArrayList<Item> findItem(Item toFind);
 	
 	public int getItemCount(int whatToGet);

@@ -1,13 +1,11 @@
 package com.datasaints.dao;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import com.datasaints.domain.Item;
 import com.datasaints.exception.AddItemException;
@@ -144,6 +142,7 @@ public class ItemDaoImpl implements ItemDao {
 	public boolean addItem(Item item) {
 		Connection conn = getConnection();
 		PreparedStatement pst;
+		String checkStatus;
         
         boolean success = false;
         
@@ -152,12 +151,11 @@ public class ItemDaoImpl implements ItemDao {
         }
         
         try {
-           //TO CHANGE
-           String insertStatement = "INSERT INTO Equipment (id, owner, " +
-               "serial, itemName, currentLocation, lastCalibrated) " +
-               "VALUES (?, ?, ?, ?, ?, ?);";
-
-           pst = conn.prepareStatement(insertStatement);
+           pst = conn.prepareStatement("INSERT INTO Equipment (id, owner, " +
+        	   "serial, itemName, currentLocation, lastCalibrated) " + 
+        	   "VALUES (?, (SELECT id FROM Location WHERE name = ?)" + 
+        	   ", ?, ?, (SELECT id FROM Location WHERE " + 
+        	   "name = ?), ?)");
 
            pst.setString(1, item.getId());
            pst.setString(2, item.getOwner());
@@ -167,6 +165,18 @@ public class ItemDaoImpl implements ItemDao {
            pst.setDate(6, item.getLastCalibrated());
 
 	        success = (pst.executeUpdate() == 1);
+	        
+	        pst.close();
+	        
+	        checkStatus = item.getStatus() == Item.Status.CHECKED_OUT ? "CheckedOut" : "CheckedIn";
+	        
+	        pst = conn.prepareStatement("INSERT INTO " + checkStatus + 
+	        	" VALUES (?, ?)");
+	        pst.setString(1, item.getId());
+	        pst.setTimestamp(2, item.getCheckTime());
+	        
+	        success = (pst.executeUpdate() == 1);
+	        pst.close();
 
 	        System.out.println("Added item " + item.getId() + " to the database");
         }
@@ -199,6 +209,45 @@ public class ItemDaoImpl implements ItemDao {
 			System.out.println("Updated location of " + id + " to be " + newLocation);
 		}
 		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		finally {
+			closeConnection(conn);
+		}
+		
+		return success;
+	}
+	
+	@Override
+	public boolean updateItem(Item item) {
+		boolean success = false;
+		PreparedStatement pst = null;
+		Connection conn = getConnection();
+		
+		try {
+			pst = conn.prepareStatement("UPDATE Equipment SET owner = " + 
+				"(SELECT id FROM Location WHERE name = ?), " +
+				"serial = ?, itemName = ?, currentLocation = " + 
+				"(SELECT id FROM Location WHERE name = ?), lastCalibrated " + 
+				"= ? WHERE id = ?");
+			
+			pst.setString(1, item.getOwner());
+			pst.setInt(2, item.getSerial());
+			pst.setString(3, item.getItemName());
+			pst.setString(4, item.getLocation());
+			pst.setDate(5, item.getLastCalibrated());
+			pst.setString(6, item.getId());
+			
+			success = (pst.executeUpdate() == 1);
+			
+			if (success) {
+				System.out.println("Successfully updated item " + item.getId());
+			}
+			else {
+				System.out.println("Unable to update item " + item.getId());
+			}
+		}
+		catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		finally {

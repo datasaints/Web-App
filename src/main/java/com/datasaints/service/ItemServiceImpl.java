@@ -83,6 +83,13 @@ public class ItemServiceImpl implements ItemService {
 		return itemDao.getItem(id);
 	}
 	
+	@Override
+	public boolean updateItem(Item item) {
+		ItemDao itemDao = new ItemDaoImpl();
+		
+		return itemDao.updateItem(item);
+	}
+	
 	/*
 	@Override
 	public ArrayList<Item> findItem(Item toFind) {

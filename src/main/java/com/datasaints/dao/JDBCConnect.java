@@ -30,10 +30,10 @@ public class JDBCConnect {
         items = new ArrayList<Item>();
         locations = new ArrayList<Location>();
 
-        populateItems(0);
+        populateItems(0, 0, 10);
     }
     
-    public void populateItems(int location) {
+    public void populateItems(int location, int page, int numPerPage) {
     	PreparedStatement getItemsQuery = null;
     	PreparedStatement getStatusQuery = null;
     	ResultSet getItemsResult = null;
@@ -49,8 +49,10 @@ public class JDBCConnect {
     			"l2.name AS 'owner', serial, itemName, l.name AS 'location', " + 
     			"lastCalibrated FROM Equipment e JOIN Location l ON l.id = " +
     			"currentLocation JOIN Location l2 ON l2.id = " + 
-    			"owner WHERE owner = ?");
+    			"owner WHERE owner = ? LIMIT ?, ?");
     		getItemsQuery.setInt(1, location);
+    		getItemsQuery.setInt(2, page * numPerPage);
+    		getItemsQuery.setInt(3, numPerPage);
     		
     		getItemsResult = getItemsQuery.executeQuery();
     		
@@ -98,7 +100,7 @@ public class JDBCConnect {
     	}
     }
     
-    public void populateItems() {
+    public void populateItems(int page, int numPerPage) {
     	PreparedStatement getItemsQuery = null;
     	PreparedStatement getStatusQuery = null;
     	ResultSet getItemsResult = null;
@@ -113,7 +115,10 @@ public class JDBCConnect {
     		getItemsQuery = conn.prepareStatement("SELECT e.id, " + 
     			"l2.name AS 'owner', serial, itemName, l.name AS 'location', " + 
     			"lastCalibrated FROM Equipment e JOIN Location l ON l.id = " +
-    			"currentLocation JOIN Location l2 ON l2.id = owner");
+    			"currentLocation JOIN Location l2 ON l2.id = owner " + 
+    			"LIMIT ?, ?");
+    		getItemsQuery.setInt(1, page * numPerPage);
+    		getItemsQuery.setInt(2, numPerPage);
     		
     		getItemsResult = getItemsQuery.executeQuery();
     		
@@ -161,7 +166,7 @@ public class JDBCConnect {
     	}
     }
     
-    public void populateItemsToCalibrate(int location) {
+    public void populateItemsToCalibrate(int location, int period, int page, int numPerPage) {
     	PreparedStatement getItemsQuery = null;
     	PreparedStatement getStatusQuery = null;
     	ResultSet getItemsResult = null;
@@ -178,8 +183,11 @@ public class JDBCConnect {
     			"lastCalibrated FROM Equipment e JOIN Location l ON l.id = " +
     			"currentLocation JOIN Location l2 ON l2.id = owner " +
     			"WHERE owner = ? AND DATEDIFF(NOW(), " + 
-    			"lastCalibrated) >= 14");
+    			"lastCalibrated) >= ? LIMIT ?, ?");
     		getItemsQuery.setInt(1, location);
+    		getItemsQuery.setInt(2, period);
+    		getItemsQuery.setInt(3, page * numPerPage);
+    		getItemsQuery.setInt(4, numPerPage);
     		
     		getItemsResult = getItemsQuery.executeQuery();
     		
@@ -227,7 +235,7 @@ public class JDBCConnect {
     	}
     }
     
-    public void populateItemsToCalibrate() {
+    public void populateItemsToCalibrate(int period, int page, int numPerPage) {
     	PreparedStatement getItemsQuery = null;
     	PreparedStatement getStatusQuery = null;
     	ResultSet getItemsResult = null;
@@ -243,7 +251,10 @@ public class JDBCConnect {
     			"l2.name AS 'owner', serial, itemName, l.name AS 'location', " + 
     			"lastCalibrated FROM Equipment e JOIN Location l ON l.id = " +
     			"currentLocation JOIN Location l2 ON l2.id = owner WHERE DATEDIFF(NOW(), " + 
-    			"lastCalibrated) >= 14");
+    			"lastCalibrated) >= ? LIMIT ?, ?");
+    		getItemsQuery.setInt(1, period);
+    		getItemsQuery.setInt(2, page * numPerPage);
+    		getItemsQuery.setInt(3, numPerPage);
     		
     		getItemsResult = getItemsQuery.executeQuery();
     		
@@ -291,7 +302,7 @@ public class JDBCConnect {
     	}
     }
     
-    public void populateCheckedOutItems(int location) {
+    public void populateCheckedOutItems(int location, int page, int numPerPage) {
     	PreparedStatement getItemsQuery = null;
     	ResultSet getItemsResult = null;
     	Item.Status status = Item.Status.CHECKED_OUT;
@@ -303,8 +314,11 @@ public class JDBCConnect {
     			"l2.name AS 'owner', serial, itemName, l.name AS 'location', " + 
     			"lastCalibrated, checkTime FROM Equipment e JOIN Location l ON l.id = " +
     			"currentLocation JOIN CheckedOut c ON c.id = " + 
-    			"e.id JOIN Location l2 ON l2.id = owner WHERE owner = ?");
+    			"e.id JOIN Location l2 ON l2.id = owner WHERE owner = ? " + 
+    			"LIMIT ?, ?");
     		getItemsQuery.setInt(1, location);
+    		getItemsQuery.setInt(2, page * numPerPage);
+    		getItemsQuery.setInt(3, numPerPage);
     		
     		getItemsResult = getItemsQuery.executeQuery();
     		
@@ -328,7 +342,7 @@ public class JDBCConnect {
     	}
     }
     
-    public void populateCheckedOutItems() {
+    public void populateCheckedOutItems(int page, int numPerPage) {
     	PreparedStatement getItemsQuery = null;
     	ResultSet getItemsResult = null;
     	Item.Status status = Item.Status.CHECKED_OUT;
@@ -340,7 +354,9 @@ public class JDBCConnect {
     			"l2.name AS 'owner', serial, itemName, l.name AS 'location', " + 
     			"lastCalibrated, checkTime FROM Equipment e JOIN Location l ON l.id = " +
     			"currentLocation JOIN CheckedOut c ON c.id = " + 
-    			"e.id JOIN Location l2 ON l2.id = owner");
+    			"e.id JOIN Location l2 ON l2.id = owner LIMIT ?, ?");
+    		getItemsQuery.setInt(1, page * numPerPage);
+    		getItemsQuery.setInt(2, numPerPage);
     		
     		getItemsResult = getItemsQuery.executeQuery();
     		
@@ -364,7 +380,7 @@ public class JDBCConnect {
     	}
     }
     
-    public void populateCheckedInItems(int location) {
+    public void populateCheckedInItems(int location, int page, int numPerPage) {
     	PreparedStatement getItemsQuery = null;
     	ResultSet getItemsResult = null;
     	Item.Status status = Item.Status.CHECKED_IN;
@@ -376,8 +392,11 @@ public class JDBCConnect {
     			"l2.name AS 'owner', serial, itemName, l.name AS 'location', " + 
     			"lastCalibrated, checkTime FROM Equipment e JOIN Location l ON l.id = " +
     			"currentLocation JOIN CheckedIn c ON c.id = " + 
-    			"e.id JOIN Location l2 ON l2.id = owner WHERE owner = ?");
+    			"e.id JOIN Location l2 ON l2.id = owner WHERE owner = ? " + 
+    			"LIMIT ?, ?");
     		getItemsQuery.setInt(1, location);
+    		getItemsQuery.setInt(2, page * numPerPage);
+    		getItemsQuery.setInt(3, numPerPage);
     		
     		getItemsResult = getItemsQuery.executeQuery();
     		
@@ -401,7 +420,7 @@ public class JDBCConnect {
     	}
     }
     
-    public void populateCheckedInItems() {
+    public void populateCheckedInItems(int page, int numPerPage) {
     	PreparedStatement getItemsQuery = null;
     	ResultSet getItemsResult = null;
     	Item.Status status = Item.Status.CHECKED_IN;
@@ -413,7 +432,9 @@ public class JDBCConnect {
     			"l2.name AS 'owner', serial, itemName, l.name AS 'location', " + 
     			"lastCalibrated, checkTime FROM Equipment e JOIN Location l ON l.id = " +
     			"currentLocation JOIN CheckedIn c ON c.id = " + 
-    			"e.id JOIN Location l2 ON l2.id = owner");
+    			"e.id JOIN Location l2 ON l2.id = owner LIMIT ?, ?");
+    		getItemsQuery.setInt(1, page * numPerPage);
+    		getItemsQuery.setInt(2, numPerPage);
     		
     		getItemsResult = getItemsQuery.executeQuery();
     		
