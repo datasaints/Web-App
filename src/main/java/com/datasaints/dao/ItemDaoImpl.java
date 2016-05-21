@@ -223,6 +223,8 @@ public class ItemDaoImpl implements ItemDao {
 	public boolean updateItem(Item item) {
 		boolean success = false;
 		PreparedStatement pst = null;
+		PreparedStatement updateStatement = null;
+		ResultSet rst = null;
 		Connection conn = getConnection();
 		
 		try {
@@ -240,6 +242,53 @@ public class ItemDaoImpl implements ItemDao {
 			pst.setString(6, item.getId());
 			
 			success = (pst.executeUpdate() == 1);
+					
+			pst.close();
+			
+			// Check if item status changed
+			pst = conn.prepareStatement("SELECT * FROM CheckedOut WHERE id = ?");
+			pst.setString(1, item.getId());
+			
+			rst = pst.executeQuery();
+						
+			if (rst.next()) {
+				
+				pst.close();
+				
+				// Item is currently checked out
+				if (item.getStatus() == Item.Status.CHECKED_IN) {
+					// Want to check item in
+					pst = conn.prepareStatement("DELETE FROM CheckedOut WHERE id = ?");
+					pst.setString(1, item.getId());
+					pst.executeUpdate();
+					
+					pst.close();
+					
+					pst = conn.prepareStatement("INSERT INTO CheckedIn (id, checkTime) VALUES " + 
+						"(?, ?)");
+					pst.setString(1, item.getId());
+					pst.setTimestamp(2, item.getCheckTime());
+					pst.executeUpdate();
+					
+				}
+			}
+			else {
+				// Item is currently checked in
+				if (item.getStatus() == Item.Status.CHECKED_OUT) {
+					// Want to check item out
+					pst = conn.prepareStatement("DELETE FROM CheckedIn WHERE id = ?");
+					pst.setString(1, item.getId());
+					pst.executeUpdate();
+					
+					pst.close();
+					
+					pst = conn.prepareStatement("INSERT INTO CheckedOut (id, checkTime) VALUES " + 
+						"(?, ?)");
+					pst.setString(1, item.getId());
+					pst.setTimestamp(2, item.getCheckTime());
+					pst.executeUpdate();
+				}
+			}
 			
 			if (success) {
 				System.out.println("Successfully updated item " + item.getId());
@@ -247,6 +296,8 @@ public class ItemDaoImpl implements ItemDao {
 			else {
 				System.out.println("Unable to update item " + item.getId());
 			}
+			
+			pst.close();
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
