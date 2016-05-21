@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.sql.SQLException;
 
 import com.datasaints.domain.Item;
@@ -321,8 +322,9 @@ public class ItemDaoImpl implements ItemDao {
         Item.Status status;
         Timestamp checkTime;
 
-        Item item = new Item();
-
+        ArrayList<Item> items = new ArrayList<Item>();
+        Item item = null;
+        
         try {
         	getItemsQuery = conn.prepareStatement("SELECT e.id, " + 
         		"l2.name AS 'owner', serial, itemName, l.name AS 'location', " + 
@@ -333,7 +335,11 @@ public class ItemDaoImpl implements ItemDao {
         		
         	getItemsResult = getItemsQuery.executeQuery();
         		
-        	if (getItemsResult.next()) {
+        	if (getItemsResult == null) {
+        		return null;
+        	}
+        	
+        	while (getItemsResult.next()) {
         		System.out.println("Found item with id " + id);
         			
         		// For now, assume that if an item isn't checked in, it's checked out
@@ -369,9 +375,8 @@ public class ItemDaoImpl implements ItemDao {
         			status,
         			getItemsResult.getDate("lastCalibrated"),
         			checkTime);
-        	}
-        	else {
-        		return null;
+        		
+        		items.add(item);
         	}
         } catch (Exception ex) {
             ex.printStackTrace();

@@ -1,6 +1,12 @@
-angular.module('DataSaints').controller('ItemController', function ($rootScope, $scope, $http, filterByFactory) {    
+angular.module('DataSaints').controller('ItemController', function ($rootScope, 
+																	$scope, 
+																	$http, 
+																	ModalService,
+																	searchService,
+																	filterByFactory, 
+																	addItemService) {    
 	    $scope.item = {
-	    		itemId: '',
+	    		id: '',
 	    		itemName: '',
 	    		lastCalibrated: ''
 	          };
@@ -22,55 +28,68 @@ angular.module('DataSaints').controller('ItemController', function ($rootScope, 
 	    	  return !(item.checkIn === null)
 	    	}
 		
-		$scope.addItem = function(){
-			console.log('hi i changed in the new controller');
-			var item = {
-				itemId : $scope.item.itemId,
-				employeeId: $scope.item.employeeId,
-				itemName: $scope.item.itemName,
-				checkIn: null,
-				checkOut: $scope.item.checkOut,
-				lastCalibrated: $scope.item.lastCalibrated	
-			};
-			
-			if (!item.checkIn && !item.checkOut) {
-				//if neither are set then item is default checked in
-				item.checkIn = new Date();
-			}
-			
-			var res = $http.post('/datasaints/addItem', item);
-			res.success(function(data, status, headers, config) {
-				alert('Item with id: ' +item.itemId +' sucessfully added');
-				$scope.message = data;
-				$scope.clearData();
+		$scope.addItem = function(item){
+			if (item.id != "" && item.owner != "") {
+				console.log('called ad item3');
+				if (item.checkTime == null) {
+					item.checkTime = new Date();
+				}
+				var itemPromise = addItemService.addItem(item);
 				
-				$rootScope.$emit('widgets:update', item);
-			});
-			res.error(function(data, status, headers, config) {
-				alert( "failure message: " + JSON.stringify({data: data}));
-			});		
-			
+				itemPromise.then(function (response) {
+				    // if success
+					$rootScope.$emit('widgets:update', item);
+					ModalService.showModal({
+			            templateUrl: 'pages/modals/confirmation-modal.html',
+			            controller: "ModalController"
+			        }).then(function(modal) {
+			        	console.log('hello modal');
+		                $scope.itemId = item.id;
+			            modal.element.modal();
+			            modal.close.then(function(result) {
+			                $scope.clearData();
+			            });
+			        });
+				},
+				function (response) {
+				    // if failed
+					console.log('add item failure');
+				
+					}
+				);
+			}
 		};
 		
 		$scope.clearData = function() {
-			$scope.item.itemId = '';
-			$scope.item.itemName = '';
+			$scope.item.id = '';
+			$scope.item.serial = '';
 			$scope.item.lastCalibrated = '';
-			$scope.item.employeeId = '';
-			$scope.item.checkOut = '';
+			$scope.item.location = '';
+			$scope.item.status = '';
 		}
 		
 		$scope.searchItem = function(toFind) {
 			var item = {
-				itemId : toFind,
-				employeeId: null,
+				id : toFind,
+				serial: null,
 				itemName: null,
-				checkIn: null,
-				checkOut: null,
+				status: null,
+				location: null,
 				lastCalibrated: null	
 			};
-			
-			var res = $http.post('/datasaints/findItem', item);
+			var res = searchService.findItem(item);
+			res.success(function(data, status, headers, config) {
+				 console.log('found item');
+				 $scope.results = data;
+				 console.log($scope.results.length);
+				 console.log($scope.results);
+
+			});
+			res.error(function(data, status, headers, config) {
+				alert('no item found');
+			});	
+			/*
+			var res = $http.post('/findItem', item);
 			res.success(function(data, status, headers, config) {
 				 console.log('found');
 				 $scope.results = true;
@@ -84,7 +103,7 @@ angular.module('DataSaints').controller('ItemController', function ($rootScope, 
 			});
 			res.error(function(data, status, headers, config) {
 				alert('no item found');
-			});		
+			});		*/
 			
 		}
 		

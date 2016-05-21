@@ -1,12 +1,13 @@
 angular.module('DataSaints').controller('WidgetController', function($rootScope, $scope, $location, CountService, LocationService) {
-	var initListener = $rootScope.$on('widgets:initialize', function (event, itemList, location) {	
-		$scope.totalCount = itemList.length;
-console.log('called initialize with location ' +location);
-		 $scope.lastCalibratedCount = itemList.length;
-		 
+	var initListener = $rootScope.$on('widgets:initialize', function (event, itemList, location) {			 
+		 $scope.totalCount = null;
 		 $scope.checkedInCount = null;
 		 $scope.checkedOutCount = null;
 		 $scope.lastCalibratedCount = null;
+		 
+		 CountService.getCount(1, location).then(function(dataResponse) {
+		        $scope.totalCount = dataResponse;
+		    });
 		 CountService.getCount(2, location).then(function(dataResponse) {
 		        $scope.checkedInCount = dataResponse;
 		    });

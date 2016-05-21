@@ -20,10 +20,18 @@
 	      			<div class="form-group">
 	        			<label for="item-id" class="col-sm-2 control-label">Item Id</label>
 						<div class="col-sm-10">
-	          				<input type="text" class="form-control" id="item-id" placeholder="Item Id" ng-model="item.itemId">
+	          				<input type="text" class="form-control" id="item-id" placeholder="Item Id" ng-model="item.id" required>
 	        			</div>
 	      			</div>
 	      			
+	      			<div class="form-group">
+	        			<label for="serial" class="col-sm-2 control-label">Serial Number</label>
+	
+	        			<div class="col-sm-10">
+	          				<input type="text" class="form-control" id="serial" placeholder="Serial" ng-model="item.serial">
+	        			</div>
+	      			</div>
+
 	      			<div class="form-group">
 	        			<label for="item-name" class="col-sm-2 control-label">Item Name</label>
 	
@@ -31,46 +39,49 @@
 	          				<input type="text" class="form-control" id="item-name" placeholder="Item Name" ng-model="item.itemName">
 	        			</div>
 	      			</div>
-
+	      			
+					<div class="form-group">
+						<label for="location" class="col-sm-2 control-label">Location</label>
+					
+					 	<div class="col-sm-10">
+							<select class="form-control" id="location" placeholder="Current Location" ng-model="item.location" ng-change="item.owner=item.location" required>
+								<option>Metrology</option>
+								<option>Production</option>
+					      		<option>Software Engineering</option>
+					    	</select>
+						</div>
+					</div>
 	
 					<div class="form-group">
 						<label for="last-calibrated" class="col-sm-2 control-label">Last Calibrated</label>
 							<div class="col-sm-3">
-							    <input id="last-calibrated" type="date" class="form-control" placeholder="yyyy-MM-dd" ng-model="item.lastCalibrated">
+							    <input id="last-calibrated" type="date" class="form-control" placeholder="yyyy-MM-dd" ng-model="item.lastCalibrated" required>
 							</div>
 					</div>					 
               
 			 		<div class="form-group">	 		
-	        	<div class="col-sm-offset-2 col-sm-10">
-	          	<div class="checkbox">
-	            <label>
-	              <input type="checkbox" ng-true-value="checkedOut" ng-false-value="checkedIn" ng-model="checkStatus"> Checked Out
-	            </label>
-	           </div>
-	         </div>
+			        	<div class="col-sm-offset-2 col-sm-10">
+			          	<div class="checkbox">
+			            <label>
+			              <input type="checkbox" ng-model="item.checkStatus"> Checked Out
+			            </label>
+			           </div>
+			         </div>
 			    </div>
 			        
-	        <div ng-show="checkStatus == 'checkedOut'">
-              <div class="form-group">
-                <label for="employee-id" class="col-sm-2 control-label">Checked Out By</label>
-
-               <div class="col-sm-10">
-                   <input type="text" class="form-control" id="employee-id" placeholder="Employee Id" ng-model="item.employeeId">
-               </div>
-              </div>
+	        <div ng-show="item.checkStatus">
               
               <div class="form-group">
 	            <label for="checkout-date" class="col-sm-2 control-label">Check Out Date</label>
 	              <div class="col-sm-3">
-	                  <input id="checkout-date" type="date" class="form-control" placeholder="yyyy-MM-dd" ng-model="item.checkOut">
+	                  <input id="checkout-date" type="date" class="form-control" placeholder="yyyy-MM-dd" ng-model="item.checkTime">
 	              </div>
 	          </div>
           </div>
-    
-					
+			
 				<div class="box-footer">
 				  <button id="clear-form" type="submit" class="btn btn-default" ng-click="clearData()">Clear</button>
-				  <button id ="save-item" type="submit" class="btn btn-info pull-right" ng-click="addItem()">Add</button>
+				  <button id ="save-item" type="submit" class="btn btn-info pull-right" ng-click="addItem(item)">Add</button>
 				</div>
 				<!-- /.box-footer -->
 			</div>
@@ -89,27 +100,33 @@
 	      			</div>
 						<ul>
 							<table id="itemTable" class="table table-bordered table-striped" ng-show="results">
-								<thead>
-									<tr>
-										<th>Item ID</th>
-										<th>Item Name</th>
-										<th>Employee ID</th>
-										<th>Check In Date</th>
-										<th>Check Out Date</th>
-										<th>Last Calibrated</th>
+					      		<thead>
+					      			<tr>
+										<th>Item ID </th>
+										<th>Serial </th>	
+										<th>Item Name </th>
+										<th>Status </th>
+										<th>Location </button></th>
+										<th>Last Calibrated </th>
+					      			</tr>
+					      		</thead>
+					      		
+					      		<!--  <tbody ng-repeat="item in allItems | orderBy:'employeeId'">-->
+					      		<tbody>
+									<tr ng-repeat="found in results"> 
+										<td> {{ found.id }} </td>
+										<td> {{ found.serial }} </td>
+										<td> {{ found.itemName }} </td>
+										<td> <div style="display: table; margin: 0 auto;" ng-switch on = found.status>
+										        <p ng-switch-when = "CHECKED_OUT"><span class="label label-danger">Checked Out</span></p>
+										        <p ng-switch-when = "CHECKED_IN"><span class="label label-success">Checked In</span></p>
+										    </div>
+										</td>
+										<td> {{ found.location }} </td>
+										<td> {{ found.lastCalibrated }} </td>				
 									</tr>
-								</thead>
-
-								<tbody ng-repeat="item in foundItems">
-									<tr>
-										<td>{{ item.itemId }}</td>
-										<td>{{ item.itemName }}</td>
-										<td>{{ item.employeeId }}</td>
-										<td>{{ item.checkIn }}</td>
-										<td>{{ item.checkOut }}</td>
-										<td>{{ item.lastCalibrated }}</td>
-									</tr>
-								</tbody>
+					      		</tbody>
+							</table>
 								<!--  
 	      		<div class="box-footer">
 				  <button type="submit" class="btn btn-default">Cancel</button>

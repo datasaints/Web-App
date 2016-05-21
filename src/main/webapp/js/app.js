@@ -2,10 +2,13 @@ var app = angular.module('DataSaints', ['ui.router',
                                         'ngCookies',
                                         'ngRoute',
                                         'ngAnimate',
-                                        'ui.bootstrap'
+                                        'ui.bootstrap',
+                                        'angularModalService',
+                                        'oc.lazyLoad'/*,
+                                        'ct.ui.router.extras'*/
                                         ]);
 
-app.config(function($stateProvider, $urlRouterProvider) {
+app.config(function($stateProvider, $urlRouterProvider) { //$stickyStateProvider
 	$urlRouterProvider.otherwise('/login');
     
     $stateProvider
@@ -42,7 +45,9 @@ app.config(function($stateProvider, $urlRouterProvider) {
         	        templateUrl: 'pages/top-widgets.html',
         	        controller: 'WidgetController'
                 }
-            }
+            },
+            /*sticky: true,
+            dsr: true*/
         })
         .state('home.table', {
 			url: '/item-table/:location',
@@ -64,82 +69,16 @@ app.config(function($stateProvider, $urlRouterProvider) {
 			templateUrl: 'pages/update-reader.html',
 			controller: 'ReaderProfileController'
 		})
-/*
-        .state('update-item', {
-            url: '/update-item',
-            views: {
-            	'': {
-         	       templateUrl: 'pages/home.html',
-            	},
-                'navbar@update-item': {
-                    templateUrl: 'pages/navbar.html',
-                },
-                'sidebar@update-item': {
-                    templateUrl: 'pages/sidebar.html',
-                },
-                'widgets@update-item': {
-        	        templateUrl: 'pages/top-widgets.html',
-        	        controller: 'WidgetController'
-                },
-                'content@update-item': {
-        	        templateUrl: 'pages/update-item.html',
-        	        controller: 'ItemController'
-                }
-            }
-        })
-        
-        .state('update-reader', {
-            url: '/update-reader',
-            views: {
-            	'': {
-         	       templateUrl: 'pages/home.html',
-            	},
-                'navbar@update-reader': {
-                    templateUrl: 'pages/navbar.html',
-                },
-                'sidebar@update-reader': {
-                    templateUrl: 'pages/sidebar.html',
-                },
-                'widgets@update-reader': {
-        	        templateUrl: 'pages/top-widgets.html',
-        	        controller: 'WidgetController'
-                },
-                'content@update-reader': {
-        	        templateUrl: 'pages/edit-reader.html',
-        	        controller: 'ReaderProfileController'
-                }
-            }
-        })
-        
-        .state('advanced-search', {
-            url: '/advanced-search',
-            views: {
-            	'': {
-         	       templateUrl: 'pages/home.html',
-            	},
-                'navbar@advanced-search': {
-                    templateUrl: 'pages/navbar.html',
-                },
-                'sidebar@advanced-search': {
-                    templateUrl: 'pages/sidebar.html',
-                },
-                'widgets@advanced-search': {
-        	        templateUrl: 'pages/top-widgets.html',
-        	        controller: 'WidgetController'
-                },
-                'content@advanced-search': {
-        	        templateUrl: 'pages/edit-reader.html',
-        	        controller: 'ReaderProfileController'
-                }
-            }
-        })
-    */
+
         // Login state
         .state('login', {
             url: '/login',
             controller: 'LoginController',
             templateUrl: 'pages/login.html'
         });
+    
+    /*$stickyStateProvider.enableDebug(true);*/
+
     
 /*
     // use the HTML5 History API

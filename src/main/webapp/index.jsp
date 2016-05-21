@@ -88,13 +88,16 @@
 <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.min.js"></script>-->
 <script src="https://code.angularjs.org/1.2.28/angular-route.min.js"></script>
 <script src="plugins/angular-ui-router/release/angular-ui-router.min.js"></script>
+<!-- <script src="plugins/ui-router-extras/release/ct-ui-router-extras.js"></script> -->
+<script src="plugins/oclazyload/dist/ocLazyLoad.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-cookies.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-animate.js"></script>
 <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-1.3.2.js"></script>
-
+<script src="plugins/angular-modal-service/dst/angular-modal-service.js"></script>
 
 <!--  My Angular Controllers -->
 <script src="js/app.js"></script>
+<script src="js/controllers/ModalController.js"></script>
 <script src="js/controllers/WidgetController.js"></script>
 <script src="js/controllers/ItemController.js"></script>
 <script src="js/controllers/TableController.js"></script>
@@ -105,6 +108,8 @@
 <script src="js/services/AuthenticationService.js"></script>
 <script src="js/services/CountService.js"></script>
 <script src="js/services/ItemService.js"></script>
+<script src="js/services/SearchService.js"></script>
+<script src="js/services/AddItemService.js"></script>
 <script src="js/services/LocationService.js"></script>
 <script src="js/directives/SlideableDirective.js"></script>
 

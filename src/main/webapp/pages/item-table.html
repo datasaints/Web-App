@@ -6,25 +6,34 @@
 
 	<!-- /.box-header -->
 	<div class="box-body">
+		<div ng-show="errorOccurred" class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h4><i class="icon fa fa-ban"></i> Error</h4>
+                There was an error loading the items
+        </div>
     	<table id="itemTable" class="table table-bordered table-striped">
       		<thead>
       			<tr>
-					<th>Item ID <button ng-click="type = 'itemId'; reverse = !reverse" i class="fa fa-filter"></button></th>
-					<th>Serial <button ng-click="type = 'employeeId'; reverse = !reverse" i class="fa fa-filter"></button></th>	
+					<th>Item ID <button ng-click="type = 'id'; reverse = !reverse" i class="fa fa-filter"></button></th>
+					<th>Serial <button ng-click="type = 'serial'; reverse = !reverse" i class="fa fa-filter"></button></th>	
 					<th>Item Name <button ng-click="type = 'itemName'; reverse = !reverse" i class="fa fa-filter"></button></th>
-					<th>Status <button ng-click="type = 'checkIn'; reverse = !reverse" i class="fa fa-filter"></button></th>
-					<th>Location <button ng-click="type = 'checkOut'; reverse = !reverse" i class="fa fa-filter"></button></th>
+					<th>Status <button ng-click="type = 'status'; reverse = !reverse" i class="fa fa-filter"></button></th>
+					<th>Location <button ng-click="type = 'location'; reverse = !reverse" i class="fa fa-filter"></button></th>
 					<th>Last Calibrated <button ng-click="type = 'lastCalibrated'; reverse = !reverse" i class="fa fa-filter"></button></th>
       			</tr>
       		</thead>
       		
       		<!--  <tbody ng-repeat="item in allItems | orderBy:'employeeId'">-->
-      		<tbody ng-repeat="item in allItems | orderBy:type:reverse | filter:getFilter()">
-				<tr>
+      		<tbody>
+				<tr ng-repeat="item in allItems | orderBy:type:reverse"> <!--  | filter:getFilter() -->
 					<td> {{ item.id }} </td>
-					<td> {{ item.itemName }} </td>
 					<td> {{ item.serial }} </td>
-					<td> {{ item.status }} </td>
+					<td> {{ item.itemName }} </td>
+					<td> <div style="display: table; margin: 0 auto;" ng-switch on = item.status>
+					        <p ng-switch-when = "CHECKED_OUT"><span class="label label-danger">Checked Out</span></p>
+					        <p ng-switch-when = "CHECKED_IN"><span class="label label-success">Checked In</span></p>
+					    </div>
+					</td>
 					<td> {{ item.location }} </td>
 					<td> {{ item.lastCalibrated }} </td>				
 				</tr>

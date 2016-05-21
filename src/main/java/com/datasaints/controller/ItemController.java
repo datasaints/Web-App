@@ -149,15 +149,15 @@ public class ItemController {
    }
    */
    
-   @RequestMapping(value = "/findItem/{id}", method = RequestMethod.POST)
-   public Item findItem(@PathVariable String id) {
-	   if (id == null) {
+   @RequestMapping(value = "/findItem/", method = RequestMethod.POST)
+   public Item findItem(@RequestBody Item item) {
+	   if (item.getId() == null) {
 		   throw new IllegalArgumentException("id is required");
 	   }
 	   
-	   System.out.println("Finding item with id = " + id);
+	   System.out.println("Finding item with id = " + item.getId());
 	   
-	   return itemService.getItem(id);
+	   return itemService.getItem(item.getId());
    }
    
    @RequestMapping(value = "/deleteItem/{id}", method = RequestMethod.DELETE)
