@@ -149,6 +149,17 @@ public class ItemController {
    }
    */
    
+   @RequestMapping(value = "/findItemByID/{id}", method = RequestMethod.GET)
+   public Item getItem(@PathVariable String id) {
+	   System.out.println("Called get item with id: " + id);
+	   
+	   if (id == null) {
+		   throw new IllegalArgumentException("id is required");
+	   }
+	   
+	   return itemService.getItem(id);
+   }
+   
    @RequestMapping(value = "/findItem/", method = RequestMethod.POST)
    public Item findItem(@RequestBody Item item) {
 	   if (item.getId() == null) {
