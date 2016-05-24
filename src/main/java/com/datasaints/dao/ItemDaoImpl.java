@@ -438,8 +438,6 @@ public class ItemDaoImpl implements ItemDao {
         return item;
     }
 	
-	//TODO: convert datetime
-	/*
 	public ArrayList<Item> findItem(Item toFind) {
 		Connection conn = getConnection();		
 		PreparedStatement pst;
@@ -447,62 +445,150 @@ public class ItemDaoImpl implements ItemDao {
         ArrayList<Item> itemList = new ArrayList<Item>();
 		StringBuilder query = new StringBuilder();
 		boolean firstCriteria = true;
-		int itemIdx = 0;
 		
-		query.append("SELECT * FROM DSaints.Equipment WHERE ");
+		PreparedStatement statusQuery = null;
+		ResultSet statusResult = null;
+		Item.Status status = Item.Status.NONE;
+		Timestamp checkTime = null;
 		
-		if (toFind.getItemId() != null) {
-			query.append("ItemID LIKE \"%" + toFind.getItemId() + "%\" ");
+		/*
+		getItemsQuery = conn.prepareStatement("SELECT e.id, " + 
+    			"l2.name AS 'owner', serial, itemName, l.name AS 'location', " + 
+    			"lastCalibrated FROM Equipment e JOIN Location l ON l.id = " +
+    			"currentLocation JOIN Location l2 ON l2.id = " + 
+    			"owner WHERE owner = ? LIMIT ?, ?");
+    	*/
+		
+		query.append("SELECT e.id, l2.name AS 'owner', serial, itemName, " + 
+			"l.name AS 'location', lastCalibrated FROM Equipment e JOIN " + 
+			"Location l ON l.id = currentLocation JOIN Location l2 ON l2.id = " + 
+			"owner WHERE ");
+				
+		if (toFind.getId() != null) {
+			query.append("e.id LIKE '%" + toFind.getId() + "%' ");
 			firstCriteria = false;
+		}
+		
+		if (toFind.getOwner() != null) {
+			if (!firstCriteria) {
+				query.append("AND ");
+			}
+			else {
+				firstCriteria = false;
+			}
+			
+			query.append("l2.name LIKE '%" + toFind.getLocation() + "%' ");
+		}
+		
+		if (toFind.getSerial() != -1) {
+			if (!firstCriteria) {
+				query.append("AND ");
+			}
+			else {
+				firstCriteria = false;
+			}
+			
+			query.append("CAST(serial AS CHAR) LIKE '%" + toFind.getSerial() + "%' ");
 		}
 		
 		if (toFind.getItemName() != null) {
 			if (!firstCriteria) {
 				query.append("AND ");
-			} else {
+			}
+			else {
 				firstCriteria = false;
 			}
 			
-			query.append("ItemName LIKE \"%" + toFind.getItemName() + "%\" ");
+			query.append("itemName LIKE '%" + toFind.getItemName() + "%' ");
 		}
 		
-		if (toFind.getEmployeeId() != 0) {
+		if (toFind.getLocation() != null) {
 			if (!firstCriteria) {
 				query.append("AND ");
-			} else {
+			}
+			else {
 				firstCriteria = false;
 			}
 			
-			query.append("EmployeeID = " + toFind.getEmployeeId() + " ");
+			query.append("l.name LIKE '%" + toFind.getLocation() + "%' ");
 		}
+		
 		
 		if (toFind.getLastCalibrated() != null) {
 			if (!firstCriteria) {
 				query.append("AND ");
 			}
+			else {
+				firstCriteria = false;
+			}
 			
-			query.append("LastCalibrated = " + toFind.getLastCalibrated());
+			query.append("lastCalibrated = " + toFind.getLastCalibrated());
 		}
 		
-		query.append(";");
-		
-		System.out.println("Attempting to query " +query.toString());
+		if (toFind.getStatus() == Item.Status.CHECKED_IN) {
+			if (!firstCriteria) {
+				query.append("AND ");
+			}
+			else {
+				firstCriteria = false;
+			}
+			
+			query.append("e.id IN(SELECT id FROM CheckedIn) ");
+		}
+		else if (toFind.getStatus() == Item.Status.CHECKED_OUT) {
+			if (!firstCriteria) {
+				query.append("AND ");
+			}
+			else {
+				firstCriteria = false;
+			}
+			
+			query.append("e.id IN(SELECT id FROM CheckedOut) ");
+		}
+				
+		System.out.println("QUERY: " + query.toString());
 		
 		try {
             pst = conn.prepareStatement(query.toString());
             rst = pst.executeQuery();
 
             while (rst.next()) {
-                itemList.add(itemIdx, new Item());
-
-                itemList.get(itemIdx).setItemId(rst.getString("ItemID"));
-                itemList.get(itemIdx).setEmployeeId(rst.getInt("EmployeeID"));
-                itemList.get(itemIdx).setItemName(rst.getString("ItemName"));
-                itemList.get(itemIdx).setCheckIn(rst.getDate("CheckIn"));
-                itemList.get(itemIdx).setCheckOut(rst.getDate("CheckOut"));
-                itemList.get(itemIdx).setLastCalibrated(rst.getDate("LastCalibrated"));
-
-                itemIdx++;
+            	statusQuery = conn.prepareStatement("SELECT * FROM CheckedOut " +
+            		"WHERE id = ?");
+            	statusQuery.setString(1, rst.getString("id"));
+            	statusResult = statusQuery.executeQuery();
+            	
+            	if (statusResult.next()) {
+            		status = Item.Status.CHECKED_OUT;
+            		checkTime = statusResult.getTimestamp("checkTime");
+            	}
+            	else {
+            		status = Item.Status.CHECKED_IN;
+            		
+            		statusQuery.close();
+            		statusResult.close();
+            		
+            		statusQuery = conn.prepareStatement("SELECT * FROM CheckedIn " +
+            			"WHERE id = ?");
+            		statusQuery.setString(1, rst.getString("id"));
+            		statusResult = statusQuery.executeQuery();
+            		
+            		statusResult.next();
+            		checkTime = statusResult.getTimestamp("checkTime");
+            	}
+            	
+            	statusQuery.close();
+            	statusResult.close();
+            	
+            	itemList.add(new Item(
+            		rst.getString("id"),
+            		rst.getString("owner"),
+            		rst.getInt("serial"),
+            		rst.getString("itemName"),
+            		rst.getString("location"),
+            		status,
+            		rst.getDate("lastCalibrated"),
+            		checkTime));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -514,5 +600,4 @@ public class ItemDaoImpl implements ItemDao {
 		return itemList;
 
 	}
-	*/
 }

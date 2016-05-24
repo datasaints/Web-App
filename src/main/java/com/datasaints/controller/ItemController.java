@@ -137,17 +137,15 @@ public class ItemController {
 	   return itemService.updateItem(item);
    }
    
-   /*
    @RequestMapping(value = "/findItem", method = RequestMethod.POST)
    public ArrayList<Item> findItem(@RequestBody Item item) throws NoItemFoundException {
-       System.out.println("Called find item with id: " + item.getItemId());
-       
+       System.out.println("Called findItem");
+	   
        ArrayList<Item> foundItems = itemService.findItem(item);
        
 	   return foundItems;
        
    }
-   */
    
    @RequestMapping(value = "/findItemByID/{id}", method = RequestMethod.GET)
    public Item getItem(@PathVariable String id) {
@@ -158,17 +156,6 @@ public class ItemController {
 	   }
 	   
 	   return itemService.getItem(id);
-   }
-   
-   @RequestMapping(value = "/findItem/", method = RequestMethod.POST)
-   public Item findItem(@RequestBody Item item) {
-	   if (item.getId() == null) {
-		   throw new IllegalArgumentException("id is required");
-	   }
-	   
-	   System.out.println("Finding item with id = " + item.getId());
-	   
-	   return itemService.getItem(item.getId());
    }
    
    @RequestMapping(value = "/deleteItem/{id}", method = RequestMethod.DELETE)

@@ -90,7 +90,6 @@ public class ItemServiceImpl implements ItemService {
 		return itemDao.updateItem(item);
 	}
 	
-	/*
 	@Override
 	public ArrayList<Item> findItem(Item toFind) {
 		ItemDao itemDao = new ItemDaoImpl();
@@ -98,5 +97,4 @@ public class ItemServiceImpl implements ItemService {
 		
 		return foundItems;
 	}
-	*/
 }

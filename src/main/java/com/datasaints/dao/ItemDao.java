@@ -2,6 +2,8 @@ package com.datasaints.dao;
 
 import com.datasaints.domain.Item;
 
+import java.util.ArrayList;
+
 public interface ItemDao {
 	public boolean addItem(Item item);
 	
@@ -13,7 +15,7 @@ public interface ItemDao {
 	
 	public Item getItem(String id);
 	
-	// public ArrayList<Item> findItem(Item toFind);
+	public ArrayList<Item> findItem(Item toFind);
 	
 	public int getItemCount(int whatToGet);
 	

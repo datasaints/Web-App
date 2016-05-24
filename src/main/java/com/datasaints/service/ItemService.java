@@ -17,7 +17,7 @@ public interface ItemService {
 	
 	public boolean updateItem(Item item);
 	
-	// public ArrayList<Item> findItem(Item toFind);
+	public ArrayList<Item> findItem(Item toFind);
 	
 	public int getItemCount(int whatToGet);
 	

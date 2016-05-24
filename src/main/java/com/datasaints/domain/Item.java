@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 
 public class Item {
 	public enum Status {
-		CHECKED_IN, CHECKED_OUT
+		CHECKED_IN, CHECKED_OUT, NONE
 	}
 	
 	private String id;
