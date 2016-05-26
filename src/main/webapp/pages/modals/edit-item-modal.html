@@ -6,10 +6,67 @@
                 <h4 class="modal-title">Edit Item</h4>
               </div>
               <div class="modal-body">
-                <p>Item {{itemToUpdate.id}} was successfully added to the database.</p>
+               <!-- <p>Item {{itemToUpdate.id}} was successfully added to the database.</p>
+                 <form novalidate class="simple-form">
+				    Name: <input type="text" ng-model="user.name" /><br />
+				    E-mail: <input type="email" ng-model="user.email" /><br />
+				    Gender: <input type="radio" ng-model="user.gender" value="male" />male
+				    <input type="radio" ng-model="user.gender" value="female" />female<br />
+				    <input type="button" ng-click="reset()" value="Reset" />
+				    <input type="submit" ng-click="update(user)" value="Save" />
+				  </form>-->
+				  
+				  <form class="form-horizontal">
+              <div class="box-body">
+                <div class="form-group">
+                  <label for="item-id" class="col-sm-2 control-label">Item Id</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="item-id" placeholder="{{ itemToUpdate.id }}">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="item-serial" class="col-sm-2 control-label">Serial</label>
+                  <div class="col-sm-10">
+                    <input type="number" class="form-control" id="item-serial" placeholder="{{ itemToUpdate.serial }}">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="item-name" class="col-sm-2 control-label">Item name</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="item-name" placeholder="{{ itemToUpdate.itemName }}">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="item-name" class="col-sm-2 control-label">Status</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="item-name" placeholder="{{ itemToUpdate.status }}">
+                  </div>
+                </div>
+                <div class="form-group">
+				  <label for="item-location" class="col-sm-2 control-label">Location</label>
+			 	  <div class="col-sm-10">
+					<select class="form-control" id="item-location" ng-model="item.location" ng-change="item.owner=item.location">
+					    <option value="" disabled selected hidden>{{ itemToUpdate.location }}</option>
+						<option>Metrology</option>
+						<option>Production</option>
+			      		<option>Software Engineering</option>
+			    	</select>
+				  </div>
+			    </div>
+			  	<div class="form-group">
+					<label for="item-last-calibrated" class="col-sm-2 control-label">Last Calibrated</label>
+						<div class="col-sm-3">
+						    <input id="item-last-calibrated" type="date" class="form-control" placeholder="{{ itemToUpdate.lastCalibrated }}" ng-model="item.lastCalibrated">
+						</div>
+					</div>	
+              </div>
+            </form>
+            
+            
               </div>
               <div class="modal-footer">
-                <button type="button" ng-click="close('Yes')" class="btn btn-primary pull-right" data-dismiss="modal">OK</button>
+                <button type="button" ng-click="close('Cancel')" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>              
+                <button type="submit" ng-click="close('Update')" class="btn btn-info pull-right" data-dismiss="modal">Update</button>
               </div>
             </div>
             <!-- /.modal-content -->

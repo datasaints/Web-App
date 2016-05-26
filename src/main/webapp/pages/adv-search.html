@@ -11,7 +11,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label for="search-item-id">Item Id</label>
-                <input type="text" class="form-control select2" placeholder="Item Id" style="width: 100%;" ng-model="itemToFind.itemId" required>
+                <input type="text" class="form-control select2" placeholder="Item Id" style="width: 100%;" ng-model="itemToFind.id" required>
               </div>
               <!-- /.form-group -->
               <div class="form-group">
@@ -37,8 +37,8 @@
             <!-- /.col -->
             <div class="col-md-6">
               <div class="form-group">
-                <label>Checked Out By</label>
-                	<input type="text" class="form-control select2" placeholder="Employee Id" disabled="disabled" style="width: 100%;" ng-model="itemToFind.employeeId">
+                <label>Item Serial</label>
+                	<input type="text" class="form-control select2" placeholder="Serial"  style="width: 100%;" ng-model="itemToFind.serial">
               </div>
               <!-- /.form-group -->
               <div class="form-group">
@@ -51,31 +51,36 @@
           </div>
           <!-- /.row -->
           
-          <table id="itemTable" class="table table-bordered table-striped" ng-show="results">
-								<thead>
-									<tr>
-										<th>Item ID</th>
-										<th>Item Name</th>
-										<th>Employee ID</th>
-										<th>Check In Date</th>
-										<th>Check Out Date</th>
-										<th>Last Calibrated</th>
+         <table id="itemTable" class="table table-bordered table-striped" ng-show="results">
+					      		<thead>
+					      			<tr>
+										<th>Item ID </th>
+										<th>Serial </th>	
+										<th>Item Name </th>
+										<th>Status </th>
+										<th>Location </button></th>
+										<th>Last Calibrated </th>
 										<th></th>
+					      			</tr>
+					      		</thead>
+					      		
+					      		<!--  <tbody ng-repeat="item in allItems | orderBy:'employeeId'">-->
+					      		<tbody>
+									<tr ng-repeat="found in results"> 
+										<td> {{ found.id }} </td>
+										<td> {{ found.serial }} </td>
+										<td> {{ found.itemName }} </td>
+										<td> <div style="display: table; margin: 0 auto;" ng-switch on = found.status>
+										        <p ng-switch-when = "CHECKED_OUT"><span class="label label-danger">Checked Out</span></p>
+										        <p ng-switch-when = "CHECKED_IN"><span class="label label-success">Checked In</span></p>
+										    </div>
+										</td>
+										<td> {{ found.location }} </td>
+										<td> {{ found.lastCalibrated }} </td>	
+										<td><button type="button" class="btn btn-block btn-default" ng-click = "updateItem(found)")>Update</button></td>			
 									</tr>
-								</thead>
-
-								<tbody ng-repeat="item in foundItems">
-									<tr>
-										<td>{{ item.itemId }}</td>
-										<td>{{ item.itemName }}</td>
-										<td>{{ item.employeeId }}</td>
-										<td>{{ item.checkIn }}</td>
-										<td>{{ item.checkOut }}</td>
-										<td>{{ item.lastCalibrated }}</td>
-										<td><button ng-click="open(item)">Edit</button></td>
-									</tr>
-								</tbody>
-								
+					      		</tbody>
+							</table>
         </div>
         <!-- /.box-body -->
         <div class="box-footer">
