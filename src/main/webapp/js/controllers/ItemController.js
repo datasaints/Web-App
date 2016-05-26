@@ -1,6 +1,6 @@
 angular.module('DataSaints').controller('ItemController', function ($rootScope, 
 																	$scope, 
-																	$http, 
+																	$http,
 																	ModalService,
 																	searchService,
 																	filterByFactory, 
@@ -88,23 +88,32 @@ angular.module('DataSaints').controller('ItemController', function ($rootScope,
 			res.error(function(data, status, headers, config) {
 				alert('no item found');
 			});	
-			/*
-			var res = $http.post('/findItem', item);
-			res.success(function(data, status, headers, config) {
-				 console.log('found');
-				 $scope.results = true;
-				 if (data == null) {
-					alert('no item found');
-				 }
-				 else {
-					 console.log(data);
-					 $scope.foundItems = data;
-				 }
-			});
-			res.error(function(data, status, headers, config) {
-				alert('no item found');
-			});		*/
-			
 		}
 		
+		$scope.updateItem = function(toUpdate) {
+			ModalService.showModal({
+				templateUrl: 'pages/modals/edit-item-modal.html',
+				controller: "ModalUpdateItemController",
+				inputs: {
+					item: toUpdate
+					}
+			    }).then(function(modal) {
+			      modal.element.modal();
+			      modal.close.then(function(result) {
+			        console.log('modal closed');
+			      });
+			    });
+			/*
+			ModalService.showModal({
+	            templateUrl: 'pages/modals/edit-item-modal.html',
+	            controller: "ModalUpdateItemController",
+	            resolve: {
+	            	itemToUpdate: function () {
+	                    return toUpdate;
+	                  }
+	            }
+	        }).then(function(modal) {
+	            modal.element.modal();
+	        });*/
+		}
 	});
