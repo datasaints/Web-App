@@ -8,8 +8,8 @@ angular.module('DataSaints').factory('searchService', function($http) {
     		item.status = "NONE";
     	if (item.owner == null)
     		item.owner = null;
-    	
-        return $http.post('/datasaints/findItem/', item)
+
+    	return $http.post('/datasaints/findItem/', item)
     };
 
     return { findItem: findItem };

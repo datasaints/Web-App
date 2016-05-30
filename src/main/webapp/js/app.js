@@ -40,6 +40,7 @@ app.config(function($stateProvider, $urlRouterProvider) { //$stickyStateProvider
                 },
                 'sidebar@home': {
                     templateUrl: 'pages/sidebar.html',
+                    controller: 'SidebarController'
                 },
                 'widgets@home': {
         	        templateUrl: 'pages/top-widgets.html',

@@ -545,7 +545,7 @@ public class ItemDaoImpl implements ItemDao {
 			
 			query.append("e.id IN(SELECT id FROM CheckedOut) ");
 		}
-				
+		System.out.println("checktime is " +toFind.getCheckTime());
 		System.out.println("QUERY: " + query.toString());
 		
 		try {

@@ -1,14 +1,4 @@
-angular.module('DataSaints').controller('SearchController', function ($scope, $http, searchService,	ModalService) {
-	$scope.searchItem = function(itemToFind) {
-		var item = {
-			itemId : itemToFind.itemId,
-			employeeId: itemToFind.employeeId,
-			itemName: itemToFind.itemName,
-			checkIn: null,
-			checkOut: null,
-			lastCalibrated: itemToFind.lastCalibrated	
-		};
-		
+angular.module('DataSaints').controller('SearchController', function ($scope, $http, searchService,	ModalService) {		
 		$scope.searchItem = function(toFind) {
 
 			var res = searchService.findItem(toFind);
@@ -23,10 +13,6 @@ angular.module('DataSaints').controller('SearchController', function ($scope, $h
 				alert('no item found');
 			});	
 		}
-		
-		
-		
-	}
 	
 	$scope.updateItem = function(toUpdate) {
 		ModalService.showModal({

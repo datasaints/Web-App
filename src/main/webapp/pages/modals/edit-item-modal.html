@@ -21,31 +21,36 @@
                 <div class="form-group">
                   <label for="item-id" class="col-sm-2 control-label">Item Id</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="item-id" placeholder="{{ itemToUpdate.id }}">
+                    <input type="text" class="form-control" id="item-id" placeholder="{{ itemToUpdate.id }}" ng-model="itemToUpdate.id">
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="item-serial" class="col-sm-2 control-label">Serial</label>
                   <div class="col-sm-10">
-                    <input type="number" class="form-control" id="item-serial" placeholder="{{ itemToUpdate.serial }}">
+                    <input type="number" class="form-control" id="item-serial" placeholder="{{ itemToUpdate.serial }}" ng-model="itemToUpdate.serial">
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="item-name" class="col-sm-2 control-label">Item name</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="item-name" placeholder="{{ itemToUpdate.itemName }}">
+                    <input type="text" class="form-control" id="item-name" placeholder="{{ itemToUpdate.itemName }}" ng-model="itemToUpdate.itemName">
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="item-name" class="col-sm-2 control-label">Status</label>
+                  <label for="item-status" class="col-sm-2 control-label">Status</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="item-name" placeholder="{{ itemToUpdate.status }}">
+                    <select class="form-control" id="item-status" placeholder="{{ itemToUpdate.status }}" ng-model="itemToUpdate.status">
+					    <option value="" disabled selected hidden>{{ itemToUpdate.status }}</option>
+						<option>CHECKED_IN</option>
+						<option>CHECKED_OUT</option>
+			    	</select>
+			    	
                   </div>
                 </div>
                 <div class="form-group">
 				  <label for="item-location" class="col-sm-2 control-label">Location</label>
 			 	  <div class="col-sm-10">
-					<select class="form-control" id="item-location" ng-model="item.location" ng-change="item.owner=item.location">
+					<select class="form-control" id="item-location" ng-model="itemToUpdate.location" ng-change="itemToUpdate.owner=itemToUpdate.location">
 					    <option value="" disabled selected hidden>{{ itemToUpdate.location }}</option>
 						<option>Metrology</option>
 						<option>Production</option>
@@ -55,8 +60,8 @@
 			    </div>
 			  	<div class="form-group">
 					<label for="item-last-calibrated" class="col-sm-2 control-label">Last Calibrated</label>
-						<div class="col-sm-3">
-						    <input id="item-last-calibrated" type="date" class="form-control" placeholder="{{ itemToUpdate.lastCalibrated }}" ng-model="item.lastCalibrated">
+						<div class="col-sm-10">
+						    <input id="item-last-calibrated" type="date" class="form-control" ng-model="itemToUpdate.lastCalibrated">
 						</div>
 					</div>	
               </div>

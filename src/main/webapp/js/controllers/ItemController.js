@@ -3,34 +3,18 @@ angular.module('DataSaints').controller('ItemController', function ($rootScope,
 																	$http,
 																	ModalService,
 																	searchService,
+																	updateItemService,
 																	filterByFactory, 
 																	addItemService) {    
-	    $scope.item = {
-	    		id: '',
-	    		itemName: '',
-	    		lastCalibrated: ''
-	          };
 	    
-	    $scope.foundItems = [];
 		$scope.updateOption = 'add-item-option';
 		
-		$scope.showEditItem = function()
-	    {
-	        $scope.updateOption = 'edit-item-option';
-	    };
+		$scope.showEditItem = function() { $scope.updateOption = 'edit-item-option'; };
 		
-	    $scope.showAddItem = function()
-	    {
-	        $scope.updateOption = 'add-item-option';
-	    };
-	    
-	    $scope.emptyOrNull = function(item){
-	    	  return !(item.checkIn === null)
-	    	}
-		
+	    $scope.showAddItem = function() { $scope.updateOption = 'add-item-option'; };
+	    		
 		$scope.addItem = function(item){
 			if (item.id != "" && item.owner != "") {
-				console.log('called ad item3');
 				if (item.checkTime == null) {
 					item.checkTime = new Date();
 				}
@@ -103,17 +87,6 @@ angular.module('DataSaints').controller('ItemController', function ($rootScope,
 			        console.log('modal closed');
 			      });
 			    });
-			/*
-			ModalService.showModal({
-	            templateUrl: 'pages/modals/edit-item-modal.html',
-	            controller: "ModalUpdateItemController",
-	            resolve: {
-	            	itemToUpdate: function () {
-	                    return toUpdate;
-	                  }
-	            }
-	        }).then(function(modal) {
-	            modal.element.modal();
-	        });*/
+			
 		}
 	});

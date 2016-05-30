@@ -107,14 +107,13 @@
 
 <script src="js/services/AuthenticationService.js"></script>
 <script src="js/services/CountService.js"></script>
+<script src="js/services/FindItemByIdService.js"></script>
 <script src="js/services/ItemService.js"></script>
 <script src="js/services/SearchService.js"></script>
 <script src="js/services/AddItemService.js"></script>
+<script src="js/services/UpdateItemService.js"></script>
 <script src="js/services/LocationService.js"></script>
 <script src="js/directives/SlideableDirective.js"></script>
-
-<!--  My jQuery Assets -->
-<script src="js/assets/updateItem.js"></script>
 
 </body>
 </html>

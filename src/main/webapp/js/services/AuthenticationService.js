@@ -1,8 +1,6 @@
 'use strict';
 
-angular.module('DataSaints')
-
-.factory('AuthenticationService',
+angular.module('DataSaints').factory('AuthenticationService',
     ['Base64', '$http', '$cookieStore', '$rootScope', '$timeout',
     function (Base64, $http, $cookieStore, $rootScope, $timeout) {
         var service = {};
