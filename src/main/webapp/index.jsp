@@ -113,7 +113,9 @@
 <script src="js/services/AddItemService.js"></script>
 <script src="js/services/UpdateItemService.js"></script>
 <script src="js/services/LocationService.js"></script>
+
 <script src="js/directives/SlideableDirective.js"></script>
+<script src="js/filters/TableFilter.js"></script>
 
 </body>
 </html>

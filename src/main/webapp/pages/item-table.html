@@ -25,7 +25,7 @@
       		
       		<!--  <tbody ng-repeat="item in allItems | orderBy:'employeeId'">-->
       		<tbody>
-				<tr ng-repeat="item in allItems | orderBy:type:reverse"> <!--  | filter:getFilter() -->
+				<tr ng-repeat="item in allItems | orderBy:type:reverse | tableFilter:filterBy">
 					<td> {{ item.id }} </td>
 					<td> {{ item.serial }} </td>
 					<td> {{ item.itemName }} </td>

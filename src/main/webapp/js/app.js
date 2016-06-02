@@ -4,31 +4,20 @@ var app = angular.module('DataSaints', ['ui.router',
                                         'ngAnimate',
                                         'ui.bootstrap',
                                         'angularModalService',
-                                        'oc.lazyLoad'/*,
-                                        'ct.ui.router.extras'*/
+                                        'oc.lazyLoad'
                                         ]);
 
-app.config(function($stateProvider, $urlRouterProvider) { //$stickyStateProvider
+app.config(function($stateProvider, $urlRouterProvider) { 
 	$urlRouterProvider.otherwise('/login');
     
     $stateProvider
-   /* .state('home', {
-    	    url: '/home',
-    	    template: '<div>Home</div>  <a ui-sref="home.news"> change state</a><br><a ui-sref="home.main"> change state2</a><div ui-view></div>'
-    	  })
-    	  .state('home.main', {
-    	    url: '/main',
-    	    template: '<div>Main News</div>'
-    	  })
-    	  .state('home.news', {
-    	    url: '/news',
-    	    template: '<div>List of News</div><ul><li ng-repeat="new in news"><a>{{new.title}}</a></li></ul>',
-    	    controller: function($scope){
-    	      $scope.news = [{ title: 'First News' }, { title: 'Second News' }];
-    	    }
-    	  })
-*/
-        // Home states and nested views
+	    // Login state
+	    .state('login', {
+	        url: '/login',
+	        controller: 'LoginController',
+	        templateUrl: 'pages/login.html'
+	    })    
+	    // Home states and nested views
         .state('home', {
             url: '/home',
             views: {
@@ -47,8 +36,6 @@ app.config(function($stateProvider, $urlRouterProvider) { //$stickyStateProvider
         	        controller: 'WidgetController'
                 }
             },
-            /*sticky: true,
-            dsr: true*/
         })
         .state('home.table', {
 			url: '/item-table/:location',
@@ -69,14 +56,7 @@ app.config(function($stateProvider, $urlRouterProvider) { //$stickyStateProvider
 			url: '/update-reader',
 			templateUrl: 'pages/update-reader.html',
 			controller: 'ReaderProfileController'
-		})
-
-        // Login state
-        .state('login', {
-            url: '/login',
-            controller: 'LoginController',
-            templateUrl: 'pages/login.html'
-        });
+		});
     
     /*$stickyStateProvider.enableDebug(true);*/
 
@@ -86,24 +66,10 @@ app.config(function($stateProvider, $urlRouterProvider) { //$stickyStateProvider
     $locationProvider.html5Mode(true);*/
 });
 
-
-app.factory('filterByFactory', function () {
-    var filterBy = { };
-
-    return {
-        getFilter: function () {
-            return filterBy;
-        },
-        setFilter: function(value) {
-        	filterBy = value;
-        }
-    };
-});
- 
  
 app.controller('ReaderProfileController', function($scope) {
  
-    $scope.message = 'This is Show orders screen';
+    $scope.message = 'This is the reader profile controller';
  
 });
 

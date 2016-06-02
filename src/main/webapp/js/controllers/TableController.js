@@ -1,16 +1,13 @@
 angular.module('DataSaints').controller('TableController', function($rootScope, 
 																	$scope, 
+																	$filter,
 																	$http, 
 																	$route, 
 																	$stateParams, 
-																	itemService, 
-																	filterByFactory) {
-	/*$scope.filter = filterByFactory.filterBy;
-	
-	$scope.$watch(function () { return filterByFactory.getFilter(); }, function (newValue, oldValue) {
-        if (newValue !== oldValue) $scope.filter = newValue;
-    });*/
-	$scope.filter = "$";
+																	itemService) {
+
+	$scope.filterBy = '';
+			
 	$scope.location = $stateParams.location;
 	$scope.numPerPage = 20;
 	
@@ -32,9 +29,9 @@ angular.module('DataSaints').controller('TableController', function($rootScope,
 			);
 
 
-		 /*
+		
 	var filterListener = $rootScope.$on('itemtable:filter', function (event, newFilter) {
-		$scope.filter = newFilter; 
+		$scope.filterBy = newFilter;
 	});
     
 	$scope.getFilter = function() {
@@ -49,7 +46,7 @@ angular.module('DataSaints').controller('TableController', function($rootScope,
             default: //default -- no filter
                 return {}
         }
-    }*/
+    }
 	
 	$scope.reloadPage = function(){
 		console.log("reloading page");

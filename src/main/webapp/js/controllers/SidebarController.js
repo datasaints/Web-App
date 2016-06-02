@@ -1,6 +1,6 @@
-angular.module('DataSaints').controller('SidebarController',function($scope, findItemByIdService, ModalService){
-   $scope.active = false;
-   
+angular.module('DataSaints').controller('SidebarController',function($scope, 
+																	 findItemByIdService, 
+																	 ModalService){   
    $scope.searchById = function(itemId) {
 	   console.log('called search by id with id: ' +itemId);
 		var promise = findItemByIdService.findItem(itemId);

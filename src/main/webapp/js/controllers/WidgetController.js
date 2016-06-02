@@ -35,7 +35,6 @@ angular.module('DataSaints').controller('WidgetController', function($rootScope,
 	});
 		
 	$scope.changeFilter = function(newFilter) {
-        $location.path('/');
         $rootScope.$emit('itemtable:filter', newFilter); 
     }
 	
